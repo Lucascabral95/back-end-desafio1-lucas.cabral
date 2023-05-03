@@ -7,13 +7,17 @@ class ProductManager {
         this.idContador = 1
     }
 
+// AGREGA PRODUCTOS
     addProduct({ title, description, price, thumbnail, code, stock }) {
         if (!title || !description || !price || !thumbnail || !code || !stock) {
             console.log("ERROR: Todos los campos son obligatorios.")
         }
 
+        
+         this.idContador
+        const id = this.idContador++
         const nuevoProducto = {
-            id: this.idContador,
+            id: id,
             title,
             description,
             price,
@@ -22,10 +26,9 @@ class ProductManager {
             stock
         }
         this.producto.push(nuevoProducto)
-        this.idContador++
         console.log("¡Producto agregado exitosamente!")
 
-        fs.writeFile(this.path, JSON.stringify(this.producto), (error, data) => {
+        return fs.writeFile(this.path, JSON.stringify(this.producto), (error, data) => {
             if (!error) {
                 console.log(data)
             } else {
@@ -34,7 +37,7 @@ class ProductManager {
         })
     }
 
-
+//MUESTRA TODOS LOS PRODUCTOS EN LA TERMINAL
     getProduct() {
         console.log("Hasta el momento usted tiene estos productos")
         return fs.readFile(this.path, "utf-8", (error) => {
@@ -46,17 +49,19 @@ class ProductManager {
             }
         })
     }
-      
-
+    
+//BUSCA PRODUCTOS SEGUN EL ID QUE LE INDIQUES
     getProductById(id) {
         const productoRepetido = this.producto.find(producto => producto.id === id)
         if (!productoRepetido) {
             console.log("No se encontro ningun id.")
         } else {
-            console.log(productoRepetido)
+            return console.log(productoRepetido)
         }
     }
 
+
+    //PERMITE MODIFICAR EL PRODUCTO DEL ID QUE LE INDIQUES
     updateProduct(id, actualizarProduct) {
         const actualizarProducto = this.producto.findIndex(producto => producto.id === id)
         if (actualizarProducto !== -1) {
@@ -74,7 +79,7 @@ class ProductManager {
         }
     }
 
-
+// ELIMINA PRODUCTOS SEGUN EL ID QUE LE INDIQUES
     deleteProduct(id) {
         const eliminarProduct = this.producto.findIndex(producto => producto.id === id);
         if (eliminarProduct !== -1) {
@@ -89,7 +94,7 @@ class ProductManager {
                 }
             })
         } else {
-            console.log("No se elimino el producto con el id indicado.");
+            return console.log("No se elimino el producto con el id indicado.");
         }
     }
     
@@ -114,6 +119,7 @@ productManager1.addProduct({
     code: "A002",
     stock: 3
 })
+
 productManager1.addProduct({
     title: "Xbox",
     description: "Consola de videojuegos",
@@ -122,6 +128,7 @@ productManager1.addProduct({
     code: "A003",
     stock: 3
 })
+
 productManager1.addProduct({
     title: "Pelota",
     description: "Pelota de futbol",
@@ -131,7 +138,6 @@ productManager1.addProduct({
     stock: 50
 })
 
-// productManager1.getProduct()
 productManager1.addProduct({
     title: "Mario",
     description: "Figura de accion de Mario",
@@ -140,8 +146,7 @@ productManager1.addProduct({
     code: "A005",
     stock: 150
 })
-// productManager1.getProduct()
-productManager1.deleteProduct(1)
+
 productManager1.addProduct({
     title: "Kirby",
     description: "Figura de accion de Kirby",
@@ -150,14 +155,14 @@ productManager1.addProduct({
     code: "A006",
     stock: 26
 })
-productManager1.updateProduct(6, {
-    title: "No Kirby",
-    description: "No Kirby",
-    price: 15000,
-    thumbnail: "../img/NoKirby.png",
-    code: "A007",
-    stock: 150
-})
-productManager1.getProduct()
+
 productManager1.deleteProduct(2)
+
 productManager1.getProduct()
+
+
+
+
+
+
+
