@@ -1,168 +1,101 @@
-const fs = require("fs")
+import { promises as fs } from "fs"
 
 class ProductManager {
     constructor() {
-        this.path = "productos.json"
-        this.producto = []
-        this.idContador = 1
+        this.path = "productos.txt"
+        this.products = []
     }
 
-// AGREGA PRODUCTOS
-    addProduct({ title, description, price, thumbnail, code, stock }) {
-        if (!title || !description || !price || !thumbnail || !code || !stock) {
-            console.log("ERROR: Todos los campos son obligatorios.")
-        }
+    static id = 0
 
-        
-         this.idContador
-        const id = this.idContador++
-        const nuevoProducto = {
-            id: id,
+// AGREGAR PRODUCTOS
+    addProduct = async (title, description, price, imagen, code, stock) => {
+
+        ProductManager.id++
+
+        let nuevoProducto = {
+            id: ProductManager.id,
             title,
             description,
             price,
-            thumbnail,
+            imagen,
             code,
             stock
         }
-        this.producto.push(nuevoProducto)
-        console.log("¡Producto agregado exitosamente!")
 
-        return fs.writeFile(this.path, JSON.stringify(this.producto), (error, data) => {
-            if (!error) {
-                console.log(data)
-            } else {
-                console.log(`Error: ${error}`)
-            }
-        })
+        this.products.push(nuevoProducto)
+
+        await fs.writeFile(this.path, JSON.stringify(this.products))
     }
 
-//MUESTRA TODOS LOS PRODUCTOS EN LA TERMINAL
-    getProduct() {
-        console.log("Hasta el momento usted tiene estos productos")
-        return fs.readFile(this.path, "utf-8", (error) => {
-            if (!error) {
-                console.log(this.producto)
-            } else {
-                console.log("Error. No se pudo leer.")
 
-            }
-        })
+// LEER ARCHIVO TXT CON LOS PRODUCTOS
+    readProducts = async () => {
+        let respuesta = await fs.readFile(this.path, "utf-8")
+        return JSON.parse(respuesta)
     }
-    
-//BUSCA PRODUCTOS SEGUN EL ID QUE LE INDIQUES
-    getProductById(id) {
-        const productoRepetido = this.producto.find(producto => producto.id === id)
-        if (!productoRepetido) {
-            console.log("No se encontro ningun id.")
+
+
+// OBTENER LOS PRODUCTO EN CONSOLA
+    getProducts = async () => {
+        let respuesta2 = await this.readProducts()
+        return console.log(respuesta2)
+    }
+
+// OBTENER LOS PRODUCTOS SEGUN SU ID
+    getProductsById = async (id) => {
+        let respuesta3 = await this.readProducts()
+        if (!respuesta3.find(product => product.id === id)) {
+            console.log("Producto no encontado.")
         } else {
-            return console.log(productoRepetido)
+            console.log(respuesta3.find(product => product.id === id))
         }
     }
 
-
-    //PERMITE MODIFICAR EL PRODUCTO DEL ID QUE LE INDIQUES
-    updateProduct(id, actualizarProduct) {
-        const actualizarProducto = this.producto.findIndex(producto => producto.id === id)
-        if (actualizarProducto !== -1) {
-            this.producto[actualizarProducto] = {
-                ...this.producto[actualizarProducto],
-                ...actualizarProduct
-            }
-            fs.writeFile(this.path, JSON.stringify(this.producto), (error)=>{
-                if(error){
-                    console.log("Error")
-                }
-            })
-        } else {
-            console.log("No se ha podido modificar el producto.")
-        }
+// ELIMINAR PRODUCTOR SEGUN SU ID
+    deleteProductById = async (id) => {
+        let respuesta3 = await this.readProducts()
+        let productFilter = respuesta3.filter(products => products.id !== id)
+        await fs.writeFile(this.path, JSON.stringify(productFilter))
+        console.log("Producto eliminado.")
     }
 
-// ELIMINA PRODUCTOS SEGUN EL ID QUE LE INDIQUES
-    deleteProduct(id) {
-        const eliminarProduct = this.producto.findIndex(producto => producto.id === id);
-        if (eliminarProduct !== -1) {
-            this.producto.splice(eliminarProduct, 1);
-            console.log("Producto eliminado exitosamente!");
-
-            fs.writeFile(this.path, JSON.stringify(this.producto), (error, data) => {
-                if (!error) {
-                    console.log(data)
-                } else {
-                    console.log(`Error: ${error}`)
-                }
-            })
-        } else {
-            return console.log("No se elimino el producto con el id indicado.");
-        }
+// ACTUALIZAR PRODUCTOS
+    updateProduct = async ({ id, ...productoCambiado }) => {
+        await this.deleteProductById(id)
+        let productOld = await this.readProducts()
+        let productosModificados = [ ...productOld, { id, ...productoCambiado } ]
+        await fs.writeFile(this.path, JSON.stringify(productosModificados))
+        console.log(productosModificados)
     }
-    
+
 }
 
-const productManager1 = new ProductManager()
 
-productManager1.addProduct({
-    title: "Nintendo Switch",
-    description: "Consola de videojuegos",
-    price: 215000,
-    thumbnail: "../img/nintendo.png",
-    code: "A001",
-    stock: 13
+const producto1 = new ProductManager
+
+// PRODUCTOS YA AGREGADOS (EN EL ARCHIVO TXT)
+// producto1.addProduct("Kirby", "Figura de accion", 15000, "../img/kirby.png", "A001", 5);
+// producto1.addProduct("Mario", "Figura de accion", 30000, "../img/mario.png", "A002", 10);
+// producto1.addProduct("Sonic", "Figura de accion", 30000, "../img/sonic.png", "A003", 15);
+// producto1.addProduct("Zelda", "Figura de accion", 30000, "../img/zelda.png", "A004", 20);
+
+// MOSTRAR PRODUCTOS EN CONSOLA
+producto1.getProducts()
+
+// OBTENER PRODUCTOS SEGUN SU ID
+producto1.getProductsById(2)
+
+// ELIMINAR PRODUCTOS SEGUN SU ID
+producto1.deleteProductById(1)
+
+// ACTUALIZAR PRODUCTOS
+producto1.updateProduct({
+    id: 1,
+    title: 'Kirby/Copia',
+    description: 'Figura de accion',
+    price: 500,
+    imagen: '../img/Kirby-copia.png',
+    code: 'A003',
+    stock: 500
 })
-
-productManager1.addProduct({
-    title: "PlayStation 5",
-    description: "Consola de videojuegos",
-    price: 400000,
-    thumbnail: "../img/ps4.png",
-    code: "A002",
-    stock: 3
-})
-
-productManager1.addProduct({
-    title: "Xbox",
-    description: "Consola de videojuegos",
-    price: 150000,
-    thumbnail: "../img/xbox.png",
-    code: "A003",
-    stock: 3
-})
-
-productManager1.addProduct({
-    title: "Pelota",
-    description: "Pelota de futbol",
-    price: 50000,
-    thumbnail: "../img/pelota.png",
-    code: "A004",
-    stock: 50
-})
-
-productManager1.addProduct({
-    title: "Mario",
-    description: "Figura de accion de Mario",
-    price: 15000,
-    thumbnail: "../img/mario.png",
-    code: "A005",
-    stock: 150
-})
-
-productManager1.addProduct({
-    title: "Kirby",
-    description: "Figura de accion de Kirby",
-    price: 45000,
-    thumbnail: "../img/kirby.png",
-    code: "A006",
-    stock: 26
-})
-
-productManager1.deleteProduct(2)
-
-productManager1.getProduct()
-
-
-
-
-
-
-
