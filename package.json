@@ -1,0 +1,26 @@
+{
+  "type": "module",
+  "name": "curso-backend",
+  "version": "1.0.0",
+  "description": "practicas",
+  "main": "no",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "no"
+  },
+  "keywords": [
+    "no"
+  ],
+  "author": "Lucas Cabral",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "moment": "^2.29.4",
+    "random": "^4.1.0"
+  },
+  "devDependencies": {}
+}

@@ -1,8 +1,8 @@
-import { promises as fs } from "fs"
+import { promises as fs, readFile } from "fs"
 
 class ProductManager {
     constructor() {
-        this.path = "productos.txt"
+        this.path = "../productos.json"
         this.products = []
     }
 
@@ -25,7 +25,10 @@ class ProductManager {
 
         this.products.push(nuevoProducto)
 
-        await fs.writeFile(this.path, JSON.stringify(this.products))
+        const productosOrdenados = JSON.stringify(this.products, null, 2)
+
+        // await fs.writeFile(this.path, JSON.stringify(this.products))
+        await fs.writeFile(this.path, productosOrdenados)
     }
 
 
@@ -72,30 +75,34 @@ class ProductManager {
 }
 
 
-const producto1 = new ProductManager
+const producto1 = new ProductManager()
 
 // PRODUCTOS YA AGREGADOS (EN EL ARCHIVO TXT)
-// producto1.addProduct("Kirby", "Figura de accion", 15000, "../img/kirby.png", "A001", 5);
-// producto1.addProduct("Mario", "Figura de accion", 30000, "../img/mario.png", "A002", 10);
-// producto1.addProduct("Sonic", "Figura de accion", 30000, "../img/sonic.png", "A003", 15);
-// producto1.addProduct("Zelda", "Figura de accion", 30000, "../img/zelda.png", "A004", 20);
+producto1.addProduct("Kirby", "Figura de accion de Kirby", 7500, "../img/kirby.png", "A001", 5);
+producto1.addProduct("Mario", "Figura de accion de Mario", 6000, "../img/mario.png", "A002", 10);
+producto1.addProduct("Sonic", "Figura de accion de Sonis", 3000, "../img/sonic.png", "A003", 15);
+producto1.addProduct("Link", "Figura de accion de Link", 5500, "../img/link.png", "A005", 20);
+producto1.addProduct("Luigi", "Figura de accion de Luigi", 4500, "../img/luigi.png", "A006", 20);
+producto1.addProduct("Bowser", "Figura de accion de Bowser", 6100, "../img/bowser.png", "A007", 20);
 
 // MOSTRAR PRODUCTOS EN CONSOLA
-producto1.getProducts()
+// producto1.getProducts()
 
 // OBTENER PRODUCTOS SEGUN SU ID
-producto1.getProductsById(2)
+// producto1.getProductsById(2)
 
 // ELIMINAR PRODUCTOS SEGUN SU ID
-producto1.deleteProductById(1)
+// producto1.deleteProductById(1)
 
 // ACTUALIZAR PRODUCTOS
-producto1.updateProduct({
-    id: 1,
-    title: 'Kirby/Copia',
-    description: 'Figura de accion',
-    price: 500,
-    imagen: '../img/Kirby-copia.png',
-    code: 'A003',
-    stock: 500
-})
+// producto1.updateProduct({
+//     id: 1,
+//     title: 'Kirby/Copia',
+//     description: 'Figura de accion',
+//     price: 500,
+//     imagen: '../img/Kirby-copia.png',
+//     code: 'A003',
+//     stock: 500
+// })
+
+export default ProductManager

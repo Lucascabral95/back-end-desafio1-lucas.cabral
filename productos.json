@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "title": "Kirby",
+    "description": "Figura de accion de Kirby",
+    "price": 7500,
+    "imagen": "../img/kirby.png",
+    "code": "A001",
+    "stock": 5
+  },
+  {
+    "id": 2,
+    "title": "Mario",
+    "description": "Figura de accion de Mario",
+    "price": 6000,
+    "imagen": "../img/mario.png",
+    "code": "A002",
+    "stock": 10
+  },
+  {
+    "id": 3,
+    "title": "Sonic",
+    "description": "Figura de accion de Sonis",
+    "price": 3000,
+    "imagen": "../img/sonic.png",
+    "code": "A003",
+    "stock": 15
+  },
+  {
+    "id": 4,
+    "title": "Link",
+    "description": "Figura de accion de Link",
+    "price": 5500,
+    "imagen": "../img/link.png",
+    "code": "A005",
+    "stock": 20
+  },
+  {
+    "id": 5,
+    "title": "Luigi",
+    "description": "Figura de accion de Luigi",
+    "price": 4500,
+    "imagen": "../img/luigi.png",
+    "code": "A006",
+    "stock": 20
+  },
+  {
+    "id": 6,
+    "title": "Bowser",
+    "description": "Figura de accion de Bowser",
+    "price": 6100,
+    "imagen": "../img/bowser.png",
+    "code": "A007",
+    "stock": 20
+  }
+]
