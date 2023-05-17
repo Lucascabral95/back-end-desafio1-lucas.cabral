@@ -6,13 +6,13 @@ const cart = Router()
 const cart1 = new CartManager()
 
 // RUTA QUE MUESTRA TODOS LOS CARRITOS CON SU ID CORRESPONDIENTE Y ARRAY DE PRODUCTOS 
-cart.get("/api/cart", async (req, res) => {
+cart.get("/api/carts", async (req, res) => {
     let carritos = await cart1.getCarts()
     res.send(carritos)
 })
 
 // RUTA QUE MUESTRA UN CARRITO SEGUN SU ID
-cart.get("/api/cart/:cid", async (req, res) => {
+cart.get("/api/carts/:cid", async (req, res) => {
     const cid = parseInt(req.params.cid)
     try {
         const carrito = await cart1.getCarts()
@@ -33,7 +33,7 @@ cart.get("/api/cart/:cid", async (req, res) => {
 })
 
 // METODO QUE AGREGA CARRITOS CON UN ID INCREMENTABLE Y UN ARRAY VACIO DE PRODUCTOS
-cart.post("/api/cart", async (req, res) => {
+cart.post("/api/carts", async (req, res) => {
     try {
         const carritos = await cart1.addCarts()
         res.send(carritos)
@@ -46,7 +46,7 @@ cart.post("/api/cart", async (req, res) => {
 
 // RUTA POST QUE AGREGA PRODUCTOS EN EL ARREGLO VACIO (PRODUCTS). SE LE AGREGA EL PRODUCTO DEL :PID INDICADO + 1 DE QUANTITY
 // SI SE REPITE EL ID DEL PRODUCTO, SE SUMA + 1 DE QUANTITY. 
-cart.post('/api/cart/:cid/product/:pid', async (req, res) => {
+cart.post('/api/carts/:cid/product/:pid', async (req, res) => {
     try {
         const cid = parseInt(req.params.cid);
         const pid = parseInt(req.params.pid);

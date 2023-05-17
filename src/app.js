@@ -13,7 +13,7 @@ app.use(products)
 
 
 app.get("/", (req, res) => {
-    res.send("¡Hola, visitante! 😊. Aca iran todos los productos.")
+    res.send("¡Hola, visitante! 😊. En las rutas /api/carts y /api/productos podras interacturar con los carritos y productos.")
 })
 
 const server = app.listen(8080, () => console.log("Running on the port 8080"))
