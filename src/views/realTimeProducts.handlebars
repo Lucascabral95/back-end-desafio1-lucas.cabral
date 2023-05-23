@@ -1,0 +1,69 @@
+<section>
+
+    <h1 class="text-center mt-4 mb-4">Lista de todos los productos</h1>
+
+    <p style="text-align: center;">*Vista en tiempo real desde <span style="font-weight: bolder">
+            realTimeProducts.handlebars. </span>
+        <span style="color: red;">Con Socket.io</span>*
+    </p>
+
+    <div id="tabla-productos-socket" class="js">
+
+    </div>
+
+    <div class="container ">
+
+        <h2 class="text-center mt-4 mb-4 ">Formularios para agregar mas productos o eliminar uno segun ID. <span
+                style="color:red">(Se actualiza en tiempo real)</span></h2>
+
+        <div style="display: flex; justify-content: space-evenly">
+
+            <div class="mb-4" style="width: 30%">
+
+                <b style="font-size: 1.5rem;">Todos los campos son obligatorios.</b>
+
+                <form action="/realtimeproducts" method="POST">
+                    <label for="title">title:</label>
+                    <input type="text" name="title" required>
+                    <br>
+                    <label for="description">description: </label>
+                    <input type="text" name="description" required>
+                    <br>
+                    <label for="code">code:</label>
+                    <input type="text" name="code" required>
+                    <br>
+                    <label for="price">price:</label>
+                    <input type="number" name="price" required>
+                    <br>
+                    <label for="stock">stock:</label>
+                    <input type="number" name="stock" required>
+                    <br>
+                    <label for="category">category:</label>
+                    <input type="text" name="category" required>
+                    <br>
+                    <label for="status">Status:</label>
+                    <input type="text" id="status" name="status" value="true" readonly>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                </form>
+
+            </div>
+
+            <div class="mb-4" style="width: 30%">
+
+                <label for="id">Ingrese el ID del producto a eliminar:</label>
+                <input type="text" id="id" name="id" required>
+                <button type="submit" id="boton-eliminar" class="btn btn-primary">Eliminar producto</button>
+
+            </div>
+
+        </div>
+    </div>
+
+
+</section>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="../Routes/views.router.js"></script>
+<script src="/js/index.js"></script>
