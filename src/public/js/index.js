@@ -1,4 +1,8 @@
+// import { messagesModel } from "../../DAO/models/messages.model.js";
 const socket = io();
+// import MessagesManager from "../../DAO/MessagesDAO.js";
+// const messages2 = new MessagesManager()
+
 
 const div = document.getElementById("tabla-productos-socket");
 
@@ -45,7 +49,30 @@ const boton = document.getElementById("boton-eliminar");
 
 boton.addEventListener("click", () => {
     const id = document.getElementById("id").value;
-
+0
     socket.emit("delete-product", id);
 });
+
+// CHAT HANDLEBARS
+
+function funcion() {
+    let input = document.getElementById('miInput');
+    let p = document.getElementById('miParrafo');
+    const message = input.value;
+  
+    if (message === "") {
+      return;
+    } else {
+            p.innerHTML += `${message}<br>`;
+          input.value = "";
+          socket.emit("prueba", message);
+}
+}
+
+function enter(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        funcion();
+    }
+}
 

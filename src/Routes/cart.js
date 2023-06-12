@@ -1,9 +1,90 @@
 import { Router } from "express"
 import { promises as fs } from "fs"
 import CartManager from "../CartManager.js"
+import CartsManager2 from "../DAO/CartsDAO.js"
 const cart = Router()
 
+const cart2 = new CartsManager2()
 const cart1 = new CartManager()
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// CARTS MOSTRADOS CON MONGODB
+
+cart.get("/api/cartsDB", async (req, res) => {
+    try {
+        const results = await cart2.getAllCarts()
+        res.send({ status: "success", payload: results })
+    } catch (error) {
+        res.status(400).send({ status: "error", error })
+    }
+})
+
+cart.delete("/api/cartsDB/:cid", async (req, res) => {
+    let { cid } = req.params
+    try {
+        let cart = await cart2.deleteCartById(cid)
+        if (cart) {
+            res.send({ status: "Error" })
+        } else {
+            res.send({ status: "success", payload: cart })
+        }
+    } catch (error) {
+        res.status(400).send({ status: "error", message: "No se encontro el cart a eliminar." })
+    }
+})
+
+
+
+cart.post("/api/cartsDB", async (req, res) => {
+    try {
+        const results = await cart2.addCarts(req.body)
+        res.send({ status: "success", payload: results })
+    } catch (error) {
+        res.status(400).send({ status: "error", message: "Error al crear carrito." })
+    }
+})
+
+// cart.post("/api/cartsDB/:cid/productsDB/:pid", async (req, res) => {
+//     try {
+//         let cid = parseInt(req.params.cid);
+//         let pid = parseInt(req.params.pid);
+        
+//         let carrito = await cart2.getAllCarts();
+//         let carritoBuscado = carrito.find(c => c._id === cid)
+
+//         if (carritoBuscado) {
+//             let productoExistente = carritoBuscado.products.find(p => p.product === pid);
+
+//             if (productoExistente) {
+//                 productoExistente.quantity++;
+//             } else {
+//                 carritoBuscado.products.push({
+//                     product: pid,
+//                     quantity: 1
+//                 });
+//             }
+
+//             res.send({ status: "success", payload: carrito});
+//         } else {
+//             res.send({ status: "Error", message: "No se encontró el carrito especificado." });
+//         }
+//     } catch (error) {
+//         res.status(400).send({ status: "error", message: "Error al agregar producto al carrito seleccionado." });
+//     }
+// });
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // RUTA QUE MUESTRA TODOS LOS CARRITOS CON SU ID CORRESPONDIENTE Y ARRAY DE PRODUCTOS 
 cart.get("/api/carts", async (req, res) => {

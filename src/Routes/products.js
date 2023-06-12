@@ -1,9 +1,77 @@
-import { Router } from "express"
 import { promises as fs } from "fs"
+import { Router } from "express"
 import ProductManager from "../ProductManager.js";
-const products = Router()
+const products = Router();
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+import ProductsManager2 from "../DAO/productsDAO.js";
+const product2 = new ProductsManager2()
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const product1 = new ProductManager()
+
+products.get("/api/productsDB", async (req, res) => {
+    let productos
+    try {
+        productos = await product2.getAllProducts()
+        res.send({ status: "success", payload: productos })
+    } catch (error) {
+        res.status(400).send({ status: "error", message: "No se han podido encontrar los productos." })
+    }
+})
+
+// products.get("/api/productsDB/:codex", async (req, res) => {
+//     let codex = req.params.codex;
+//     let productos;
+//     try {
+//         productos = await product2.getAllProducts();
+
+//         let encontrarProducto = productos.filter(prod => prod.code === codex);
+
+//         if (encontrarProducto.length > 0) {
+//             res.send({ payload: encontrarProducto });
+//         } else {
+//             res.send({ status: "success", payload: productos });
+//         }
+//     } catch (error) {
+//         res.send({ status: "success", payload: productos });
+//     }
+// });
+
+products.post("/api/productsDB", async (req, res) => {
+    try {
+        const results = await product2.addProducts(req.body)
+        res.send({ status: "success", payload: results })
+    } catch (error) {
+        res.status(400).send({ status: "error", error })
+    }
+})
+
+products.delete("/api/productsDB/:pid", async (req, res) => {
+    let { pid } = req.params
+    try {
+        let result = await product2.deleteProductById(pid)
+        if (result) {
+            res.send({ status: "success", payload: result })
+        } else {
+            res.send({ status: "error", message: "No se encontro el producto." })
+        }
+    } catch (error) {
+        res.status(400).send({ status: "error", message: "Error al intentar eliminar el producto." })
+    }
+})
+
+products.put("/api/productsDB/:pid", async (req, res) => {
+    try {
+        const { pid } = req.params
+        const productoAModificar = req.body
+        const result = product2.updateProduct(pid, productoAModificar)
+
+        res.send({ status: "success", payload: result })
+    } catch (error) {
+        res.status(400).send({ status: "error", message: "Producto no encontrado." })
+    }
+})
+
 
 // RUTA PARA VER TODOS LOS PRODUCTOS. INCLUSO CON ?LIMIT=(+ NUMERO) PODES VER ELEGIR LA CANTIDAD DE PRODUCTOS QUE DESEAS VER.
 products.get("/api/productos", async (req, res) => {

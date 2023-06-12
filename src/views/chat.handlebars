@@ -1,0 +1,32 @@
+<body>
+
+  <h1>Chat simulator con MongoDB</h1>
+
+  <div class="container">
+    <div class="row">
+      <div class="contendor-estructura-chat col-12">
+
+
+        <div class="chat">
+
+          <p id="miChat">
+            {{#each combineData.[0]}}
+          <p> {{lookup ../combineData.[2] @index}} | {{this}} - {{lookup ../combineData.[1] @index}}</p>
+          {{/each}}
+          </p>
+
+          <p id="miParrafo"></p>
+        </div>
+        <div class="chat-dos">
+          <input type="text" id="miInput" onkeydown="enter(event)">
+          <button id="miBoton" onclick="funcion()">Enviar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../Routes/views.router.js"></script>
+  <script src="/js/index.js"></script>
+</body>
