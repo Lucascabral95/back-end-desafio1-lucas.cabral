@@ -9,8 +9,9 @@ const cart1 = new CartManager()
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// CARTS MOSTRADOS CON MONGODB
+// PETICIONES GET, POST, PUT Y DELETE CONECTADA CON MONGODB
 
+// RUTA PARA VER TODOS LOS CARTS. Conectado a MongoDB
 cart.get("/api/cartsDB", async (req, res) => {
     try {
         const results = await cart2.getAllCarts()
@@ -20,6 +21,25 @@ cart.get("/api/cartsDB", async (req, res) => {
     }
 })
 
+// RUTA PARA VER TODOS LOS CARTS SEGUN SU ID. Conectado a MongoDB
+cart.get("/api/cartsDB/:cid", async (req, res) => {
+    try {
+        let cid = req.params.cid;
+        let carts = await cart2.getAllCarts();
+        let carritoBuscado = carts.find(c => c._id.toString() === cid.toString());
+
+        if (carritoBuscado) {
+            res.send({ status: "success", payload: carritoBuscado });
+        } else {
+            res.send({ payload: carts });
+        }
+
+    } catch (error) {
+        res.status(400).send({ status: "Error", message: "No se ha podido encontrar el carrito." });
+    }
+});
+
+// PETICION PARA ELIMINAR UN CARRITO SEGUN SU ID. Conectado a MongoDB
 cart.delete("/api/cartsDB/:cid", async (req, res) => {
     let { cid } = req.params
     try {
@@ -34,8 +54,7 @@ cart.delete("/api/cartsDB/:cid", async (req, res) => {
     }
 })
 
-
-
+//PETICION PARA AGREGAR UN CARRITO. Conectado a MongoDB
 cart.post("/api/cartsDB", async (req, res) => {
     try {
         const results = await cart2.addCarts(req.body)
@@ -45,46 +64,8 @@ cart.post("/api/cartsDB", async (req, res) => {
     }
 })
 
-// cart.post("/api/cartsDB/:cid/productsDB/:pid", async (req, res) => {
-//     try {
-//         let cid = parseInt(req.params.cid);
-//         let pid = parseInt(req.params.pid);
-        
-//         let carrito = await cart2.getAllCarts();
-//         let carritoBuscado = carrito.find(c => c._id === cid)
-
-//         if (carritoBuscado) {
-//             let productoExistente = carritoBuscado.products.find(p => p.product === pid);
-
-//             if (productoExistente) {
-//                 productoExistente.quantity++;
-//             } else {
-//                 carritoBuscado.products.push({
-//                     product: pid,
-//                     quantity: 1
-//                 });
-//             }
-
-//             res.send({ status: "success", payload: carrito});
-//         } else {
-//             res.send({ status: "Error", message: "No se encontró el carrito especificado." });
-//         }
-//     } catch (error) {
-//         res.status(400).send({ status: "error", message: "Error al agregar producto al carrito seleccionado." });
-//     }
-// });
-
-
-
-
-
-
-
-
-
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PETICIONES GET, POST, PUT Y DELETE CON FILESYSTEM 
 
 // RUTA QUE MUESTRA TODOS LOS CARRITOS CON SU ID CORRESPONDIENTE Y ARRAY DE PRODUCTOS 
 cart.get("/api/carts", async (req, res) => {

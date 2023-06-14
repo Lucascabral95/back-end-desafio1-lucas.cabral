@@ -8,9 +8,7 @@ class ProductsManager {
     getAllProducts = async () => {
         try {
             let productos = this.model.find()
-            
             console.log("Exito al buscar producto por id.");
-
             return productos
         } catch (error) {
             console.log("error al buscar productor por id");

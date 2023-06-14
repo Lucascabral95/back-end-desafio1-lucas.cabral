@@ -9,6 +9,10 @@ const product2 = new ProductsManager2()
 
 const product1 = new ProductManager()
 
+
+// PETICIONES GET, POST, PUT, DELETE CONECTADA CON ---MongoDB--- 
+
+// RUTA PARA VER TODOS LOS PRODUCTOS. Conectado a MongoDB
 products.get("/api/productsDB", async (req, res) => {
     let productos
     try {
@@ -19,24 +23,25 @@ products.get("/api/productsDB", async (req, res) => {
     }
 })
 
-// products.get("/api/productsDB/:codex", async (req, res) => {
-//     let codex = req.params.codex;
-//     let productos;
-//     try {
-//         productos = await product2.getAllProducts();
+// RUTA PARA VER LOS PRODUCTOS SEGUN SU ID. Conectado a MongoDB
+products.get("/api/productsDB/:pid", async (req, res) => {
+    try {
+        let pid = req.params.pid;
+        let producto = await product2.getAllProducts();
+        let productoBuscado = producto.find((prod) => prod._id.toString() === pid);
 
-//         let encontrarProducto = productos.filter(prod => prod.code === codex);
+        if (productoBuscado) {
+            res.send({ status: "success", payload: productoBuscado });
+        } else {
+            res.send({ message: "Producto no encontrado" })
+        }
 
-//         if (encontrarProducto.length > 0) {
-//             res.send({ payload: encontrarProducto });
-//         } else {
-//             res.send({ status: "success", payload: productos });
-//         }
-//     } catch (error) {
-//         res.send({ status: "success", payload: productos });
-//     }
-// });
+    } catch (error) {
+        res.status(400).send({ status: "Error", message: "Error al obtener el producto seleccionado." });
+    }
+});
 
+// RUTA POST PARA AGREGAR PRODUCTOS CON SUS RESPECTIVOS CAMPOS OBLIGATORIOS. Conectado a MongoDB
 products.post("/api/productsDB", async (req, res) => {
     try {
         const results = await product2.addProducts(req.body)
@@ -46,6 +51,7 @@ products.post("/api/productsDB", async (req, res) => {
     }
 })
 
+// RUTA DELETE PARA ELIMINAR PRODUCTOS SEGUN SU ID. Conectado a MongoDB
 products.delete("/api/productsDB/:pid", async (req, res) => {
     let { pid } = req.params
     try {
@@ -53,13 +59,14 @@ products.delete("/api/productsDB/:pid", async (req, res) => {
         if (result) {
             res.send({ status: "success", payload: result })
         } else {
-            res.send({ status: "error", message: "No se encontro el producto." })
+            res.send({ status: "success", message: "Se elimino el producto." })
         }
     } catch (error) {
         res.status(400).send({ status: "error", message: "Error al intentar eliminar el producto." })
     }
 })
 
+// RUTA PARA MODIFICAR PRODUCTOS SEGUN SU ID. Conectado a MongoDB
 products.put("/api/productsDB/:pid", async (req, res) => {
     try {
         const { pid } = req.params
@@ -72,6 +79,8 @@ products.put("/api/productsDB/:pid", async (req, res) => {
     }
 })
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PETICIONES GET, POST, PUT Y DELETE CON ---FILESYSTEM---
 
 // RUTA PARA VER TODOS LOS PRODUCTOS. INCLUSO CON ?LIMIT=(+ NUMERO) PODES VER ELEGIR LA CANTIDAD DE PRODUCTOS QUE DESEAS VER.
 products.get("/api/productos", async (req, res) => {

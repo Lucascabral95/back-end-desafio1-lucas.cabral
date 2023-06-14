@@ -1,25 +1,36 @@
-<body>
+<body class="body-chat-handlebars">
 
-  <h1>Chat simulator con MongoDB</h1>
+  <h1>Prototipo de chat con MongoDB</h1>
+
 
   <div class="container">
     <div class="row">
       <div class="contendor-estructura-chat col-12">
 
+        <div class="input-identificacion">
+          <label class="label-identificacion" for="identificacion" aria-required="true">Indique su correo electronico, por favor:
+          </label>
+          <input type="text" id="identificacion" placeholder="Tu correo electronico...">
+        </div>
 
-        <div class="chat">
+        <div class="chat col-8">
 
           <p id="miChat">
             {{#each combineData.[0]}}
-          <p> {{lookup ../combineData.[2] @index}} | {{this}} - {{lookup ../combineData.[1] @index}}</p>
+          <div class="contenedor-text-mongoDB">
+            <p id="text-mongoDB"> {{lookup ../combineData.[2] @index}} </p>
+            <p id="text-mongoDB">{{this}} - {{lookup ../combineData.[1] @index}}</p>
+          </div>
           {{/each}}
           </p>
 
-          <p id="miParrafo"></p>
+          <p id="miParrafo" class="text-new"></p>
+
         </div>
-        <div class="chat-dos">
-          <input type="text" id="miInput" onkeydown="enter(event)">
-          <button id="miBoton" onclick="funcion()">Enviar</button>
+
+        <div class="chat-dos col-8">
+          <input placeholder="Escribí un mensaje..." type="text" id="miInput" onkeydown="enter(event)">
+          <button class="btn btn-info" id="miBoton" onclick="funcion()">Enviar</button>
         </div>
 
       </div>

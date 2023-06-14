@@ -11,6 +11,9 @@ import ProductManager from "./ProductManager.js";
 const product3 = new ProductManager()
 import mongoose from "mongoose"
 
+import ProductosManagerDao from "./DAO/productsDAO.js";
+const productDao = new ProductosManagerDao()
+
 import MessagesManager from "./DAO/MessagesDAO.js";
 const message2 = new MessagesManager()
 
@@ -38,11 +41,6 @@ app.use(products);
 app.use(viewsRouter);
 
 
-// const horaFull = new Date
-// const hora = horaFull.getHours().toString().padStart(2, "0")
-// const minutos = horaFull.getMinutes().toString().padStart(2, "0")
-// const segundos = horaFull.getSeconds().toString().padStart(2, "0") 
-
 io.on("connection", async (socket) => {
   console.log("Nuevo cliente conectado.")
 
@@ -61,18 +59,25 @@ io.on("connection", async (socket) => {
   const horaFull = new Date
   const hora = horaFull.getHours().toString().padStart(2, "0")
   const minutos = horaFull.getMinutes().toString().padStart(2, "0")
-  const segundos = horaFull.getSeconds().toString().padStart(2, "0") 
-  
+  const segundos = horaFull.getSeconds().toString().padStart(2, "0")
+
   socket.on("prueba", async data => {
     console.log(data);
-    await message2.addMessages({ user: "Client", message: data, hour: `${hora}:${minutos}:${segundos}` })
+    await message2.addMessages({ user: data[1] === "" ? "Client" : data[1], message: data[0], hour: `${hora}:${minutos}:${segundos}` })
   })
 
+  const contenidoDelChat = await message2.getMessages()
+  socket.emit("contenidoChat", `${contenidoDelChat}`)
 
-    const contenidoDelChat = await message2.getMessages()
-    socket.emit("contenidoChat", `${contenidoDelChat}`)
- 
+  socket.on("idPro", async data => {
+    const eliminarProducto = await productDao.deleteProductById(parseInt(data)) 
+    
+    if (eliminarProducto) {
+      console.log("Producto eliminado");
+    } else {
+      console.log("No se encontro el producto.");
+    }
+    console.log(data);
+  })
+
 });
-
-// const muestra = await message2.getMessages()
-// console.log(muestra);
