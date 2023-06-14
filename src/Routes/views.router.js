@@ -131,9 +131,9 @@ viewsRouter.delete("/home-mongodb/:pid", async (req, res) => {
         } else {
             Swal.fire({
                 icon: 'success',
-                title: 'Éxito al eliminar el producto deseado',
+                title: 'Éxito al eliminar el producto deseado. REFRESQUE la pagina para ver los cambios.',
             });
-            res.send({ status: "Success", message: "Exito al eliminar el producto." });
+            res.send({ status: "Success", message: "Exito al eliminar el producto. \n\nPor favor, REFRESQUE la pagina para ver los cambios" });
         }
     } catch (error) {
         res.status(400).send({ status: "Error" });
