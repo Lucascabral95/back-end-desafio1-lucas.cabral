@@ -11,8 +11,6 @@ import ProductManager from "./ProductManager.js";
 const product3 = new ProductManager()
 import mongoose from "mongoose"
 
-import ProductosManagerDao from "./DAO/productsDAO.js";
-const productDao = new ProductosManagerDao()
 
 import MessagesManager from "./DAO/MessagesDAO.js";
 const message2 = new MessagesManager()
@@ -68,16 +66,5 @@ io.on("connection", async (socket) => {
 
   const contenidoDelChat = await message2.getMessages()
   socket.emit("contenidoChat", `${contenidoDelChat}`)
-
-  socket.on("idPro", async data => {
-    const eliminarProducto = await productDao.deleteProductById(parseInt(data)) 
-    
-    if (eliminarProducto) {
-      console.log("Producto eliminado");
-    } else {
-      console.log("No se encontro el producto.");
-    }
-    console.log(data);
-  })
 
 });

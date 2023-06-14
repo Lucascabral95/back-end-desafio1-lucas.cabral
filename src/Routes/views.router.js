@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import MessagesManager from "../DAO/MessagesDAO.js";
 const message2 = new MessagesManager()
 import ProductsManager2 from "../DAO/productsDAO.js"
+import products from './products.js';
+
 
 
 const viewsRouter = Router();
@@ -119,23 +121,25 @@ viewsRouter.post("/home-mongoDB", async (req, res) => {
     }
 })
 
+viewsRouter.delete("/home-mongodb/:pid", async (req, res) => {
+    try {
+        const pid = req.params.pid;
+        const prod = await productDao.deleteProductById(pid);
 
+        if (prod) {
+            res.send({ status: "Success", message: "Producto eliminado." });
+        } else {
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito al eliminar el producto deseado',
+            });
+            res.send({ status: "Success", message: "Exito al eliminar el producto." });
+        }
+    } catch (error) {
+        res.status(400).send({ status: "Error" });
+    }
+});
 
-// viewsRouter.delete("/home-mongodb/:pid", async (req, res) => {
-//     try {
-//         let pid = parseInt(req.params.pid);
-//         let product = await productDao.deleteProductById(pid);
-
-//         if (product) {
-            
-//             res.send({ status: "Success", message: "Producto eliminado correctamente" });
-//         } else {
-//             res.send({ status: "Error", message: "Error al eliminar el producto" });
-//         }
-//     } catch (error) {
-//         res.send({ status: "Error", message: "No se encontró el ID del producto." });
-//     }
-// });
 
 
 export default viewsRouter;

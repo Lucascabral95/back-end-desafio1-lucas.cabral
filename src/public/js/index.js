@@ -2,13 +2,6 @@ const socket = io();
 
 // VISTA REALTIMEPRODUCTS.HANDLEBARS 
 
-document.getElementById("boton-mongo").addEventListener("click", () => {
-    const idd = document.getElementById("idMongo").value
-    
-    socket.emit("idPro", idd)
-})
-  
-
 const div = document.getElementById("tabla-productos-socket");
 
 socket.on("productos-actualizados", data => {
@@ -57,6 +50,7 @@ boton.addEventListener("click", () => {
     0
     socket.emit("delete-product", id);
 });
+
 
 // CHAT HANDLEBARS
 
@@ -111,3 +105,22 @@ function enter(event) {
 // FUNCION DE CHAT.HANDLEBARS QUE ES LA ENCARGADA DE DAR FUNCIONAMIENTO AL CHAT CONECTADO A MONGODB
 
 //---------------------------------------------------------------------------------------------
+
+function funcionMongo() {
+    const id = document.getElementById('idMongo').value;
+    
+    fetch(`/home-mongodb/${id}`, { method: 'DELETE' })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'Success') {
+          alert(data.message);
+        } else {
+          alert('Error al eliminar el producto.');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        alert('Error al eliminar el producto.');
+      });
+  }
+  

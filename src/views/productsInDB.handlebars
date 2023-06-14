@@ -34,7 +34,7 @@
                 </tbody>
             </table>
 
-            <h2 class="text-center mt-4 mb-4 ">Formulario para agregar mas productos o eliminar uno segun ID. <span
+            <h2 class="text-center mt-4 mb-4 ">Formulario para agregar mas productos o eliminar uno segun su _id. <span
                     style="color:red">(Se actualiza en tiempo real)</span></h2>
 
             <div style="display: flex; justify-content: space-evenly">
@@ -69,15 +69,10 @@
 
                 <div class="mb-4" style="width: 30%">
 
-                    {{!-- <label for="id">Ingrese el ID del producto a eliminar:</label>
-                    <input type="text" id="idMongo" name="id" required>
-                    <button type="submit" id="boton-eliminar-mongo" class="btn btn-primary">Eliminar producto</button>
-                    --}}
                     <label for="id">Ingrese el ID del producto a eliminar:</label>
                     <input type="text" id="idMongo" name="id" required>
-                    <button type="submit" id="boton-mongo" class="btn btn-primary">Eliminar producto</button>
-
-
+                    <button type="submit" id="boton-mongo" onclick="funcionMongo()" class="btn btn-primary">Eliminar
+                        producto</button>
 
                 </div>
 
@@ -86,6 +81,6 @@
 
 </section>
 
-  <script src="/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script src="../Routes/views.router.js"></script>
 <script src="/js/index.js"></script>
