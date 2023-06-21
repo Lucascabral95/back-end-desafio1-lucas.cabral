@@ -163,11 +163,12 @@ viewsRouter.delete("/home-mongodb/:pid", async (req, res) => {
 
 // RENDERIZA LA VISTA "cardId"
 viewsRouter.get("/carts/:cid", async (req, res) => {
+    const cartAll = await cartsModel.find()
     try {
         const cid = req.params.cid
         const cart = await cartsModel.findById(cid).populate("products.product")
 
-const cartId = cart._id
+        const cartId = cart._id
         const productId = cart.products.map(prod => prod.product._id)
         const title = cart.products.map(prod => prod.product.title);
         const price = cart.products.map(prod => prod.product.price);
@@ -175,15 +176,17 @@ const cartId = cart._id
         const totalPrice = price.map((p, index) => parseFloat(p) * parseFloat(quantity[index]));
         const totalPriceFull = totalPrice.reduce((accumulator, current) => accumulator + current, 0);
         const totalPriceFullWithComa = totalPriceFull.toLocaleString()
+        const cartIdAll = cartAll.map(i => i._id)
 
-        const datos = [cart, productId, title, quantity, price, totalPrice, totalPriceFullWithComa, cartId]
+        const datos = [cart, productId, title, quantity, price, totalPrice, totalPriceFullWithComa, cartId, cartIdAll]
 
         res.render("cartId", { datos })
     } catch (error) {
-        res.status(400).send({ status: "Error", message: "Error al obtener carts." })
+        res.status(400).send({
+            status: "Error",
+            message: `Error al obtener carts. Por favor, para buscar uno vaya a /api/cartsDB `
+        })
     }
 })
-
-
 
 export default viewsRouter;

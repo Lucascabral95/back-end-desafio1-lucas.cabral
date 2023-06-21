@@ -1,4 +1,4 @@
-    {{!-- ACA ESTAN TODOS LOS PRODUCTOS EXISTENTE EN MongoDB ATLAS --}}
+{{!-- ACA ESTAN TODOS LOS PRODUCTOS EXISTENTE EN MongoDB ATLAS --}}
 <section>
 
     <h1>Lista de productos leída desde en MongoDB Atlas</h1>
@@ -45,7 +45,11 @@
                             <td>{{lookup ../productossFull.[4] @index}}</td>
                             <td>{{lookup ../productossFull.[5] @index}}</td>
                             <td>{{lookup ../productossFull.[6] @index}}</td>
-                            <td> <button class="btn btn-info" id="boton-add" value="{{this}}" onclick="funcionAddToCart()">Add to cart</button> </td>
+                            {{!-- <td> <button class="btn btn-info" id="boton-add" value="{{this}}"
+                                    onclick="funcionAddToCart()">Add to cart</button> </td> --}}
+                            <td> <button class="btn btn-info" id="boton-add" value="{{this}}"
+                                    onclick="funcionAddToCart(this.value)">Add to cart</button>
+                            </td>
                         </tr>
                         {{/each}}
                     </tbody>

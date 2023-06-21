@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
 
-            <h2 class="titulo-cart">Carrito seleccionado por su ID con su/s respectivo/s producto/s agregado/s.</h2>
+            <h2 class="titulo-cart">Carrito seleccionado por su _ID con su/s respectivo/s producto/s agregado/s.</h2>
 
             <div class="carrito-seleccionado">
                 <h4 class="cart-selected">Carrito seleccionado _id: <span class="cart-texto">{{datos.[7]}} </h4>
@@ -30,8 +30,8 @@
                                 <th scope="row">{{this}}</th>
                                 <td>{{lookup ../datos.[2] @index}}</td>
                                 <td>{{lookup ../datos.[3] @index}}</td>
-                                <td>{{lookup ../datos.[4] @index}}</td>
-                                <td>{{lookup ../datos.[5] @index}}</td>
+                                <td>${{lookup ../datos.[4] @index}}</td>
+                                <td>${{lookup ../datos.[5] @index}}</td>
                             </tr>
                             {{/each}}
                         </tbody>
@@ -43,6 +43,18 @@
             <div class="contenedor-precio-final">
                 <h4 class="precio-final">Precio total de todos los productos: <span
                         class="precio-final-texto">${{datos.[6]}}</span> </h4>
+            </div>
+
+            <div class="totalidad-carritos">
+                <p class="totalidad-carritos-texto">Para evitar que busque los _id en "/api/cartsDB", aca le dejo el .id
+                    de todos los carritos en existencia</p>
+                <div class="totalidad-carritos-lista">
+                    <ul>
+                        {{#each datos.[8] }}
+                        <li> Carrito por _id: <span class="bucle-carritos-id"> {{this}} </span> </li>
+                        {{/each }}
+                    </ul>
+                </div>
             </div>
 
         </div>

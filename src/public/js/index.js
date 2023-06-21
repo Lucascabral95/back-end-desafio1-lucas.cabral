@@ -124,8 +124,8 @@ function funcionMongo() {
       });
   }
 
-  function funcionAddToCart() {
-    const valueProduct = document.getElementById("boton-add").value
-    console.log(valueProduct);
+  function funcionAddToCart(value) {
+    console.log(value);
+    alert("Funcion para agregar productos a un carrito: ¡Proximamente!")
   }
   

@@ -124,17 +124,17 @@ h1 {
       font-weight: bolder;
       color: black;
       .cart-texto {
-          text-align: center;
-          font-weight: 600;
-          color: red;
-        }
-    }
-    .cart-title{
         text-align: center;
-        font-weight: bolder;
-        color: black;
-        font-size: 2rem;
-        margin-top: 8%;
+        font-weight: 600;
+        color: red;
+      }
+    }
+    .cart-title {
+      text-align: center;
+      font-weight: bolder;
+      color: black;
+      font-size: 2rem;
+      margin-top: 8%;
     }
   }
 
@@ -157,6 +157,24 @@ h1 {
         font-size: 2.5rem;
         font-weight: 600;
         color: red;
+      }
+    }
+  }
+
+  .totalidad-carritos {
+    margin: auto;
+    .totalidad-carritos-texto {
+      font-weight: bolder;
+      text-align: center;
+      font-size: 1.6rem;
+      color: red;
+      margin-top: 9%;
+    }
+    .totalidad-carritos-lista {
+      .bucle-carritos-id {
+        color: blue;
+        font-weight: bolder;
+        font-size: 1.2rem;
       }
     }
   }
