@@ -123,4 +123,9 @@ function funcionMongo() {
         alert('Error al eliminar el producto.');
       });
   }
+
+  function funcionAddToCart() {
+    const valueProduct = document.getElementById("boton-add").value
+    console.log(valueProduct);
+  }
   

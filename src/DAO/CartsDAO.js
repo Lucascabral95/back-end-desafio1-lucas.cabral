@@ -1,4 +1,5 @@
-import { cartsModel } from "./models/carts.model.js"
+// import { cartsModel } from "./models/carts.model.js"
+import cartsModel from "./models/carts.model.js"
 
 class CartsManager {
     constructor() {
@@ -15,12 +16,10 @@ class CartsManager {
         return carts
     }
 
-    addCarts = async (contenidoCart) => {
+    addCarts = async (contenidoBody1) => {
         try {
-            const { productos = [] } = contenidoCart
-
-            const cart = await cartsModel.create({ productos })
-            console.log("Creacion de carrito exitosa.");
+            const carts = await cartsModel.create(contenidoBody1)
+            console.log("Exito al crear cart.");
         } catch (error) {
             console.log("Error al crear cart.");
         }
@@ -31,7 +30,7 @@ class CartsManager {
         cart = await this.model.deleteOne({ _id: cid })
         if (cart) {
             console.log("Exito al eliminar el cart.");
-        } 
+        }
     }
 
 }

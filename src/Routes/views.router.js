@@ -7,7 +7,10 @@ const message2 = new MessagesManager()
 import ProductsManager2 from "../DAO/productsDAO.js"
 import products from './products.js';
 
+import ProductModel from "../DAO/models/products.model.js"
+import { fileURLToPath } from "url";
 
+import cartsModel from "../DAO/models/carts.model.js"
 
 const viewsRouter = Router();
 const productDao = new ProductsManager2
@@ -62,7 +65,6 @@ viewsRouter.delete("/realtimeproducts", async (req, res) => {
 });
 
 
-//------------------------------------------------------------------------------------------------------------------------------------------------
 viewsRouter.get("/chat", async (req, res) => {
     let mensajes = await message2.getMessages()
 
@@ -75,28 +77,46 @@ viewsRouter.get("/chat", async (req, res) => {
 
     res.render("chat.handlebars", { combineData })
 })
+//------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+// RUTA "GET" QUE RENDERIZA CON PAGINATION Y AGGREGATION LA VISTA "PRODUCTS.HANDLEBARS"
 viewsRouter.get("/home-mongoDB", async (req, res) => {
-    try {
-        let productoss = await productDao.getAllProducts()
+    const limit = parseInt(req.query.limit) || 10 // Especifica la cantidad de elementos a mostrar. Si no especifico esa cantidad, por defecto el numero despues del ||
+    const page = parseInt(req.query.page) || 1 // Especifica la pagina en la que quiero estar. Si no especifico, mostrar en la pagina que se pone despues del ||
+    const sort = req.query.sort || "createdAt" // Sirve para odenar numeros y palabras. Si pongo ?sort=-price, se ordenaran los precios de manera descendente, sino se ordenaran de manera ascendente 
+    const category = req.query.category // Sirve para filtrar los productos segun su categoria (éstas son case sensitive)
 
-        const buscadorId = productoss.map(i => i._id)
-        const buscadorTitle = productoss.map(title => title.title)
-        const buscadorDescription = productoss.map(d => d.description)
-        const buscadorCode = productoss.map(c => c.code)
-        const buscadorPrice = productoss.map(p => p.price)
-        const buscadorStock = productoss.map(s => s.stock)
-        const buscadorCategory = productoss.map(ca => ca.category)
+    const productoss = await ProductModel.paginate(category ? { category } : null, { limit, page, sort })
 
+    const productos = productoss.docs
 
-        const productossFull = [buscadorId, buscadorTitle, buscadorDescription, buscadorCode, buscadorPrice, buscadorStock, buscadorCategory]
+    const buscadorId = productos.map(i => i._id)
+    const buscadorTitle = productos.map(title => title.title)
+    const buscadorDescription = productos.map(d => d.description)
+    const buscadorCode = productos.map(c => c.code)
+    const buscadorPrice = productos.map(p => p.price)
+    const buscadorStock = productos.map(s => s.stock)
+    const buscadorCategory = productos.map(ca => ca.category)
 
-        res.render("productsInDB", { productossFull })
-    } catch (error) {
-        res.status(400).send({ status: "Error", message: "Error al obtener productos de MongoDB." })
-    }
+    const productossFull = [buscadorId, buscadorTitle, buscadorDescription, buscadorCode, buscadorPrice, buscadorStock, buscadorCategory]
+
+    const totalDocss = productoss.totalDocs
+    const limitt = productoss.limit
+    const totalPages = productoss.totalPages
+    const pagee = productoss.page
+    const pagingCounter = productoss.pagingCounter
+    const hasPrevPage = productoss.hasPrevPage
+    const hasNextPage = productoss.hasNextPage
+    const prevPage = productoss.prevPage
+    const nextPage = productoss.nextPage
+
+    const datosDePaginate = [totalDocss, limitt, totalPages, pagee, pagingCounter, hasPrevPage, hasNextPage, prevPage, nextPage]
+
+    res.render("products", { productossFull: productossFull, datosExtras: datosDePaginate, sort })
 })
 
+// METODO "POST" PARA AGREGAR UN DOCUMENTO NUEVO POR MEDIO DE UN FORMULARIO. 
 viewsRouter.post("/home-mongoDB", async (req, res) => {
     try {
         const newProduct = req.body
@@ -121,6 +141,7 @@ viewsRouter.post("/home-mongoDB", async (req, res) => {
     }
 })
 
+// METODO "DELETE" PARA ELIMINAR POR _ID UN PRODUCTO DE mongoDB ATLAS.
 viewsRouter.delete("/home-mongodb/:pid", async (req, res) => {
     try {
         const pid = req.params.pid;
@@ -139,6 +160,29 @@ viewsRouter.delete("/home-mongodb/:pid", async (req, res) => {
         res.status(400).send({ status: "Error" });
     }
 });
+
+// RENDERIZA LA VISTA "cardId"
+viewsRouter.get("/carts/:cid", async (req, res) => {
+    try {
+        const cid = req.params.cid
+        const cart = await cartsModel.findById(cid).populate("products.product")
+
+const cartId = cart._id
+        const productId = cart.products.map(prod => prod.product._id)
+        const title = cart.products.map(prod => prod.product.title);
+        const price = cart.products.map(prod => prod.product.price);
+        const quantity = cart.products.map(prod => prod.quantity)
+        const totalPrice = price.map((p, index) => parseFloat(p) * parseFloat(quantity[index]));
+        const totalPriceFull = totalPrice.reduce((accumulator, current) => accumulator + current, 0);
+        const totalPriceFullWithComa = totalPriceFull.toLocaleString()
+
+        const datos = [cart, productId, title, quantity, price, totalPrice, totalPriceFullWithComa, cartId]
+
+        res.render("cartId", { datos })
+    } catch (error) {
+        res.status(400).send({ status: "Error", message: "Error al obtener carts." })
+    }
+})
 
 
 

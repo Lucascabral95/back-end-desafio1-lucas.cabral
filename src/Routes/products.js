@@ -4,24 +4,36 @@ import ProductManager from "../ProductManager.js";
 const products = Router();
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import ProductsManager2 from "../DAO/productsDAO.js";
+import { fileURLToPath } from "url";
 const product2 = new ProductsManager2()
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+import ProductsModel from "../DAO/models/products.model.js";
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const product1 = new ProductManager()
 
-
 // PETICIONES GET, POST, PUT, DELETE CONECTADA CON ---MongoDB--- 
 
-// RUTA PARA VER TODOS LOS PRODUCTOS. Conectado a MongoDB
+// RUTA "GET" CONECTADA "mongoDB  ATLAS" PARA VER TODOS LOS PRODUCTOS, CON QUERY "?LIMIT=" PARA BUSCAR LA CANTIDAD DE PRODUCTOS DESEADA, 
+// CON "?SORT=" PARA ORDENAR DEL PRODUCTO DE MANERA ASCENDENTE O DESCENDENTE SEGUN SU PRECIO,
+// CON "?PAGE=" PARA BUSCAR LA PAGINA DESEADA,
+// CON "?CATEGORY=" PARA FILTRAR LA CATEGORIA DE PRODUCTOS DESEADA (¡¡¡ BUSCAR LAS CATEGORIAS SEGUN FIGURAN, SON CASE SENSITIVE !!!) 
+
 products.get("/api/productsDB", async (req, res) => {
-    let productos
-    try {
-        productos = await product2.getAllProducts()
-        res.send({ status: "success", payload: productos })
-    } catch (error) {
-        res.status(400).send({ status: "error", message: "No se han podido encontrar los productos." })
-    }
+    const limit = parseInt(req.query.limit) || 7 // Especifica la cantidad de elementos a mostrar. Si no especifico esa cantidad, por defecto el numero despues del ||
+    const page = parseInt(req.query.page) || 1 // Especifica la pagina en la que quiero estar. Si no especifico, mostrar en la pagina que se pone despues del ||
+    const sort = req.query.sort // Sirve para odenar numeros y palabras. Si pongo ?sort=-price, se ordenaran los precios de manera descendente, sino se ordenaran de manera ascendente 
+    const category = req.query.category // Sirve para filtrar los productos segun su categoria (estas son case sensitive)
+    const title = req.query.title // Sirve para filtrar los productos segun su titulo (estas son case sensitive)
+
+    const existeCategory = category ? {category} : null
+    const existeTitle = title ? {title} : null
+    
+    const productos = await ProductsModel.paginate( { ...existeCategory, ...existeTitle }, { limit, page, sort } );    
+    res.send(productos)
+    console.log(productos);
 })
+
 
 // RUTA PARA VER LOS PRODUCTOS SEGUN SU ID. Conectado a MongoDB
 products.get("/api/productsDB/:pid", async (req, res) => {
@@ -81,7 +93,6 @@ products.put("/api/productsDB/:pid", async (req, res) => {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // PETICIONES GET, POST, PUT Y DELETE CON ---FILESYSTEM---
-
 // RUTA PARA VER TODOS LOS PRODUCTOS. INCLUSO CON ?LIMIT=(+ NUMERO) PODES VER ELEGIR LA CANTIDAD DE PRODUCTOS QUE DESEAS VER.
 products.get("/api/productos", async (req, res) => {
     try {

@@ -1,0 +1,148 @@
+    {{!-- ACA ESTAN TODOS LOS PRODUCTOS EXISTENTE EN MongoDB ATLAS --}}
+<section>
+
+    <h1>Lista de productos leída desde en MongoDB Atlas</h1>
+    <h6 style="text-align: center; font-size: 1.6rem"> Esta base de datos esta leida directamente desde <span
+            style="color:red;">MongoDB Atlas</span></h6>
+    <h6 class="text-center"> *El dropdown de abajo tiene filtros para filtrar los productos segun tu necesidad*</h6>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="dropdown mb-5">
+                <button class="btn btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Filtros
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/home-mongodb?sort=title"> Orden alfabetico </a></li>
+                    <li><a class="dropdown-item" href="/home-mongodb?sort=price"> Menor precio </a></li>
+                    <li><a class="dropdown-item" href="/home-mongodb?sort=-price"> Mayor precio </a></li>
+                </ul>
+            </div>
+
+            <div class="col-12">
+                <table style="margin-top: 3.5%;" class="table table-striped col-12">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Code</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Stock</th>
+                            <th scope="col">Category</th>
+                            <th>Agregar al carrito</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each productossFull.[0]}}
+                        <tr>
+                            <th scope="row">{{this}}</th>
+                            <td>{{lookup ../productossFull.[1] @index}}</td>
+                            <td>{{lookup ../productossFull.[2] @index}}</td>
+                            <td>{{lookup ../productossFull.[3] @index}}</td>
+                            <td>{{lookup ../productossFull.[4] @index}}</td>
+                            <td>{{lookup ../productossFull.[5] @index}}</td>
+                            <td>{{lookup ../productossFull.[6] @index}}</td>
+                            <td> <button class="btn btn-info" id="boton-add" value="{{this}}" onclick="funcionAddToCart()">Add to cart</button> </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-12" style="display: flex; justify-content: space-between; margin-bottom: 1.8%">
+                {{#if datosExtras.[5]}}
+                <a href="/home-mongoDB?sort={{sort}}&page={{datosExtras.[7]}}" class="btn btn-danger">Página
+                    anterior</a>
+                {{/if}}
+                {{#unless datosExtras.[5]}}
+                <button disabled class="btn btn-danger">Página anterior</button>
+                {{/unless}}
+
+                <div class="numeros-paginacion">
+                    <span style="color: red;"> {{datosExtras.[3]}} <span
+                            style="color: gray; font-weight: 600; font-size: 1.2rem">de</span> </span>
+                    <span> {{datosExtras.[2]}} </span>
+                </div>
+
+                {{#if datosExtras.[6]}}
+                <a href="/home-mongoDB?sort={{sort}}&page={{datosExtras.[8]}}" class="btn btn-danger">Página
+                    siguiente</a>
+                {{/if}}
+                {{#unless datosExtras.[6]}}
+                <button disabled class="btn btn-danger">Página siguiente</button>
+                {{/unless}}
+
+            </div>
+
+            <div class="contenedor-datos-extras-paginate col-12">
+                <h3>Datos extras de Paginate de Mongoose</h3>
+                <p> totalDocs: {{datosExtras.[0]}} </p>
+                <p> limit: {{datosExtras.[1]}} </p>
+                <p> totalPages: {{datosExtras.[2]}} </p>
+                <p> page: {{datosExtras.[3]}} </p>
+                <p> pagingCounter: {{datosExtras.[4]}} </p>
+                <p> hasPrevPage: {{datosExtras.[5]}} </p>
+                <p> hasNextPage: {{datosExtras.[6]}} </p>
+                <p> prevPage: {{datosExtras.[7]}} </p>
+                <p> nextPage: {{datosExtras.[8]}} </p>
+            </div>
+
+            <h2 class="text-center mt-4 mb-4 ">Formulario para agregar mas productos o eliminar uno segun su _id. <span
+                    style="color:red">(Se actualiza en tiempo real)</span></h2>
+
+            <div class="col-12" style="display: flex; justify-content: space-evenly">
+
+                <div class="mb-4" style="width: 30%">
+
+                    <b style="font-size: 1.5rem;">Todos los campos son obligatorios.</b>
+
+                    <form action="/home-mongodb" method="POST">
+                        <label for="title">title:</label>
+                        <input type="text" name="title" required>
+                        <br>
+                        <label for="description">description: </label>
+                        <input type="text" name="description" required>
+                        <br>
+                        <label for="code">code:</label>
+                        <input type="text" name="code" required>
+                        <br>
+                        <label for="price">price:</label>
+                        <input type="number" name="price" required>
+                        <br>
+                        <label for="stock">stock:</label>
+                        <input type="number" name="stock" required>
+                        <br>
+                        <label for="category">category:</label>
+                        <input type="text" name="category" required>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Agregar</button>
+                    </form>
+
+                </div>
+
+                <div class="mb-4" style="width: 30%">
+
+                    <label for="id">Ingrese el ID del producto a eliminar:</label>
+                    <input type="text" id="idMongo" name="id" required>
+                    <button type="submit" id="boton-mongo" onclick="funcionMongo()" class="btn btn-primary">Eliminar
+                        producto</button>
+                    <p style="font-weight: bolder; font-size: 1.1rem; color: red">Por favor, cuando elimine un producto,
+                        refresque la pagina asi ve los cambios.</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="../Routes/views.router.js"></script>
+<script src="/js/index.js"></script>

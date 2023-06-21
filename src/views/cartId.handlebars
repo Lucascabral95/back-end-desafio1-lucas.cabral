@@ -1,0 +1,51 @@
+{{!-- ACA ESTAN TODOS LOS CARRITOS SEGUN SU ID SELECCIONADO --}}
+<section class="section-carts">
+
+    <div class="container">
+        <div class="row">
+
+            <h2 class="titulo-cart">Carrito seleccionado por su ID con su/s respectivo/s producto/s agregado/s.</h2>
+
+            <div class="carrito-seleccionado">
+                <h4 class="cart-selected">Carrito seleccionado _id: <span class="cart-texto">{{datos.[7]}} </h4>
+                <h4 class="cart-title"> Contenido del carrito </h4>
+            </div>
+
+            <div class="col-12 contenedor-carts">
+
+                <div class="col-12">
+                    <table style="margin-top: 3.5%;" class="table table-striped col-12">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID del producto</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Total price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each datos.[1]}}
+                            <tr>
+                                <th scope="row">{{this}}</th>
+                                <td>{{lookup ../datos.[2] @index}}</td>
+                                <td>{{lookup ../datos.[3] @index}}</td>
+                                <td>{{lookup ../datos.[4] @index}}</td>
+                                <td>{{lookup ../datos.[5] @index}}</td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="contenedor-precio-final">
+                <h4 class="precio-final">Precio total de todos los productos: <span
+                        class="precio-final-texto">${{datos.[6]}}</span> </h4>
+            </div>
+
+        </div>
+    </div>
+
+</section>
