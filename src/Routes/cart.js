@@ -124,9 +124,9 @@ cart.put("/api/cartsDb/:cid", async (req, res) => {
         const product = req.body;
         await cartsModel.findByIdAndUpdate(cid, { $push: { products: product } });
 
-        res.send({ status: "Success", message: "Exito al modificar el carrito." })
+        res.send({ status: "Success", message: "Exito al actualizar el carrito." })
     } catch (error) {
-        res.send({ status: "Error", message: "Error al modificar el carrito." })
+        res.send({ status: "Error", message: "Error al actualizar el carrito." })
     }
 })
 
