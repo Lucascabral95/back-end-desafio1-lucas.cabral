@@ -1,4 +1,3 @@
-// import { cartsModel } from "./models/carts.model.js"
 import cartsModel from "./models/carts.model.js"
 
 class CartsManager {
@@ -32,6 +31,16 @@ class CartsManager {
             console.log("Exito al eliminar el cart.");
         }
     }
+
+    updateCartById = async (cartId, newData) => {
+        try {
+            const updateCart = await this.model.updateOne({ _id: cartId }, { newData })
+            return updateCart
+        } catch (error) {
+            throw error
+        }
+    }
+
 
 }
 

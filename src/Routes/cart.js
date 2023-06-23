@@ -117,6 +117,19 @@ cart.put("/api/cartsDB/:cid/products/:pid", async (req, res) => {
     }
 });
 
+// LOGICA DE METODO "PUT" QUE PERMITE ACTUALIZAR EL CARRITO SELECCIONADO POR "/:CID" CON UN ARREGLO DE PRODUCTOS QUE LE PASO POR EL BODY, escribir { "product": "(+ el _id del producto a agregar)"}
+cart.put("/api/cartsDb/:cid", async (req, res) => {
+    try {
+        const cid = req.params.cid;
+        const product = req.body;
+        await cartsModel.findByIdAndUpdate(cid, { $push: { products: product } });
+
+        res.send({ status: "Success", message: "Exito al modificar el carrito." })
+    } catch (error) {
+        res.send({ status: "Error", message: "Error al modificar el carrito." })
+    }
+})
+
 // LOGICA "DELETE" PARA ELIMINAR DE mongoDB ATLAS UN PRODUCTO SELECCINADO DE UN CARRITO SEGUN SU ID.
 cart.delete("/api/cartsDB/:cid/products/:pid", async (req, res) => {
     try {
@@ -150,11 +163,11 @@ cart.delete("/api/cartsDB/:cid", async (req, res) => {
         const cid = req.params.cid;
 
         const cart = await cartsModel.findById(cid);
-        
+
         cart.products = [];
-        
+
         const result = await cart.save();
-        
+
         res.status(200).json({ status: "Success", message: "Éxito al eliminar el carrito.", result: result, });
     } catch (error) {
         res.status(500).json({ status: "Error", message: "Error al eliminar el carrito.", result: result });
@@ -236,9 +249,9 @@ export default cart
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// PETICIONES GET, POST, PUT Y DELETE CON FILESYSTEM 
+// PETICIONES GET, POST, PUT Y DELETE CON FILESYSTEM
 
-// RUTA QUE MUESTRA TODOS LOS CARRITOS CON SU ID CORRESPONDIENTE Y ARRAY DE PRODUCTOS 
+// RUTA QUE MUESTRA TODOS LOS CARRITOS CON SU ID CORRESPONDIENTE Y ARRAY DE PRODUCTOS
 // cart.get("/api/carts", async (req, res) => {
 //     let carritos = await cart1.getCarts()
 //     res.send(carritos)
@@ -278,7 +291,7 @@ export default cart
 // })
 
 // RUTA POST QUE AGREGA PRODUCTOS EN EL ARREGLO VACIO (PRODUCTS). SE LE AGREGA EL PRODUCTO DEL :PID INDICADO + 1 DE QUANTITY
-// SI SE REPITE EL ID DEL PRODUCTO, SE SUMA + 1 DE QUANTITY. 
+// SI SE REPITE EL ID DEL PRODUCTO, SE SUMA + 1 DE QUANTITY.
 // cart.post('/api/carts/:cid/product/:pid', async (req, res) => {
 //     try {
 //         const cid = parseInt(req.params.cid);
