@@ -12,9 +12,75 @@ import { fileURLToPath } from "url";
 
 import cartsModel from "../DAO/models/carts.model.js"
 
+import { createUser, getAll, getByEmail } from "../DAO/sessions.js"
+import { auth, authDenied } from "../middlewares/auth.js"
+
+
 const viewsRouter = Router();
 const productDao = new ProductsManager2
 const product2 = new ProductManager()
+
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+// DESAFIO DE COOKIES, SESSIONS & STORAGE
+// METODO "GET" PARA VER EL REGISTRO DE USUARIOS
+viewsRouter.get("/api/session/register", authDenied, async (req, res) => {
+    res.render("register", {})
+})
+
+// METODO "POST" PARA QUE SE REGISTREN LOS USUARIOS
+viewsRouter.post("/api/session/register", async (req, res) => {
+    let user = req.body
+    let cuentaUsuario = await getByEmail(user.email)
+    if (cuentaUsuario) {
+        res.render("register-error", {})
+    }
+    let result = await createUser(user)
+    console.log(result)
+    res.render("login", {})
+})
+
+// // METODO "GET" PARA VER EL LOGIN DE USUARIOS
+viewsRouter.get("/api/session/login", authDenied, (req, res) => {
+    res.render("login", {})
+})
+
+// METODO "POST" PARA QUE LOS USUARIOS PUEDAN LOGUEARSE. 
+viewsRouter.post("/api/session/login", async (req, res) => {
+    try {
+        const user = req.body;
+        const busquedaData = await getByEmail(user.email);
+        // console.log(user);
+        // console.log(`Soy busqueda Data: ${busquedaData.email}`);
+        if (!busquedaData || user.password !== busquedaData.password) {
+            return res.render("login-error", {});
+        } else if (busquedaData.email === null || typeof busquedaData.email === "undefined") {
+            return res.render("login-error", {});
+        } else if (user.password === "adminCod3r123" && user.email === "adminCoder@coder.com") {
+            req.session.rol = "Admin"
+            req.session.emailUser = user.email;
+            console.log(req.session.emailUser);
+            return res.redirect("/home-mongoDB");
+        } else {
+            req.session.rol = "Usuario"
+            req.session.emailUser = user.email;
+            console.log(req.session.emailUser);
+            // return res.render("products", { user: req.session.emailUser });
+            return res.redirect("/home-mongoDB");
+        }
+    } catch (error) {viewsRouter
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// LOGICA PARA CERRAR SESSION AL IR A ESTA RUTA.
+viewsRouter.get("/api/session/logout", auth, (req, res) => {
+    req.session.destroy(error => {
+        res.render("login")
+    })
+})
+//----------------------------------------------------------------------------------------------------------------------------------------
 
 
 viewsRouter.get("/", (req, res) => {
@@ -64,15 +130,15 @@ viewsRouter.delete("/realtimeproducts", async (req, res) => {
 
 });
 
-
-viewsRouter.get("/chat", async (req, res) => {
+viewsRouter.get("/chat", auth, async (req, res) => {
     let mensajes = await message2.getMessages()
 
     let messageMongo = mensajes.map(mensaje => mensaje.message)
     let horaMongo = mensajes.map(men => men.hour)
     let userMongo = mensajes.map(men => men.user)
+    let user = req.session.emailUser
 
-    const combineData = [horaMongo, messageMongo, userMongo]
+    const combineData = [horaMongo, messageMongo, userMongo, user]
 
 
     res.render("chat.handlebars", { combineData })
@@ -81,7 +147,8 @@ viewsRouter.get("/chat", async (req, res) => {
 
 
 // RUTA "GET" QUE RENDERIZA CON PAGINATION Y AGGREGATION LA VISTA "PRODUCTS.HANDLEBARS"
-viewsRouter.get("/home-mongoDB", async (req, res) => {
+// viewsRouter.get("/home-mongoDB", async (req, res) => {
+viewsRouter.get("/home-mongoDB", auth, async (req, res) => {
     const limit = parseInt(req.query.limit) || 10 // Especifica la cantidad de elementos a mostrar. Si no especifico esa cantidad, por defecto el numero despues del ||
     const page = parseInt(req.query.page) || 1 // Especifica la pagina en la que quiero estar. Si no especifico, mostrar en la pagina que se pone despues del ||
     const sort = req.query.sort || "createdAt" // Sirve para odenar numeros y palabras. Si pongo ?sort=-price, se ordenaran los precios de manera descendente, sino se ordenaran de manera ascendente 
@@ -98,8 +165,10 @@ viewsRouter.get("/home-mongoDB", async (req, res) => {
     const buscadorPrice = productos.map(p => p.price)
     const buscadorStock = productos.map(s => s.stock)
     const buscadorCategory = productos.map(ca => ca.category)
+    const user = req.session.emailUser
+    const rol = req.session.rol
 
-    const productossFull = [buscadorId, buscadorTitle, buscadorDescription, buscadorCode, buscadorPrice, buscadorStock, buscadorCategory]
+    const productossFull = [buscadorId, buscadorTitle, buscadorDescription, buscadorCode, buscadorPrice, buscadorStock, buscadorCategory, user, rol]
 
     const totalDocss = productoss.totalDocs
     const limitt = productoss.limit

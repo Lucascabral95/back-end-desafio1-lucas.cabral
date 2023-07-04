@@ -179,3 +179,52 @@ h1 {
     }
   }
 }
+
+/* noAutorizado.handlebars */
+
+.noAutorizado {
+  margin-top: 6vh;
+  .title-noAutorizado {
+    color: blue;
+    font-weight: bolder;
+    font-size: 3.4rem;
+    text-align: center;
+  }
+  .subtitle-noAutorizado {
+    color: red;
+    font-weight: bolder;
+    font-size: 1.7rem;
+    margin-top: 2%;
+    margin-bottom: 4%;
+    text-align: center;
+  }
+  .boton-logout-noAutorizado {
+    font-size: 1.2rem;
+  }
+  .contenedor-img-noAutorizado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5.6%;
+    .img-noAutorizado {
+      width: 50%;
+      height: auto;
+    }
+  }
+}
+
+/* LOGIN-ERROR.HANDLEBARS */
+.section-login-error {
+  .section-login-error-title {
+    font-size: 3.5rem;
+    color: black;
+    text-align: center;
+    margin-top: 4.5%;
+  }
+  .section-login-error-subtitle {
+    font-size: 2rem;
+    color: red;
+    text-align: center;
+  }
+}
+

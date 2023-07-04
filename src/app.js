@@ -10,9 +10,22 @@ import { Server } from "socket.io";
 import ProductManager from "./ProductManager.js";
 const product3 = new ProductManager()
 import mongoose from "mongoose"
+import MongoStore from "connect-mongo"
 
+//-----------cookies parser-----------
+import cookieParser from "cookie-parser";
+//-----------cookies parser-----------
+
+//-----------express-session-----------
+import session from "express-session";
+//-----------express-session-----------
+
+//-----------prueba-----------
+import { createUser, getAll, getByEmail } from "./DAO/sessions.js"
+//-----------prueba-----------
 
 import MessagesManager from "./DAO/MessagesDAO.js";
+import { fileURLToPath } from "url";
 const message2 = new MessagesManager()
 
 const app = express();
@@ -25,6 +38,8 @@ const io = new Server(httpServer);
 mongoose.connect("mongodb+srv://LucasDeveloper:Developer.20@cluster0.xuswj7g.mongodb.net/ecommerce?retryWrites=true&w=majority")
   .then(() => console.log("Base de datos conectada"))
   .catch(err => console.log(err))
+
+
 // CONEXION MONGO ATLAS
 
 app.use(express.json());
@@ -36,7 +51,7 @@ app.use(express.static(__dirname + "/public"));
 
 app.use(cart);
 app.use(products);
-app.use(viewsRouter);
+// app.use(viewsRouter);
 
 
 io.on("connection", async (socket) => {
@@ -53,7 +68,6 @@ io.on("connection", async (socket) => {
     console.log("cliente dice: " + data);
   })
 
-
   const horaFull = new Date
   const hora = horaFull.getHours().toString().padStart(2, "0")
   const minutos = horaFull.getMinutes().toString().padStart(2, "0")
@@ -68,3 +82,39 @@ io.on("connection", async (socket) => {
   socket.emit("contenidoChat", `${contenidoDelChat}`)
 
 });
+
+// -----------session-----------
+app.use(cookieParser())
+
+// app.use(session({
+//   store: MongoStore.create({
+//     mongoUrl:
+//       "mongodb+srv://LucasDeveloper:Developer.20@cluster0.xuswj7g.mongodb.net/session?retryWrites=true&w=majority",
+//     mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+//     ttl: 1000000
+//   }),
+//   secret: "frasesecret",
+//   resave: false,
+//   saveUninitilized: false
+// }))
+app.use(
+  session({
+    secret: 'frasesecret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 semana (ejemplo)
+    },
+    store: MongoStore.create({
+      mongoUrl:
+        'mongodb+srv://LucasDeveloper:Developer.20@cluster0.xuswj7g.mongodb.net/session?retryWrites=true&w=majority',
+      mongoOptions: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      },
+      ttl: 1000000, // Tiempo de vida de la sesión en segundos (ejemplo)
+    }),
+  })
+);
+//-----------session-----------
+app.use(viewsRouter);

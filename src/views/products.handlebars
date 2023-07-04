@@ -1,6 +1,15 @@
 {{!-- ACA ESTAN TODOS LOS PRODUCTOS EXISTENTE EN MongoDB ATLAS --}}
 <section>
 
+    <a href="/api/session/logout" class="btn btn-primary">LOGOUT</a>
+
+    <h2 style="text-align: center; font-weigth: bolder; font-size: 3.5rem; margin-top: 1%">Bienvenido/a,
+        {{productossFull.[7]}} </h2>
+    <h3 style="text-align: center; font-weigth: bolder; font-size: 2.8rem; margin-top: 1%; color: blue">
+        Tu rol es de: {{productossFull.[8]}} </h3>
+        
+
+
     <h1>Lista de productos leída desde en MongoDB Atlas</h1>
     <h6 style="text-align: center; font-size: 1.6rem"> Esta base de datos esta leida directamente desde <span
             style="color:red;">MongoDB Atlas</span></h6>
