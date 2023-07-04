@@ -103,7 +103,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 semana (ejemplo)
+      maxAge: 7 * 24 * 60 * 60 * 1000, 
     },
     store: MongoStore.create({
       mongoUrl:
@@ -112,7 +112,7 @@ app.use(
         useNewUrlParser: true,
         useUnifiedTopology: true,
       },
-      ttl: 1000000, // Tiempo de vida de la sesión en segundos (ejemplo)
+      ttl: 1000000, 
     }),
   })
 );
