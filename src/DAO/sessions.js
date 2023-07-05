@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 import { userModel } from "./models/user.js"
 
 
-mongoose.connect("mongodb+srv://LucasDeveloper:Developer.20@cluster0.xuswj7g.mongodb.net/session?retryWrites=true&w=majority")
+// mongoose.connect("mongodb+srv://LucasDeveloper:Developer.20@cluster0.xuswj7g.mongodb.net/session?retryWrites=true&w=majority")
 // mongoose.createConnection("mongodb+srv://LucasDeveloper:Developer.20@cluster0.xuswj7g.mongodb.net/session?retryWrites=true&w=majority")
 
 export const getAll = async () => {
