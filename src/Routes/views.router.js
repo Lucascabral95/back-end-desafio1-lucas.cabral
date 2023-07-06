@@ -50,8 +50,6 @@ viewsRouter.post("/api/session/login", async (req, res) => {
     try {
         const user = req.body;
         const busquedaData = await getByEmail(user.email);
-        // console.log(user);
-        // console.log(`Soy busqueda Data: ${busquedaData.email}`);
         if (!busquedaData || user.password !== busquedaData.password) {
             return res.render("login-error", {});
         } else if (busquedaData.email === null || typeof busquedaData.email === "undefined") {
@@ -65,10 +63,10 @@ viewsRouter.post("/api/session/login", async (req, res) => {
             req.session.rol = "Usuario"
             req.session.emailUser = user.email;
             console.log(req.session.emailUser);
-            // return res.render("products", { user: req.session.emailUser });
             return res.redirect("/home-mongoDB");
         }
-    } catch (error) {viewsRouter
+    } catch (error) {
+        viewsRouter
         console.error(error);
         res.status(500).send("Internal Server Error");
     }
@@ -80,6 +78,7 @@ viewsRouter.get("/api/session/logout", auth, (req, res) => {
         res.render("login")
     })
 })
+// DESAFIO DE COOKIES, SESSIONS & STORAGE
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 
