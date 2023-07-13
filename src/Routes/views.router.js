@@ -14,12 +14,46 @@ import cartsModel from "../DAO/models/carts.model.js"
 
 import { createUser, getAll, getByEmail } from "../DAO/sessions.js"
 import { auth, authDenied } from "../middlewares/auth.js"
-
+//------------------------------------------------------------------------------------------------------
+import { createHash, isValidPassword } from "../utils.js";
+import passport from "passport"
+//------------------------------------------------------------------------------------------------------
 
 const viewsRouter = Router();
 const productDao = new ProductsManager2
 const product2 = new ProductManager()
 
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+// PASSPORT-GITHUB2
+// RUTA "GET" PARA MOSTRAR LOGUEARTE CON GITHUB.
+viewsRouter.get("/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { })
+
+viewsRouter.get("/api/session/githubcallback", authDenied, passport.authenticate("github", { failureRedirect: "/api/session/login" }),
+    (req, res) => {
+        // req.session.user = req.user;
+        req.session.emailUser = req.user;
+        req.session.rol = "Usuario";
+        req.session.exitsRol = false
+        res.redirect("/api/session/dentro");
+    }
+);
+
+// RUTA RAIZ DE /API/SESSION CON HANDLEBARS
+viewsRouter.get("/api/session/dentro", auth, async (req, res) => {
+    let user = req.session.emailUser
+    let rol = req.session.rol
+    let existeRol = req.session.existRol
+
+    let userNameGithub = req.session.emailUser.first_name
+    let userEmailGithub = req.session.emailUser.email
+    let userAgeGithub = req.session.emailUser.age
+    const userData = [user, rol, userNameGithub, userEmailGithub, userAgeGithub, existeRol]
+
+    res.render("pageGithub", { user: userData })
+})
+
+// PASSPORT-GITHUB2
+//---------------------------------------------------------------------------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 // DESAFIO DE COOKIES, SESSIONS & STORAGE
@@ -28,59 +62,63 @@ viewsRouter.get("/api/session/register", authDenied, async (req, res) => {
     res.render("register", {})
 })
 
-// METODO "POST" PARA QUE SE REGISTREN LOS USUARIOS
+//------------------------------------------------------------------------------------------------------------------------------
+// METODO "POST" PARA REGISTRARTE. AL HACERLO, LA CONTRASEÑA SE HASHEA CON BCRYP Y SE LEE EN EL LOGIN.
 viewsRouter.post("/api/session/register", async (req, res) => {
-    let user = req.body
-    let cuentaUsuario = await getByEmail(user.email)
+    let user = req.body;
+    let cuentaUsuario = await getByEmail(user.email);
     if (cuentaUsuario) {
-        res.render("register-error", {})
-    }
-    let result = await createUser(user)
-    console.log(result)
-    res.render("login", {})
-})
+        res.render("register-error", {});
+    } else {
+        let hashedPassword = createHash(user.password);
+        user.password = hashedPassword;
 
-// // METODO "GET" PARA VER EL LOGIN DE USUARIOS
+        let result = await createUser(user);
+        console.log(result);
+        res.render("login", {});
+    }
+});
+//------------------------------------------------------------------------------------------------------------------------------
+// METODO "GET" PARA VER EL LOGIN DE USUARIOS
 viewsRouter.get("/api/session/login", authDenied, (req, res) => {
     res.render("login", {})
 })
 
-// METODO "POST" PARA QUE LOS USUARIOS PUEDAN LOGUEARSE. 
+// METODO "POST" PARA LOGUEARTE CON LA CONTRASEÑA YA HASHEADA DEL REGISTER
 viewsRouter.post("/api/session/login", async (req, res) => {
     try {
         const user = req.body;
         const busquedaData = await getByEmail(user.email);
-        if (!busquedaData || user.password !== busquedaData.password) {
+        if (!busquedaData || !isValidPassword(busquedaData, user.password)) {
             return res.render("login-error", {});
         } else if (busquedaData.email === null || typeof busquedaData.email === "undefined") {
             return res.render("login-error", {});
         } else if (user.password === "adminCod3r123" && user.email === "adminCoder@coder.com") {
-            req.session.rol = "Admin"
+            req.session.rol = "Admin";
             req.session.emailUser = user.email;
             console.log(req.session.emailUser);
             return res.redirect("/home-mongoDB");
         } else {
-            req.session.rol = "Usuario"
+            req.session.rol = "Usuario";
+            req.session.existRol = true;
             req.session.emailUser = user.email;
             console.log(req.session.emailUser);
-            return res.redirect("/home-mongoDB");
+            // return res.redirect("/home-mongoDB");
+            return res.redirect("/api/session/dentro");
         }
     } catch (error) {
-        viewsRouter
         console.error(error);
         res.status(500).send("Internal Server Error");
     }
 });
 
-// LOGICA PARA CERRAR SESSION AL IR A ESTA RUTA.
+// // LOGICA PARA CERRAR SESSION AL IR A ESTA RUTA.
 viewsRouter.get("/api/session/logout", auth, (req, res) => {
     req.session.destroy(error => {
         res.render("login")
     })
 })
 // DESAFIO DE COOKIES, SESSIONS & STORAGE
-//----------------------------------------------------------------------------------------------------------------------------------------
-
 
 viewsRouter.get("/", (req, res) => {
     res.render("index");
@@ -131,7 +169,6 @@ viewsRouter.delete("/realtimeproducts", async (req, res) => {
 
 viewsRouter.get("/chat", auth, async (req, res) => {
     let mensajes = await message2.getMessages()
-
     let messageMongo = mensajes.map(mensaje => mensaje.message)
     let horaMongo = mensajes.map(men => men.hour)
     let userMongo = mensajes.map(men => men.user)
@@ -139,10 +176,9 @@ viewsRouter.get("/chat", auth, async (req, res) => {
 
     const combineData = [horaMongo, messageMongo, userMongo, user]
 
-
     res.render("chat.handlebars", { combineData })
 })
-//------------------------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 // RUTA "GET" QUE RENDERIZA CON PAGINATION Y AGGREGATION LA VISTA "PRODUCTS.HANDLEBARS"
@@ -166,8 +202,15 @@ viewsRouter.get("/home-mongoDB", auth, async (req, res) => {
     const buscadorCategory = productos.map(ca => ca.category)
     const user = req.session.emailUser
     const rol = req.session.rol
+    const existeRol = req.session.existRol
+    //------
+    const userEmailGithub = req.session.emailUser.email
+    const userAgeGithub = req.session.emailUser.age
+    const userFirstNameGithub = req.session.emailUser.first_name
+    //------
 
-    const productossFull = [buscadorId, buscadorTitle, buscadorDescription, buscadorCode, buscadorPrice, buscadorStock, buscadorCategory, user, rol]
+    const productossFull = [buscadorId, buscadorTitle, buscadorDescription, buscadorCode, buscadorPrice,
+        buscadorStock, buscadorCategory, user, rol, existeRol, userEmailGithub, userAgeGithub, userFirstNameGithub]
 
     const totalDocss = productoss.totalDocs
     const limitt = productoss.limit
@@ -256,5 +299,6 @@ viewsRouter.get("/carts/:cid", async (req, res) => {
         })
     }
 })
+
 
 export default viewsRouter;
