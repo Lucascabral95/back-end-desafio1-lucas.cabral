@@ -1,4 +1,3 @@
-// import mongoose from "mongoose"
 import { userModel } from "./models/user.js"
 
 export const getAll = async () => {

@@ -25,12 +25,11 @@ const product2 = new ProductManager()
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 // PASSPORT-GITHUB2
-// RUTA "GET" PARA MOSTRAR LOGUEARTE CON GITHUB.
+// RUTA "GET" PARA LOGUEARTE CON TU CUENTA DE GITHUB.
 viewsRouter.get("/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { })
 
 viewsRouter.get("/api/session/githubcallback", authDenied, passport.authenticate("github", { failureRedirect: "/api/session/login" }),
     (req, res) => {
-        // req.session.user = req.user;
         req.session.emailUser = req.user;
         req.session.rol = "Usuario";
         req.session.exitsRol = false
@@ -38,7 +37,7 @@ viewsRouter.get("/api/session/githubcallback", authDenied, passport.authenticate
     }
 );
 
-// RUTA RAIZ DE /API/SESSION CON HANDLEBARS
+// RUTA RAIZ DE "/API/SESSION" CON HANDLEBARS. ACA TE REDIRIGE EL SERVIDOR AL LOGUEARTE EN GITHUB Y EN EL LOGIN DE MONGO-DB ATLAS
 viewsRouter.get("/api/session/dentro", auth, async (req, res) => {
     let user = req.session.emailUser
     let rol = req.session.rol
@@ -95,15 +94,15 @@ viewsRouter.post("/api/session/login", async (req, res) => {
             return res.render("login-error", {});
         } else if (user.password === "adminCod3r123" && user.email === "adminCoder@coder.com") {
             req.session.rol = "Admin";
+            req.session.existRol = true;
             req.session.emailUser = user.email;
             console.log(req.session.emailUser);
-            return res.redirect("/home-mongoDB");
+            return res.redirect("/api/session/dentro");
         } else {
             req.session.rol = "Usuario";
             req.session.existRol = true;
             req.session.emailUser = user.email;
             console.log(req.session.emailUser);
-            // return res.redirect("/home-mongoDB");
             return res.redirect("/api/session/dentro");
         }
     } catch (error) {
@@ -119,6 +118,8 @@ viewsRouter.get("/api/session/logout", auth, (req, res) => {
     })
 })
 // DESAFIO DE COOKIES, SESSIONS & STORAGE
+//--------------------------------------------------------------------------------------------------------------------------------------------
+
 
 viewsRouter.get("/", (req, res) => {
     res.render("index");
