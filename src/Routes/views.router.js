@@ -17,7 +17,9 @@ import { auth, authDenied } from "../middlewares/auth.js"
 //------------------------------------------------------------------------------------------------------
 import { createHash, isValidPassword } from "../utils.js";
 import passport from "passport"
-//------------------------------------------------------------------------------------------------------
+//--------------------------------------JWT-------------------------------------------------------------
+import { generateToken, authToken } from "../jwt.js"
+//--------------------------------------JWT-------------------------------------------------------------
 
 const viewsRouter = Router();
 const productDao = new ProductsManager2
@@ -62,32 +64,50 @@ viewsRouter.get("/api/session/register", authDenied, async (req, res) => {
 })
 
 //------------------------------------------------------------------------------------------------------------------------------
-// METODO "POST" PARA REGISTRARTE. AL HACERLO, LA CONTRASEÑA SE HASHEA CON BCRYP Y SE LEE EN EL LOGIN.
+// METODO "POST" PARA REGISTRARTE. AL HACERLO, LA CONTRASEÑA SE HASHEA CON BCRYP Y SE LEE EN EL LOGIN. TAMBIEN SE CREA UN CART CON SU ID 
+// EN REFERENCIA A LA COLECCION CARTS.
 viewsRouter.post("/api/session/register", async (req, res) => {
     let user = req.body;
-    let cuentaUsuario = await getByEmail(user.email);
-    if (cuentaUsuario) {
+    try {
+        const cuentaUsuario = await getByEmail(user.email);
+        if (cuentaUsuario) {
+            res.render("register-error", {});
+            return;
+        }
+        const newCart = cartsModel({ products: [] });
+        const savedCart = await newCart.save();
+        const newUser = {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            age: user.age,
+            password: createHash(user.password),
+            role: user.role,
+            cart: savedCart._id,
+        };
+        const savedUser = await createUser(newUser);
+        console.log(savedUser);
+        // res.render("login", {});
+        res.cookie("dataUser", savedUser).render("login", {})
+    } catch (error) {
+        console.error("Error al registrar el usuario y el carrito:", error);
         res.render("register-error", {});
-    } else {
-        let hashedPassword = createHash(user.password);
-        user.password = hashedPassword;
-
-        let result = await createUser(user);
-        console.log(result);
-        res.render("login", {});
     }
 });
+
 //------------------------------------------------------------------------------------------------------------------------------
 // METODO "GET" PARA VER EL LOGIN DE USUARIOS
 viewsRouter.get("/api/session/login", authDenied, (req, res) => {
     res.render("login", {})
 })
 
-// METODO "POST" PARA LOGUEARTE CON LA CONTRASEÑA YA HASHEADA DEL REGISTER
+// METODO "POST" PARA LOGUEARTE CON LA CONTRASEÑA YA HASHEADA DEL REGISTER. AL LOGUEARTE CORRECTAMENTE SE GENERA UN TOKEN "JWT" Y SE ALMACENA EN 
+// COOKIE "authToken" DONDE EL SERVIDOR LA LEE Y VERIFICA EN "/API/SESSION/CURRENT", SI ES CORRECTO EL TOKEN, EL MIDDLEWARE "authToken" TE DEJA ENTRAR EN DICHA RUTA
 viewsRouter.post("/api/session/login", async (req, res) => {
     try {
         const user = req.body;
         const busquedaData = await getByEmail(user.email);
+
         if (!busquedaData || !isValidPassword(busquedaData, user.password)) {
             return res.render("login-error", {});
         } else if (busquedaData.email === null || typeof busquedaData.email === "undefined") {
@@ -102,14 +122,44 @@ viewsRouter.post("/api/session/login", async (req, res) => {
             req.session.rol = "Usuario";
             req.session.existRol = true;
             req.session.emailUser = user.email;
-            console.log(req.session.emailUser);
-            return res.redirect("/api/session/dentro");
+            // propiedades de JWT
+            const token_access = generateToken(user.email);
+            console.log(user.email, token_access);
+            req.session.emailJwt = user.email;
+            return res.cookie("authToken", token_access, { httpOnly: true }).redirect("/api/session/current");
         }
     } catch (error) {
         console.error(error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send("Error Interno del Servidor");
     }
 });
+
+// RUTA "GET" CON DOS MIDDLEWARES DONDE SOLO SE PUEDE ACCEDER LUEGO DE LOGUEARTE CORRECTAMENTE Y QUE EL SERVIDOR LEA CORRECTAMENTE TU TOKEN "JWT"
+// ENVIADO DESDE LA COOKIE "authToken" Y SE ASEGURE QUE SEA EL TOKEN CORRECTO ASOCIADO AL USUARIO EN CUESTION.
+// Esta ruta te muestra todos los datos con los que te registraste: nombre, apellido, edad, email, rol (user), e .ID del cart generado.
+viewsRouter.get("/api/session/current", auth, authToken, (req, res) => {
+    const emailJwt = req.session.emailJwt;
+
+    const dataUserCookie = req.cookies.dataUser || {};
+
+    const dataUserFirstName = dataUserCookie.first_name;
+    const dataUserLastName = dataUserCookie.last_name;
+    const dataUserAge = dataUserCookie.age;
+    const dataUserRole = dataUserCookie.role;
+    const dataUserCart = dataUserCookie.cart;
+
+    res.render("current", {
+        datos: {
+            email: emailJwt,
+            firstName: dataUserFirstName,
+            lastName: dataUserLastName,
+            age: dataUserAge,
+            role: dataUserRole,
+            cart: dataUserCart,
+        },
+    });
+});
+//---------------------------JWT------------------------------------------
 
 // // LOGICA PARA CERRAR SESSION AL IR A ESTA RUTA.
 viewsRouter.get("/api/session/logout", auth, (req, res) => {
@@ -300,6 +350,5 @@ viewsRouter.get("/carts/:cid", async (req, res) => {
         })
     }
 })
-
 
 export default viewsRouter;

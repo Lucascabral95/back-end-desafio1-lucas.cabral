@@ -129,3 +129,5 @@ function funcionAddToCart(value) {
   alert("Funcion para agregar productos a un carrito: ¡Proximamente!")
 }
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
