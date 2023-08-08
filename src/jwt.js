@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken"
+import config from "./config/config.js"
 
-const KEY_SECRET = "palabraSecreta"
+const KEY_SECRET = config.key_jwt
 
 // MIDDLEWARE QUE GUARDA LA GENERA UNA COOKIE ASOCIADA AL EMAIL CON EL QUE TE LOGUEASTE
 export const generateToken = (user) => {

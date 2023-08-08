@@ -28,13 +28,18 @@ import passport from "passport"
 import initializePassport from "./config/passport.config.js"
 //-----------passport-github2-----------
 
+//-----------dotenv-----------
+import config from "./config/config.js"
+//-----------dotenv-----------
+
 import MessagesManager from "./DAO/MessagesDAO.js";
 import { fileURLToPath } from "url";
 const message2 = new MessagesManager()
 
 const app = express();
-const httpServer = app.listen(8080, () =>
-  console.log("Running on the port 8080")
+const PORT = config.port
+const httpServer = app.listen(PORT, () =>
+  console.log(`Running on the ${PORT}`)
 );
 const io = new Server(httpServer);
 
@@ -47,16 +52,18 @@ app.engine("handlebars", handlebars.engine()); // HANDLEBARS
 
 
 // CONEXION MONGO ATLAS
-mongoose.connect("mongodb+srv://LucasDeveloper:Developer.20@cluster0.xuswj7g.mongodb.net/ecommerce?retryWrites=true&w=majority")
-.then(() => console.log("Base de datos conectada"))
-.catch(err => console.log(err))
+const CONNECTION_MONGOATLAS = config.mongo_atlas
+mongoose.connect(CONNECTION_MONGOATLAS)
+  .then(() => console.log("Base de datos conectada"))
+  .catch(err => console.log(err))
 // CONEXION MONGO ATLAS
 //-----------session-----------
 app.use(cookieParser())
-
+const MONGOSTORE = config.mongoStore
+const KEY_SECRET_MONGOSTORE = config.key_mongoStore
 app.use(
   session({
-    secret: 'frasesecret',
+    secret: KEY_SECRET_MONGOSTORE,
     resave: false,
     saveUninitialized: false,
     // cookie: {
@@ -64,12 +71,12 @@ app.use(
     // },
     store: MongoStore.create({
       mongoUrl:
-        'mongodb+srv://LucasDeveloper:Developer.20@cluster0.xuswj7g.mongodb.net/session?retryWrites=true&w=majority',
+        MONGOSTORE,
       mongoOptions: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       },
-      ttl: 1000000,
+      ttl: 100000000,
     }),
   })
 );
