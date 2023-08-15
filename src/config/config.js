@@ -10,5 +10,6 @@ export default {
     callbackUrl: process.env.CALLBACKURL,
     mongo_atlas: process.env.CONNECTION_MONGOATLAS,
     mongoStore: process.env.MONGOSTORE,
-    key_mongoStore: process.env.KEY_SECRET_MONGOSTORE
+    key_mongoStore: process.env.KEY_SECRET_MONGOSTORE,
+    persitencia: process.env.PERSITENCE
 }

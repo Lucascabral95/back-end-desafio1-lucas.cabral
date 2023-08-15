@@ -1,3 +1,4 @@
+// ESTE ES EL DAO PRINCIPAL ¡¡¡NO BORRAR!!!
 import { userModel } from "./models/user.js"
 
 export const getAll = async () => {

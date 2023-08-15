@@ -5,7 +5,6 @@ import {
     cartsModelFindById,
     cartsModelFindByIdAndUpdate,
 
-
 } from "../services/cart.services.js"
 
 export const controllersApiCartsDB = async (req, res) => {
@@ -155,3 +154,5 @@ export const controllerApiCartDBDinamicoDelete = async (req, res) => {
         res.status(500).json({ status: "Error", message: "Error al eliminar el carrito.", result: result });
     }
 }
+
+

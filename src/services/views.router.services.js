@@ -8,8 +8,6 @@ import ProductModel from "../DAO/models/products.model.js"
 import { userModel } from "../DAO/models/user.js";
 import ProductsManager2 from "../DAO/productsDAO.js"
 import CartService from "../DAO/models/carts.model.js"
-import { model } from "mongoose";
-
 
 const productsService = new ProductManager()
 const messageService = new MessagesManager()

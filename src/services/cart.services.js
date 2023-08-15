@@ -1,4 +1,8 @@
 import cartsModel from "../DAO/models/carts.model.js"
+import TicketDAO  from "../DAO/TicketsDAO.js";
+
+const ticketService = new TicketDAO()
+
 
 export const cartsModelFindPopulate = async (req, res) => {
     try {
@@ -50,3 +54,24 @@ export const cartsModelFindByIdAndUpdate = async (cid, product) => {
         throw error;
     }
 }
+
+export const ticketModelGetService = async () => {
+    try {
+        const getTickets = ticketService.getAllTickets()
+        return getTickets
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export const ticketModelAddService = async (content) => {
+    try {
+        const addTicket = await ticketService.addTickets(content)
+        return addTicket
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+

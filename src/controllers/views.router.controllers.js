@@ -1,13 +1,12 @@
 // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO //
 // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO //
 // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO //
-
 import {
     getByEmail,
     createUser,
     addProducts,
     add,
-    deleteProductById
+    deleteProductById,
 } from "../services/views.router.services.js"
 import cartsModel from "../DAO/models/carts.model.js"
 import { createHash, isValidPassword } from "../utils.js";
@@ -100,8 +99,11 @@ export const controllerApiSessionLogin = async (req, res, user) => {
             req.session.rol = "Admin";
             req.session.existRol = true;
             req.session.emailUser = user.email;
-            console.log(req.session.emailUser);
-            return res.redirect("/api/session/dentro");
+            req.session.emailUser = "adminCoder@coder.com";
+            req.session.data = [busquedaData.first_name, busquedaData.last_name, busquedaData.age, busquedaData.cart]
+            const token_access = generateToken(user.email);
+            req.session.emailJwt = user.email;
+            return res.cookie("authToken", token_access, { httpOnly: true }).redirect("/api/session/current");
         } else {
             req.session.rol = "Usuario";
             req.session.existRol = true;
@@ -170,3 +172,25 @@ export const controllerMongoDbDinamico = async (pid) => {
         throw error;
     }
 };
+
+// LOGICA "POST" /CARTS/:CID/PURCHASE
+export const controllerDinamicoPurchase = async ( req, res) => {
+    try {
+        const purcharse = await ticketModelGetService()
+        res.send({ status: "success", payload: {purcharse} })
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ status: "error", message: "Error al mostrar el producto" });
+    }
+}
+
+export const controllerDinamicoPurchasePost = async ( req, res) => {
+    try {
+        const { articulos, code, product } = req.body
+        const purchase = await ticketModelAddService(req.body)
+        return purchase
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ status: "error", message: "Error al agregar el producto" });
+    }
+}

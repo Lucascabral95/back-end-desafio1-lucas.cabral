@@ -4,7 +4,9 @@
     <div class="container">
         <div class="row">
 
-            <h2 class="titulo-cart">Carrito seleccionado por su _ID con su/s respectivo/s producto/s agregado/s.</h2>
+            {{!-- <h2 class="titulo-cart">Carrito seleccionado por su _ID con su/s respectivo/s producto/s agregado/s.
+            </h2> --}}
+            <h2 style="text-align: center;" class="titulo-cart">Carrito de compras asociado a: {{datos.[9]}} </h2>
 
             <div class="carrito-seleccionado">
                 <h4 class="cart-selected">Carrito seleccionado _id: <span class="cart-texto">{{datos.[7]}} </h4>
@@ -45,7 +47,14 @@
                         class="precio-final-texto">${{datos.[6]}}</span> </h4>
             </div>
 
-            <div class="totalidad-carritos">
+            <button type="submit" class="btn btn-primary"> Terminar compra </button>
+
+            {{!-- <h1> {{datos.[10]}} </h1>
+            <h1> {{datos.[11]}} </h1>
+            <h1> {{datos.[12]}} </h1>
+            <h1> {{datos.[13]}} </h1> --}}
+
+            {{!-- <div class="totalidad-carritos">
                 <p class="totalidad-carritos-texto">Para evitar que busque los _id en "/api/cartsDB", aca le dejo el .id
                     de todos los carritos en existencia</p>
                 <div class="totalidad-carritos-lista">
@@ -55,7 +64,7 @@
                         {{/each }}
                     </ul>
                 </div>
-            </div>
+            </div> --}}
 
         </div>
     </div>

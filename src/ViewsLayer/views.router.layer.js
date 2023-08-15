@@ -19,8 +19,6 @@ import {
     cartsModelFindByIdService
 } from "../services/views.router.services.js"
 
-import cartsModel from '../DAO/models/carts.model.js';
-
 
 // RUTA "GET" DE /API/SESSION/DENTRO
 export const apiSessionDentro = async (req, res) => {
@@ -150,10 +148,12 @@ export const homeMongoDB = async (req, res) => {
     const userEmailGithub = req.session.emailUser.email
     const userAgeGithub = req.session.emailUser.age
     const userFirstNameGithub = req.session.emailUser.first_name
+    const cartIdUser = req.session.data[3]
     //------
 
     const productossFull = [buscadorId, buscadorTitle, buscadorDescription, buscadorCode, buscadorPrice,
-        buscadorStock, buscadorCategory, user, rol, existeRol, userEmailGithub, userAgeGithub, userFirstNameGithub]
+        buscadorStock, buscadorCategory, user, rol, existeRol,
+        userEmailGithub, userAgeGithub, userFirstNameGithub, cartIdUser]
 
     const totalDocss = productoss.totalDocs
     const limitt = productoss.limit
@@ -164,8 +164,14 @@ export const homeMongoDB = async (req, res) => {
     const hasNextPage = productoss.hasNextPage
     const prevPage = productoss.prevPage
     const nextPage = productoss.nextPage
+    const accesoProductos = req.session.rol === "Admin" ? true : false;
 
-    const datosDePaginate = [totalDocss, limitt, totalPages, pagee, pagingCounter, hasPrevPage, hasNextPage, prevPage, nextPage]
+    const bloqueoProductos = true
+
+    const datosDePaginate = [totalDocss, limitt, totalPages, pagee,
+        pagingCounter, hasPrevPage, hasNextPage, prevPage, nextPage, accesoProductos, bloqueoProductos]
+
+    console.log(datosDePaginate[10]);
 
     res.render("products", { productossFull: productossFull, datosExtras: datosDePaginate, sort })
 }
@@ -230,6 +236,40 @@ export const cartsParams = async (req, res) => {
         const totalPriceFull = totalPrice.reduce((accumulator, current) => accumulator + current, 0);
         const totalPriceFullWithComa = totalPriceFull.toLocaleString();
         const cartIdAll = cartAll.map((i) => i._id);
+        const userEmailSession = req.session.emailUser
+
+        req.session.sessionDataPurchase = [
+            cart,
+            cartId,
+            productId,
+            title,
+            price,
+            quantity,
+            totalPrice,
+            totalPriceFull,
+            totalPriceFullWithComa,
+            cartIdAll,
+            userEmailSession,
+        ]
+
+        const push1 = req.session.sessionDataPurchase[3];
+        const push2 = req.session.sessionDataPurchase[5];
+        const push3 = req.session.sessionDataPurchase[4];
+        const combinedArray = [];
+        const maxLength = Math.min(push1.length, push2.length, push3.length);
+        for (let i = 0; i < maxLength; i++) {
+            const producto = push1[i];
+            const cantidad = push2[i];
+            const precio = push3[i];
+            combinedArray.push({ producto, cantidad, precio });
+        }
+        const productArray = combinedArray.map(productos => productos.producto)
+        const cantidadArray = combinedArray.map(cantidad => cantidad.cantidad)
+        const precioArray = combinedArray.map(precio => precio.precio)
+        const precioTotalArray = "$ " + precioArray.reduce((total, cantidad) => total + cantidad)
+        console.log(precioTotalArray);
+
+        console.log("$ "+req.session.sessionDataPurchase[7]);
 
         const datos = [
             cart,
@@ -241,6 +281,11 @@ export const cartsParams = async (req, res) => {
             totalPriceFullWithComa,
             cartId,
             cartIdAll,
+            userEmailSession,
+            productArray,
+            cantidadArray,
+            precioArray,
+            precioTotalArray
         ];
 
         res.render("cartId", { datos });
@@ -251,3 +296,4 @@ export const cartsParams = async (req, res) => {
         });
     }
 };
+

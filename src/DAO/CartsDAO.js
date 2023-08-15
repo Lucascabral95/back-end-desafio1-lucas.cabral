@@ -41,7 +41,23 @@ class CartsManager {
         }
     }
 
+    subtractStock = async (pid, quantity) => {
+        try {
+            const findProducto = await this.model.findByIdAndUpdate(
+                { _id: pid },
+                { $inc: { stock: quantity } }
+            )
 
+            if (findProducto) {
+                console.log("Stock actualizado correctamente.");
+            } else {
+                console.log("Producto no encontrado.");
+            }
+
+        } catch (error) {
+            console.log("Error al restar stock con la compra");
+        }
+    }
 }
 
 export default CartsManager

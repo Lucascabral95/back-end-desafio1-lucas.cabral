@@ -106,8 +106,10 @@ function enter(event) {
 
 //---------------------------------------------------------------------------------------------
 
+
 function funcionMongo() {
   const id = document.getElementById('idMongo').value;
+
 
   fetch(`/home-mongodb/${id}`, { method: 'DELETE' })
     .then(response => response.json())
@@ -125,9 +127,16 @@ function funcionMongo() {
 }
 
 function funcionAddToCart(value) {
-  console.log(value);
-  alert("Funcion para agregar productos a un carrito: ¡Proximamente!")
+
+  fetch(`/api/cartsdb/64cf242cb98023cbc63c2c51/products/${value}`, {
+    // fetch(`/api/cartsdb/${idUser}/products/${value}`, {
+    method: "POST"
+  })
+  alert(`${value}`)
 }
 
+
+// alert(`¡Producto agregrado al carrito exitosamente! ${value}`);
+// alert(`¡No podes agregar productos al carrito teniendo un rol de 'Admin'! ${value}`);
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -1,7 +1,9 @@
-{{!-- ACA ESTAN TODOS LOS PRODUCTOS EXISTENTE EN MongoDB ATLAS --}}
 <section>
 
     <a href="/api/session/logout" class="btn btn-primary">LOGOUT</a>
+
+    <button class="btn btn-danger" type="submit">Descontar una unidad del stock de Playstation 2</button>
+
 
     {{#if productossFull.[9] }}
     <div class="datos-session-mongoDB">
@@ -10,6 +12,11 @@
             {{productossFull.[7]}} </h2>
         <h3 style="text-align: center; font-weigth: bolder; font-size: 2.8rem; margin-top: 1%; color: blue">
             Tu rol es de: {{productossFull.[8]}} </h3>
+        <h4 style="text-align: center; font-size: 2rem; font-weight: 600"> El _ID de tu carrito es:
+            {{productossFull.[13]}} </h4>
+        <div class="div-boton-cart">
+            <a href="/carts/{{productossFull.[13]}}/purchase" class="btn btn-primary">Ir al carrito de compras</a>
+        </div>
     </div>
     {{else}}
     <div class="datos-session-github">
@@ -55,6 +62,9 @@
                             <th scope="col">Stock</th>
                             <th scope="col">Category</th>
                             <th>Agregar al carrito</th>
+                            {{!-- {{#if datosExtras.[10] }}
+                            <th>Agregar al carrito</th>
+                            {{/if}} --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -67,9 +77,25 @@
                             <td>{{lookup ../productossFull.[4] @index}}</td>
                             <td>{{lookup ../productossFull.[5] @index}}</td>
                             <td>{{lookup ../productossFull.[6] @index}}</td>
-                            <td> <button class="btn btn-info" id="boton-add" value="{{this}}"
+                            {{!-- <td>
+                                <button class="btn btn-info" id="boton-add"
+                                    value="{{lookup ../productossFull.[0] @index}}"
+                                    onclick="funcionAddToCart(value)">Add to cart</button>
+                            </td> --}}
+                            <td>
+                                <button class="btn btn-info" id="boton-add"
+                                    onclick="funcionAddToCart('{{lookup ../productossFull.[0] @index}}')">Add to
+                                    cart</button>
+                            </td>
+
+
+
+                            {{!-- {{#if datosExtras.[10] }}
+                            <td>
+                                <button class="btn btn-info" id="boton-add" value="{{this}}"
                                     onclick="funcionAddToCart(this.value)">Add to cart</button>
                             </td>
+                            {{/if}} --}}
                         </tr>
                         {{/each}}
                     </tbody>
@@ -114,56 +140,62 @@
                 <p> nextPage: {{datosExtras.[8]}} </p>
             </div>
 
-            <h2 class="text-center mt-4 mb-4 ">Formulario para agregar mas productos o eliminar uno segun su _id. <span
-                    style="color:red">(Se actualiza en tiempo real)</span></h2>
+            {{#if datosExtras.[9]}}
+            <div>
+                <h2 class="text-center mt-4 mb-4 ">Formulario para agregar mas productos o eliminar uno segun su _id.
+                    <span style="color:red">(Se actualiza en tiempo real)</span>
+                </h2>
 
-            <div class="col-12" style="display: flex; justify-content: space-evenly">
+                <div class="col-12" style="display: flex; justify-content: space-evenly">
 
-                <div class="mb-4" style="width: 30%">
+                    <div class="mb-4" style="width: 30%">
+                        <b style="font-size: 1.5rem;">Todos los campos son obligatorios.</b>
 
-                    <b style="font-size: 1.5rem;">Todos los campos son obligatorios.</b>
+                        <form action="/home-mongodb" method="POST">
+                            <label for="title">title:</label>
+                            <input type="text" name="title" required>
+                            <br>
+                            <label for="description">description: </label>
+                            <input type="text" name="description" required>
+                            <br>
+                            <label for="code">code:</label>
+                            <input type="text" name="code" required>
+                            <br>
+                            <label for="price">price:</label>
+                            <input type="number" name="price" required>
+                            <br>
+                            <label for="stock">stock:</label>
+                            <input type="number" name="stock" required>
+                            <br>
+                            <label for="category">category:</label>
+                            <input type="text" name="category" required>
+                            <br>
+                            <button type="submit" class="btn btn-primary">Agregar</button>
+                        </form>
+                    </div>
 
-                    <form action="/home-mongodb" method="POST">
-                        <label for="title">title:</label>
-                        <input type="text" name="title" required>
-                        <br>
-                        <label for="description">description: </label>
-                        <input type="text" name="description" required>
-                        <br>
-                        <label for="code">code:</label>
-                        <input type="text" name="code" required>
-                        <br>
-                        <label for="price">price:</label>
-                        <input type="number" name="price" required>
-                        <br>
-                        <label for="stock">stock:</label>
-                        <input type="number" name="stock" required>
-                        <br>
-                        <label for="category">category:</label>
-                        <input type="text" name="category" required>
-                        <br>
-                        <button type="submit" class="btn btn-primary">Agregar</button>
-                    </form>
-
+                    <div class="mb-4" style="width: 30%">
+                        <label for="id">Ingrese el ID del producto a eliminar:</label>
+                        <input type="text" id="idMongo" name="id" required>
+                        <button type="submit" id="boton-mongo" onclick="funcionMongo()" class="btn btn-primary">Eliminar
+                            producto</button>
+                        <p style="font-weight: bolder; font-size: 1.1rem; color: red">Por favor, cuando elimine un
+                            producto,
+                            refresque la pagina asi ve los cambios.</p>
+                    </div>
                 </div>
 
-                <div class="mb-4" style="width: 30%">
+                {{else}}
+                <h4 class="title-bloqueo-crud"> ¡Disculpanos! Al no ser Admin no tenes derecho a agregar o eliminar
+                    productos 🛑 </h4>
 
-                    <label for="id">Ingrese el ID del producto a eliminar:</label>
-                    <input type="text" id="idMongo" name="id" required>
-                    <button type="submit" id="boton-mongo" onclick="funcionMongo()" class="btn btn-primary">Eliminar
-                        producto</button>
-                    <p style="font-weight: bolder; font-size: 1.1rem; color: red">Por favor, cuando elimine un producto,
-                        refresque la pagina asi ve los cambios.</p>
+                {{/if}}
 
-                </div>
 
             </div>
 
+
         </div>
-
-
-    </div>
 
 </section>
 

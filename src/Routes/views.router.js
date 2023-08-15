@@ -1,7 +1,7 @@
 import { Router } from "express";
 const viewsRouter = Router();
 import passport from "passport"
-import { auth, authDenied } from "../middlewares/auth.js"
+import { auth, authDenied, lockUser } from "../middlewares/auth.js"
 //--------------------------------------JWT-------------------------------------------------------------
 import { generateToken, authToken } from "../jwt.js"
 //--------------------------------------JWT-------------------------------------------------------------
@@ -90,7 +90,8 @@ viewsRouter.delete("/realtimeproducts", async (req, res) => {
 });
 
 // RUTA "GET" PARA IR AL CHAT /CHAT
-viewsRouter.get("/chat", auth, getChat)
+// viewsRouter.get("/chat", auth, getChat)
+viewsRouter.get("/chat", lockUser, getChat)
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -104,7 +105,9 @@ viewsRouter.post("/home-mongoDB", homeMongodbPost)
 viewsRouter.delete("/home-mongodb/:pid", homeMongodbDinamica)
 
 // RENDERIZA LA VISTA "cardId"
-viewsRouter.get("/carts/:cid", cartsParams)
+// viewsRouter.get("/carts/:cid", cartsParams)
+viewsRouter.get("/carts/:cid/purchase", cartsParams)
+
 
 export default viewsRouter;
 

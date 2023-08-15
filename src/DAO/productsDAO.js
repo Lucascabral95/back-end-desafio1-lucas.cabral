@@ -43,6 +43,25 @@ class ProductsManager {
         }
     }
 
+    // updateProduct = async (pid, productoAModificar) => {
+    //     try {
+    //         if (
+    //             !productoAModificar.title ||
+    //             !productoAModificar.description ||
+    //             !productoAModificar.code ||
+    //             !productoAModificar.price ||
+    //             !productoAModificar.stock ||
+    //             !productoAModificar.category
+    //         ) {
+    //             console.log("Datos incompletos");
+    //             return null
+    //         }
+    //         let result = await this.model.updateOne({ _id: pid }, productoAModificar)
+    //         console.log(result);
+    //     } catch (error) {
+    //         console.log(Error);
+    //     }
+    // }
     updateProduct = async (pid, productoAModificar) => {
         try {
             if (
@@ -54,12 +73,38 @@ class ProductsManager {
                 !productoAModificar.category
             ) {
                 console.log("Datos incompletos");
-                return null
+                return null;
             }
-            let result = await this.model.updateOne({ _id: pid }, productoAModificar)
+    
+            productoAModificar.stock -= 3; // Subtract 3 from the stock
+    
+            let result = await this.model.updateOne({ _id: pid }, productoAModificar);
             console.log(result);
         } catch (error) {
-            console.log(Error);
+            console.log(error);
+        }
+    };
+    
+
+    subtracStock = async (pid, cantidad) => {
+        try {
+            const product = await this.model.findById(pid)
+            if (product.stock > cantidad) {
+                product.stock -= cantidad;
+                await product.save()
+                console.log("La cantidad de unidades que deseas comprar supera al stock del producto.");
+            } else {
+                console.log("Exito al descontrar stock del producto.");
+            }
+
+            if (!product) {
+                console.log("Producto no encontrado.");
+            }
+
+
+
+        } catch (error) {
+            console.log("Error al descontar stock del producto.");
         }
     }
 }
