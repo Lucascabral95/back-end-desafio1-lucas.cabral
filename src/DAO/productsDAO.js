@@ -43,25 +43,6 @@ class ProductsManager {
         }
     }
 
-    // updateProduct = async (pid, productoAModificar) => {
-    //     try {
-    //         if (
-    //             !productoAModificar.title ||
-    //             !productoAModificar.description ||
-    //             !productoAModificar.code ||
-    //             !productoAModificar.price ||
-    //             !productoAModificar.stock ||
-    //             !productoAModificar.category
-    //         ) {
-    //             console.log("Datos incompletos");
-    //             return null
-    //         }
-    //         let result = await this.model.updateOne({ _id: pid }, productoAModificar)
-    //         console.log(result);
-    //     } catch (error) {
-    //         console.log(Error);
-    //     }
-    // }
     updateProduct = async (pid, productoAModificar) => {
         try {
             if (
@@ -73,19 +54,15 @@ class ProductsManager {
                 !productoAModificar.category
             ) {
                 console.log("Datos incompletos");
-                return null;
+                return null
             }
-    
-            productoAModificar.stock -= 3; // Subtract 3 from the stock
-    
-            let result = await this.model.updateOne({ _id: pid }, productoAModificar);
+            let result = await this.model.updateOne({ _id: pid }, productoAModificar)
             console.log(result);
         } catch (error) {
-            console.log(error);
+            console.log(Error);
         }
-    };
+    }
     
-
     subtracStock = async (pid, cantidad) => {
         try {
             const product = await this.model.findById(pid)
