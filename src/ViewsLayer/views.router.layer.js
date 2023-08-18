@@ -151,10 +151,15 @@ export const homeMongoDB = async (req, res) => {
     const cartIdUser = req.session.data[3]
     const cartIdUserMap = Array(productos.length).fill(cartIdUser);
     //------
-
+    const mostrarONo = req.session.rol === "Admin" ? false : true 
+    //------
     const productossFull = [buscadorId, buscadorTitle, buscadorDescription, buscadorCode, buscadorPrice,
         buscadorStock, buscadorCategory, user, rol, existeRol,
-        userEmailGithub, userAgeGithub, userFirstNameGithub, cartIdUser, cartIdUserMap]
+        userEmailGithub, userAgeGithub, userFirstNameGithub, cartIdUser, cartIdUserMap,
+        mostrarONo ]
+
+        console.log(`Mostrar o no eee. ${mostrarONo}`);
+
 
     const totalDocss = productoss.totalDocs
     const limitt = productoss.limit

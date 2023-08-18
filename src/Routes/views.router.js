@@ -1,7 +1,7 @@
 import { Router } from "express";
 const viewsRouter = Router();
 import passport from "passport"
-import { auth, authDenied, lockUser } from "../middlewares/auth.js"
+import { auth, authDenied, lockUser, accessDeniedAdmin } from "../middlewares/auth.js"
 //--------------------------------------JWT-------------------------------------------------------------
 import { authToken } from "../jwt.js"
 //--------------------------------------JWT-------------------------------------------------------------
@@ -92,14 +92,12 @@ viewsRouter.post("/realtimeproducts", realTimeProductsPost)
 
 // RUTA "DELETE" PARA /REALTIMEPRODUCTS
 viewsRouter.delete("/realtimeproducts", async (req, res) => {
-
 });
 
 // RUTA "GET" PARA IR AL CHAT /CHAT
 // viewsRouter.get("/chat", auth, getChat)
 viewsRouter.get("/chat", lockUser, getChat)
 // ------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 // RUTA "GET" QUE RENDERIZA CON PAGINATION Y AGGREGATION LA VISTA "PRODUCTS.HANDLEBARS"
 viewsRouter.get("/home-mongoDB", auth, homeMongoDB)
@@ -112,7 +110,7 @@ viewsRouter.delete("/home-mongodb/:pid", homeMongodbDinamica)
 
 // RENDERIZA LA VISTA "cardId"
 // viewsRouter.get("/carts/:cid", cartsParams)
-viewsRouter.get("/carts/:cid/purchase", cartsParams)
+viewsRouter.get("/carts/:cid/purchase", accessDeniedAdmin, cartsParams)
 
 // METODO "POST" PARA RESTAR LA CANTIDAD DE STOCK DE UNA COMPRA /CARTS/:PID/:STOCK
 viewsRouter.post("/cart/:cid/buy", controllerStock)
@@ -120,18 +118,31 @@ viewsRouter.post("/cart/:cid/buy", controllerStock)
 // METODO "POST" PARA CREAR UN ID CON SUS RESPECTIVOS CAMPOS OBLIGATORIOS
 viewsRouter.post("/cart/:cid/purchase", controllerTicket)
 
+
+import TicketDAO from "../DAO/TicketsDAO.js";
+const ticketService = new TicketDAO
 //RENDERIZA VISTA "GET" DE /COMPLETED/PURCHASE
-viewsRouter.get("/completed/purchase", async (req, res) => {
+viewsRouter.get("/completed/purchase", accessDeniedAdmin, async (req, res) => {
     try {
         const dataTicket = req.session.generatedTicket
+        const tid = req.session.emailUser
+        let tickets = await ticketService.getTicketByCart(tid)
 
-        res.render("completedPurchase", {ticket: dataTicket})
+        const ticketId = tickets.map(id => id._id.toString())
+        const ticketDatatime = tickets.map(id => id.purchase_dateTime)
+        const ticketPurchaser = tickets.map(id => id.purchaser)
+        const ticketCode = tickets.map(id => id.code)
+        const ticketAmount = tickets.map(id => id.amount)
+
+        const total = ticketId.length
+        const mockTicket = [ ticketId,ticketDatatime,ticketPurchaser,ticketCode,ticketAmount,total ]
+
+        res.render("completedPurchase", { ticket: dataTicket, mock: mockTicket})
     } catch (error) {
         console.log("Error", error);
         res.status(500).send("An error occurred.");
     }
 })
-
 
 export default viewsRouter;
 

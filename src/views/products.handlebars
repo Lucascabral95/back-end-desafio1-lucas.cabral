@@ -59,12 +59,12 @@
                             <th scope="col">Price</th>
                             <th scope="col">Stock</th>
                             <th scope="col">Category</th>
+                            {{#if productossFull.[15]}}
                             <th>Agregar al carrito</th>
-                            {{!-- {{#if datosExtras.[10] }}
-                            <th>Agregar al carrito</th>
-                            {{/if}} --}}
+                            {{/if}}
                         </tr>
                     </thead>
+                    {{#if productossFull.[15]}}
                     <tbody>
                         {{#each productossFull.[0]}}
                         <tr>
@@ -77,24 +77,26 @@
                             <td>{{lookup ../productossFull.[6] @index}}</td>
                             <td>
                                 <button class="btn btn-info" id="boton-add"
-                                    onclick="funcionAddToCart('{{lookup ../productossFull.[0] @index}}', '{{lookup ../productossFull.[14] @index}}' )">Add
-                                    to
-                                    cart</button>
+                                    onclick="funcionAddToCart('{{lookup ../productossFull.[0] @index}}', '{{lookup ../productossFull.[14] @index}}')">Add
+                                    to cart</button>
                             </td>
-
-
-
-
-                            {{!-- {{#if datosExtras.[10] }}
-                            <td>
-                                onclick="funcionAddToCart('{{lookup ../productossFull.[0] @index}}', '{{lookup
-                                ../productossFull.[14] @index}}' )">Add
-                                to
-                                cart</button>
-                            </td>
-                            {{/if}} --}}
                         </tr>
                         {{/each}}
+                    </tbody>
+                    {{else}}
+                    <tbody>
+                        {{#each productossFull.[0]}}
+                        <tr>
+                            <th scope="row">{{this}}</th>
+                            <td>{{lookup ../productossFull.[1] @index}}</td>
+                            <td>{{lookup ../productossFull.[2] @index}}</td>
+                            <td>{{lookup ../productossFull.[3] @index}}</td>
+                            <td>{{lookup ../productossFull.[4] @index}}</td>
+                            <td>{{lookup ../productossFull.[5] @index}}</td>
+                            <td>{{lookup ../productossFull.[6] @index}}</td>
+                        </tr>
+                        {{/each}}
+                        {{/if}}
                     </tbody>
                 </table>
             </div>

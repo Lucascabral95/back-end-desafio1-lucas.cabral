@@ -1,8 +1,12 @@
 <div class="container">
 
-    <h2 class="title-compra-realizada">¡¡¡Felicidades por termina tu compra!!!</h2>
+    <a href="/home-mongodb" class="btn btn-primary">Volver a la sección de productos</a>
+
+    <h2 class="title-compra-realizada">¡¡¡Felicidades por terminar tu compra!!!</h2>
 
     <h5 class="subtitle-compra-realizada">Tu ultimo ticket de compra se encuentra acá abajo 👇 </h5>
+    <h5 style="color: red; font-size: 1.4rem" class="subtitle-compra-realizada">*A su vez, se desconto el stock de los
+        productos en la base de datos y se vacío el carrito*</h5>
 
     <div class="col-12">
         <table style="margin-top: 3.5%;" class="table table-striped col-12">
@@ -25,10 +29,35 @@
                 </tr>
             </tbody>
         </table>
+
+        <h2
+            style="color: blue; font-weight: bolder; text-align: center; font-size: 2rem; margin-top: 7%; margin-bottom: 2%">
+            Todos los Tickets generados por este Carrito ({{mock.[5]}} en total) </h2>
+
+        {{#each mock.[0] as |ticketId index|}}
+        <table style="margin-top: 3.5%;" class="table table-striped col-12">
+            <thead>
+                <tr>
+                    <th>_id</th>
+                    <th>Code</th>
+                    <th>Purchase datatime</th>
+                    <th>Amount</th>
+                    <th>Email del comprador</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td scope="col">{{ticketId}}</td>
+                    <td scope="col">{{lookup ../mock.[3] index}}</td>
+                    <td scope="col">{{lookup ../mock.[1] index}}</td>
+                    <td scope="col">{{lookup ../mock.[4] index}}</td>
+                    <td scope="col">{{lookup ../mock.[2] index}}</td>
+                </tr>
+            </tbody>
+        </table>
+        {{/each}}
+
     </div>
 
-<div class="a-compra-realizada">
-    <a href="/home-mongodb" class="btn btn-primary">Volver a la sección de productos</a>
-</div>
 
 </div>

@@ -151,3 +151,7 @@ function funcionAddToCart(value1, value2) {
   })
   alert(`¡¡¡Producto agregado al carrito exitosamente!!!`)
 }
+
+function notAddToCart() {
+  alert("Teniedo un rol de 'Admin' no podes agregar productos al carrito")
+}

@@ -15,41 +15,21 @@ class TicketDAO {
         return tickets
     }
 
-    // addTickets = async (amount, purchaser) => {
-    //     try {
-    //         const opciones = {
-    //             timeZone: 'America/Argentina/Buenos_Aires',
-    //             year: '2-digit',
-    //             month: '2-digit',
-    //             day: '2-digit',
-    //             hour: '2-digit',
-    //             minute: '2-digit',
-    //             second: '2-digit'
-    //         };
-    //         const fechaHoraActual = new Date();
-    //         const formatoFechaHora = new Intl.DateTimeFormat('es-AR', opciones).format(fechaHoraActual);
-    //         const dateTime = `'Fecha y hora:', ${formatoFechaHora}`
+     getTicketByCart = async (cid) => {
+        try {
+            const tickets = await this.model.find({ purchaser: cid });
+            if (tickets.length > 0) {
+                return tickets;
+            } else {
+                console.log("No se encontraron tickets generados.");
+                return [];
+            }
+        } catch (error) {
+            console.log("Error al buscar los tickets:", error);
+            throw error;
+        }
+    };
 
-    //         const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    //         let codigoAlfanumerico = '';
-    //         for (let i = 0; i < 8; i++) {
-    //             const indice = Math.floor(Math.random() * caracteres.length);
-    //             codigoAlfanumerico += caracteres.charAt(indice);
-    //         }
-
-    //         const dataTicket = {
-    //             code: codigoAlfanumerico,
-    //             amount: amount,
-    //             purchaser: purchaser,
-    //             purchase_dateTime: dateTime
-    //         }
-    //         const tickets = await this.model.create(dataTicket)
-    //         console.log("Exito al crear el ticket.");
-    //         return tickets
-    //     } catch (error) {
-    //         console.log("Error al agregar ticket.");
-    //     }
-    // }
     addTickets = async (amount, purchaser) => {
         try {
             const opciones = {
@@ -63,27 +43,27 @@ class TicketDAO {
             };
             const fechaHoraActual = new Date();
             const formatoFechaHora = new Intl.DateTimeFormat('es-AR', opciones).format(fechaHoraActual);
-    
+
             const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let codigoAlfanumerico = '';
             for (let i = 0; i < 8; i++) {
                 const indice = Math.floor(Math.random() * caracteres.length);
                 codigoAlfanumerico += caracteres.charAt(indice);
             }
-    
+
             const dataTicket = {
                 code: codigoAlfanumerico,
                 amount: amount,
                 purchaser: purchaser,
-                purchase_dateTime: formatoFechaHora 
+                purchase_dateTime: formatoFechaHora
             };
-    
+
             const ticket = await this.model.create(dataTicket);
             console.log("Exito al crear el ticket.");
             return ticket;
         } catch (error) {
             console.log("Error al agregar ticket:", error);
-            throw error; 
+            throw error;
         }
     };
 

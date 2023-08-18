@@ -18,6 +18,16 @@ export const lockUser = async (req, res, next) => {
     if (req.session.rol === "Admin") {
         next()
     } else {
-        res.render("lockUser", {})
+        const role = req.session.rol === "Admin" ? true : false
+        res.render("lockUser", { rol: role })
+    }
+}
+
+export const accessDeniedAdmin = async (req, res, next) => {
+    if (req.session.rol === "Usuario") {
+        next()
+    } else {
+        const role = req.session.rol === "Usuario" ? false : true
+        res.render("lockUser", { rol: role })
     }
 }
