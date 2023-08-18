@@ -1,8 +1,10 @@
 import cartsModel from "./models/carts.model.js"
+import productsModel from "./models/products.model.js"
 
 class CartsManager {
     constructor() {
-        this.model = cartsModel
+        this.model = cartsModel,
+            this.productsModel = productsModel
     }
 
     getAllCarts = async () => {
@@ -13,6 +15,15 @@ class CartsManager {
             console.log("Error al mostrar carts");
         }
         return carts
+    }
+
+    getCartById = async (pid) => {
+        try {
+            let cart = await this.model.findById({ _id: pid })
+            return cart
+        } catch (error) {
+            console.log(("Producto no encontrado"));
+        }
     }
 
     addCarts = async (contenidoBody1) => {
@@ -43,19 +54,19 @@ class CartsManager {
 
     subtractStock = async (pid, quantity) => {
         try {
-            const findProducto = await this.model.findByIdAndUpdate(
+            const findProducto = await this.productsModel.findByIdAndUpdate(
                 { _id: pid },
-                { $inc: { stock: quantity } }
+                { $inc: { stock: -quantity } }
             )
 
             if (findProducto) {
                 console.log("Stock actualizado correctamente.");
             } else {
-                console.log("Producto no encontrado.");
+                console.log("Producto no encontrado.", findProducto);
             }
 
         } catch (error) {
-            console.log("Error al restar stock con la compra");
+            console.log("Error:", error);
         }
     }
 }

@@ -7,10 +7,14 @@ import {
     addProducts,
     add,
     deleteProductById,
+    getCartUser,
+    populateCart,
+
 } from "../services/views.router.services.js"
 import cartsModel from "../DAO/models/carts.model.js"
 import { createHash, isValidPassword } from "../utils.js";
 import { generateToken } from "../jwt.js";
+import cart from "../Routes/cart.js";
 
 // LOGIGA DE /API/SESSION/CURRENT
 export const controllerHomeMongodb = (req, res) => {
@@ -173,24 +177,48 @@ export const controllerMongoDbDinamico = async (pid) => {
     }
 };
 
-// LOGICA "POST" /CARTS/:CID/PURCHASE
-export const controllerDinamicoPurchase = async ( req, res) => {
+// LOGICA "POST" PARA DESCONTAR STOCK DE PRODUCTOS SEGUN SU _ID EN MONGODB ATLAS. 
+export const controllerStock = async (req, res) => {
+    console.log("LLEGO?");
+    const cid = req.params.cid;
     try {
-        const purcharse = await ticketModelGetService()
-        res.send({ status: "success", payload: {purcharse} })
+        // let cart = await cartsModel.findById(cid).populate("products.product");
+        let cart = await populateCart(cid)
+        const { products } = cart;
+        for (const item of products) {
+            const pid = item.product._id.toString();
+            const quantity = item.quantity;
+
+            // await cartDao.subtractStock(pid, quantity);
+            await getCartUser(pid, quantity);
+        }
+        cart.products = [];
+        await cart.save();
+        res.send(cart);
     } catch (error) {
-        console.log(error);
-        res.status(500).send({ status: "error", message: "Error al mostrar el producto" });
+        console.error("Error:", error);
+        res.status(500).send("Error de servidor");
     }
 }
 
-export const controllerDinamicoPurchasePost = async ( req, res) => {
+import TicketServices from "../DAO/TicketsDAO.js"
+const ticketDao = new TicketServices()
+
+// METODO "POST" PARA CREAR UN ID CON SUS RESPECTIVOS CAMPOS OBLIGATORIOS
+export const controllerTicket = async (req, res) => {
     try {
-        const { articulos, code, product } = req.body
-        const purchase = await ticketModelAddService(req.body)
-        return purchase
+        const amount = req.session.sessionDataPurchase[8]
+        console.log(amount);
+        const purchaser = req.session.emailUser;
+
+        const generatedTicket = await ticketDao.addTickets(amount, purchaser);
+        console.log("Ticket generado exitosamente:", generatedTicket);
+        req.session.generatedTicket = generatedTicket
+
+        // res.status(201).json({ message: "Ticket generado exitosamente", ticket: generatedTicket });
+        res.redirect("/home-mongodb")
     } catch (error) {
-        console.log(error);
-        res.status(500).send({ status: "error", message: "Error al agregar el producto" });
+        console.error("Error en el controlador:", error);
+        res.status(500).json({ error: "Ocurrió un error al generar el ticket" });
     }
-}
+};

@@ -126,17 +126,28 @@ function funcionMongo() {
     });
 }
 
-function funcionAddToCart(value) {
-
-  fetch(`/api/cartsdb/64cf242cb98023cbc63c2c51/products/${value}`, {
-    // fetch(`/api/cartsdb/${idUser}/products/${value}`, {
+function terminarCompra(value) {
+  fetch(`/cart/${value}/purchase`, {
     method: "POST"
   })
-  alert(`${value}`)
+    .then(response => {
+      console.log("Primera petición POST completada");
+      return fetch(`/cart/${value}/buy`, {
+        method: "POST"
+      });
+    })
+    .then(response => {
+      console.log("Segunda petición POST completada");
+      window.location.href = "/completed/purchase";
+    })
+    .catch(error => {
+      console.error("Error en alguna de las peticiones:", error);
+    });
 }
 
-
-// alert(`¡Producto agregrado al carrito exitosamente! ${value}`);
-// alert(`¡No podes agregar productos al carrito teniendo un rol de 'Admin'! ${value}`);
-//--------------------------------------------------------------------------------------------------------------------------------------------------------
-
+function funcionAddToCart(value1, value2) {
+  fetch(`/api/cartsdb/${value2}/products/${value1}`, {
+    method: "POST"
+  })
+  alert(`¡¡¡Producto agregado al carrito exitosamente!!!`)
+}

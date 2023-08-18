@@ -8,7 +8,7 @@ import {
     controllerApiSessionLogin,
     controllerRealTimeProductsPost,
     controllerMongoDbPost,
-    controllerMongoDbDinamico
+    controllerMongoDbDinamico,
 } from "../controllers/views.router.controllers.js"
 
 import {
@@ -149,11 +149,12 @@ export const homeMongoDB = async (req, res) => {
     const userAgeGithub = req.session.emailUser.age
     const userFirstNameGithub = req.session.emailUser.first_name
     const cartIdUser = req.session.data[3]
+    const cartIdUserMap = Array(productos.length).fill(cartIdUser);
     //------
 
     const productossFull = [buscadorId, buscadorTitle, buscadorDescription, buscadorCode, buscadorPrice,
         buscadorStock, buscadorCategory, user, rol, existeRol,
-        userEmailGithub, userAgeGithub, userFirstNameGithub, cartIdUser]
+        userEmailGithub, userAgeGithub, userFirstNameGithub, cartIdUser, cartIdUserMap]
 
     const totalDocss = productoss.totalDocs
     const limitt = productoss.limit
@@ -234,7 +235,8 @@ export const cartsParams = async (req, res) => {
         const quantity = cart.products.map((prod) => prod.quantity);
         const totalPrice = price.map((p, index) => parseFloat(p) * parseFloat(quantity[index]));
         const totalPriceFull = totalPrice.reduce((accumulator, current) => accumulator + current, 0);
-        const totalPriceFullWithComa = totalPriceFull.toLocaleString();
+        // const totalPriceFullWithComa = totalPriceFull.toLocaleString();
+        const totalPriceFullWithComa = totalPriceFull
         const cartIdAll = cartAll.map((i) => i._id);
         const userEmailSession = req.session.emailUser
 
@@ -269,7 +271,7 @@ export const cartsParams = async (req, res) => {
         const precioTotalArray = "$ " + precioArray.reduce((total, cantidad) => total + cantidad)
         console.log(precioTotalArray);
 
-        console.log("$ "+req.session.sessionDataPurchase[7]);
+        // console.log("$ "+req.session.sessionDataPurchase[7]);
 
         const datos = [
             cart,
@@ -290,10 +292,7 @@ export const cartsParams = async (req, res) => {
 
         res.render("cartId", { datos });
     } catch (error) {
-        res.status(400).send({
-            status: "Error",
-            message: `Error al obtener carritos. Por favor, para buscar uno vaya a /api/cartsDB`,
-        });
+        res.render("emptyCart")
     }
 };
 

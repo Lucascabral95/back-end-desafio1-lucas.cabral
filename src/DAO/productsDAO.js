@@ -62,27 +62,26 @@ class ProductsManager {
             console.log(Error);
         }
     }
-    
-    subtracStock = async (pid, cantidad) => {
+
+    subtractStock = async (pid, stock) => {
         try {
-            const product = await this.model.findById(pid)
-            if (product.stock > cantidad) {
-                product.stock -= cantidad;
-                await product.save()
-                console.log("La cantidad de unidades que deseas comprar supera al stock del producto.");
+            let findProduct = await this.model.findById({ _id: pid});
+      
+            if (!findProduct) {
+              return { status: "error", msg: "No se encontro el producto." };
+            }
+            
+            if (findProduct.stock < stock) {
+              return { status: "error", msg: "Stock Insuficiente." };
             } else {
-                console.log("Exito al descontrar stock del producto.");
+              findProduct.stock -= stock;
+              await findProduct.save();
+              return { status: "success", payload: findProduct };
             }
-
-            if (!product) {
-                console.log("Producto no encontrado.");
-            }
-
-
-
-        } catch (error) {
-            console.log("Error al descontar stock del producto.");
-        }
+          } catch (error) {
+            console.log("Error al intentar restar el stock.", error);
+            throw error;
+          }
     }
 }
 

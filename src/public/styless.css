@@ -322,9 +322,55 @@ h1 {
   color: red;
 }
 
-.div-boton-cart{
+.div-boton-cart {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 3%;
+}
+
+/* completedPurchase */
+.title-compra-realizada {
+  text-align: center;
+  font-weight: bolder;
+  margin-top: 4%;
+  margin-bottom: 5%;
+  font-size: 3.1rem;
+}
+
+.subtitle-compra-realizada {
+  text-align: center;
+  font-weight: bolder;
+  margin-top: 4%;
+  margin-bottom: 5%;
+  font-size: 1.8rem;
+  color: blue;
+}
+
+.a-compra-realizada {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7.5%;
+}
+
+/* emptyCart */
+.title-emptyCart {
+  text-align: center;
+  font-weight: bolder;
+  font-size: 2.8rem;
+  margin-top: 3%;
+  color: black;
+}
+
+.contenedor-emptyCart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4%;
+  .img-emptyCart {
+    margin: auto;
+    width: auto;
+    height: 32vw;
+  }
 }

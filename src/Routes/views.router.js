@@ -3,7 +3,7 @@ const viewsRouter = Router();
 import passport from "passport"
 import { auth, authDenied, lockUser } from "../middlewares/auth.js"
 //--------------------------------------JWT-------------------------------------------------------------
-import { generateToken, authToken } from "../jwt.js"
+import { authToken } from "../jwt.js"
 //--------------------------------------JWT-------------------------------------------------------------
 //--------------------------------------controllers de esta ruta-------------------------------------------------------------
 import {
@@ -24,6 +24,12 @@ import {
     homeMongodbDinamica,
     cartsParams
 } from "../ViewsLayer/views.router.layer.js";
+
+import {
+    controllerStock,
+    controllerTicket
+} from "../controllers/views.router.controllers.js"
+
 //--------------------------------------controllers de esta ruta-------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 // PASSPORT-GITHUB2
@@ -107,6 +113,24 @@ viewsRouter.delete("/home-mongodb/:pid", homeMongodbDinamica)
 // RENDERIZA LA VISTA "cardId"
 // viewsRouter.get("/carts/:cid", cartsParams)
 viewsRouter.get("/carts/:cid/purchase", cartsParams)
+
+// METODO "POST" PARA RESTAR LA CANTIDAD DE STOCK DE UNA COMPRA /CARTS/:PID/:STOCK
+viewsRouter.post("/cart/:cid/buy", controllerStock)
+
+// METODO "POST" PARA CREAR UN ID CON SUS RESPECTIVOS CAMPOS OBLIGATORIOS
+viewsRouter.post("/cart/:cid/purchase", controllerTicket)
+
+//RENDERIZA VISTA "GET" DE /COMPLETED/PURCHASE
+viewsRouter.get("/completed/purchase", async (req, res) => {
+    try {
+        const dataTicket = req.session.generatedTicket
+
+        res.render("completedPurchase", {ticket: dataTicket})
+    } catch (error) {
+        console.log("Error", error);
+        res.status(500).send("An error occurred.");
+    }
+})
 
 
 export default viewsRouter;

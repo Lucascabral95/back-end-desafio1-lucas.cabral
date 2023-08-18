@@ -1,9 +1,6 @@
 <section>
 
-    <a href="/api/session/logout" class="btn btn-primary">LOGOUT</a>
-
-    <button class="btn btn-danger" type="submit">Descontar una unidad del stock de Playstation 2</button>
-
+    <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
 
     {{#if productossFull.[9] }}
     <div class="datos-session-mongoDB">
@@ -12,7 +9,8 @@
             {{productossFull.[7]}} </h2>
         <h3 style="text-align: center; font-weigth: bolder; font-size: 2.8rem; margin-top: 1%; color: blue">
             Tu rol es de: {{productossFull.[8]}} </h3>
-        <h4 style="text-align: center; font-size: 2rem; font-weight: 600"> El _ID de tu carrito es:
+        <h4 data-otro-valor="{{productossFull.[13]}}" style="text-align: center; font-size: 2rem; font-weight: 600"> El
+            _ID de tu carrito es:
             {{productossFull.[13]}} </h4>
         <div class="div-boton-cart">
             <a href="/carts/{{productossFull.[13]}}/purchase" class="btn btn-primary">Ir al carrito de compras</a>
@@ -77,23 +75,22 @@
                             <td>{{lookup ../productossFull.[4] @index}}</td>
                             <td>{{lookup ../productossFull.[5] @index}}</td>
                             <td>{{lookup ../productossFull.[6] @index}}</td>
-                            {{!-- <td>
-                                <button class="btn btn-info" id="boton-add"
-                                    value="{{lookup ../productossFull.[0] @index}}"
-                                    onclick="funcionAddToCart(value)">Add to cart</button>
-                            </td> --}}
                             <td>
                                 <button class="btn btn-info" id="boton-add"
-                                    onclick="funcionAddToCart('{{lookup ../productossFull.[0] @index}}')">Add to
+                                    onclick="funcionAddToCart('{{lookup ../productossFull.[0] @index}}', '{{lookup ../productossFull.[14] @index}}' )">Add
+                                    to
                                     cart</button>
                             </td>
 
 
 
+
                             {{!-- {{#if datosExtras.[10] }}
                             <td>
-                                <button class="btn btn-info" id="boton-add" value="{{this}}"
-                                    onclick="funcionAddToCart(this.value)">Add to cart</button>
+                                onclick="funcionAddToCart('{{lookup ../productossFull.[0] @index}}', '{{lookup
+                                ../productossFull.[14] @index}}' )">Add
+                                to
+                                cart</button>
                             </td>
                             {{/if}} --}}
                         </tr>

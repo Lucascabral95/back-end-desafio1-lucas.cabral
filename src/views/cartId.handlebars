@@ -2,11 +2,11 @@
 <section class="section-carts">
 
     <div class="container">
+        <a href="/home-mongodb" class="btn btn-danger">Volver a la sección de productos</a>
         <div class="row">
 
-            {{!-- <h2 class="titulo-cart">Carrito seleccionado por su _ID con su/s respectivo/s producto/s agregado/s.
-            </h2> --}}
             <h2 style="text-align: center;" class="titulo-cart">Carrito de compras asociado a: {{datos.[9]}} </h2>
+
 
             <div class="carrito-seleccionado">
                 <h4 class="cart-selected">Carrito seleccionado _id: <span class="cart-texto">{{datos.[7]}} </h4>
@@ -14,7 +14,6 @@
             </div>
 
             <div class="col-12 contenedor-carts">
-
                 <div class="col-12">
                     <table style="margin-top: 3.5%;" class="table table-striped col-12">
                         <thead>
@@ -39,7 +38,6 @@
                         </tbody>
                     </table>
                 </div>
-
             </div>
 
             <div class="contenedor-precio-final">
@@ -47,26 +45,31 @@
                         class="precio-final-texto">${{datos.[6]}}</span> </h4>
             </div>
 
-            <button type="submit" class="btn btn-primary"> Terminar compra </button>
-
-            {{!-- <h1> {{datos.[10]}} </h1>
-            <h1> {{datos.[11]}} </h1>
-            <h1> {{datos.[12]}} </h1>
-            <h1> {{datos.[13]}} </h1> --}}
-
-            {{!-- <div class="totalidad-carritos">
-                <p class="totalidad-carritos-texto">Para evitar que busque los _id en "/api/cartsDB", aca le dejo el .id
-                    de todos los carritos en existencia</p>
-                <div class="totalidad-carritos-lista">
-                    <ul>
-                        {{#each datos.[8] }}
-                        <li> Carrito por _id: <span class="bucle-carritos-id"> {{this}} </span> </li>
-                        {{/each }}
-                    </ul>
-                </div>
-            </div> --}}
+            <a type="submit" style="color: white; font-size: 18px; font-weight: 600" class="btn btn-info"
+                onclick="terminarCompra('{{datos.[7]}}')">Terminar compra</a>
 
         </div>
     </div>
 
 </section>
+
+
+
+
+
+{{!-- <h1> {{datos.[10]}} </h1>
+<h1> {{datos.[11]}} </h1>
+<h1> {{datos.[12]}} </h1>
+<h1> {{datos.[13]}} </h1> --}}
+
+{{!-- <div class="totalidad-carritos">
+    <p class="totalidad-carritos-texto">Para evitar que busque los _id en "/api/cartsDB", aca le dejo el .id
+        de todos los carritos en existencia</p>
+    <div class="totalidad-carritos-lista">
+        <ul>
+            {{#each datos.[8] }}
+            <li> Carrito por _id: <span class="bucle-carritos-id"> {{this}} </span> </li>
+            {{/each }}
+        </ul>
+    </div>
+</div> --}}

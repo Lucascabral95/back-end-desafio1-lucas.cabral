@@ -9,9 +9,25 @@ import { userModel } from "../DAO/models/user.js";
 import ProductsManager2 from "../DAO/productsDAO.js"
 import CartService from "../DAO/models/carts.model.js"
 
+import CartsManager from "../DAO/CartsDAO.js";
+const cartDao = new CartsManager()
+
 const productsService = new ProductManager()
 const messageService = new MessagesManager()
 const productDao = new ProductsManager2()
+
+// OBTENER POPULATE CART
+export const populateCart = async (cid) => {
+    const cart = await CartService.findById(cid).populate("products.product");
+    return cart
+}
+
+
+// OBTENER CART DE COMPRA DE USUARIOS
+export const getCartUser = async (pid, quantity) => {
+    const cart = await cartDao.subtractStock(pid, quantity)
+    return cart
+}
 
 // OBTENER FUNCIONES DE PRODUCTOS PARA 
 export const getProductsHome = async () => {
@@ -37,6 +53,11 @@ export const deleteProductById = async (pid) => {
     return deleteMongoDB
 }
 
+// LOGICA "PUT" DINAMICA PARA MODIFICAR STOCK DE PRODUCTOS EN /CARTS/:PID/:STOCK
+export const updateStock = async (pid, stock) => {
+    const updateStock = await productDao.subtractStock(pid, stock)
+    return updateStock
+}
 
 // OBTENER CHAT CONECTADO A MONGO-DB ATLAS PARA /CHAT
 export const getChatFromMongoAtlas = async () => {
