@@ -2,10 +2,10 @@ import { Router } from "express";
 const viewsRouter = Router();
 import passport from "passport"
 import { auth, authDenied, lockUser, accessDeniedAdmin } from "../middlewares/auth.js"
-//--------------------------------------JWT-------------------------------------------------------------
+//--------------------------------------JWT-------------------------------------------
 import { authToken } from "../jwt.js"
-//--------------------------------------JWT-------------------------------------------------------------
-//--------------------------------------controllers de esta ruta-------------------------------------------------------------
+//--------------------------------------JWT-------------------------------------------
+//--------------------------------------controllers de esta ruta----------------------
 import {
     apiSessionDentro,
     apiSessionRegister,
@@ -31,7 +31,7 @@ import {
 } from "../controllers/views.router.controllers.js"
 
 //--------------------------------------controllers de esta ruta-------------------------------------------------------------
-//---------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------
 // PASSPORT-GITHUB2
 // RUTA "GET" PARA LOGUEARTE CON TU CUENTA DE GITHUB.
 viewsRouter.get("/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { })

@@ -328,6 +328,9 @@ h1 {
   align-items: center;
   margin-top: 3%;
 }
+.bc {
+  font-weight: 600;
+}
 
 /* completedPurchase */
 .title-compra-realizada {

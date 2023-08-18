@@ -1,6 +1,7 @@
 <section>
 
     <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+    <a href="completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
 
     {{#if productossFull.[9] }}
     <div class="datos-session-mongoDB">
@@ -13,7 +14,7 @@
             _ID de tu carrito es:
             {{productossFull.[13]}} </h4>
         <div class="div-boton-cart">
-            <a href="/carts/{{productossFull.[13]}}/purchase" class="btn btn-primary">Ir al carrito de compras</a>
+            <a href="/carts/{{productossFull.[13]}}/purchase" class="btn btn-primary bc">Ir al carrito de compras</a>
         </div>
     </div>
     {{else}}
