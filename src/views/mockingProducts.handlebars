@@ -1,0 +1,24 @@
+<div class="container">
+
+    <h2 class="title-mocking">Generador de 100 productos a partir de Faker-js</h2>
+
+    <table style="margin-top: 3.5%;" class="table table-striped col-12">
+        <thead>
+            <tr>
+                <th>Nombre del producto</th>
+                <th>Color</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each data.[0]}}
+            <tr>
+                <td scope="col"> {{lookup ../data.[0] @index}} </td>
+                <td scope="col"> {{lookup ../data.[2] @index}} </td>
+                <td scope="col"> $ {{lookup ../data.[1] @index}} </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+</div>

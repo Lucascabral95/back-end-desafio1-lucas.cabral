@@ -9,12 +9,18 @@ import {
     deleteProductById,
     getCartUser,
     populateCart,
-
+    serviceFaker,
 } from "../services/views.router.services.js"
 import cartsModel from "../DAO/models/carts.model.js"
 import { createHash, isValidPassword } from "../utils.js";
 import { generateToken } from "../jwt.js";
+// import { generatorProducts } from "../mocks/products.js";
 import cart from "../Routes/cart.js";
+//-----------Custom Error------------------------------
+import CustomError from "../services/errors/CustomError.js";
+import EErrors from "../services/errors/enums.js";
+import { generateProductErrorInfo, generateTicketErrorInfo } from "../services/errors/info.js";
+//-----------Custom Error------------------------------
 
 // LOGIGA DE /API/SESSION/CURRENT
 export const controllerHomeMongodb = (req, res) => {
@@ -42,6 +48,7 @@ export const controllerHomeMongodb = (req, res) => {
     }
 }
 
+
 // LOGICA "POST" DE /API/SESSION/REGISTER
 export const apiSessionRegisterPost = async (req, res) => {
     let user = req.body;
@@ -57,7 +64,6 @@ export const apiSessionRegisterPost = async (req, res) => {
         res.render("register-error", {});
     }
 };
-
 
 // LOGICA "POST" DE /API/SESSION/REGISTER 
 export const controllerApiSessionRegister = async (user) => {
@@ -145,27 +151,48 @@ export const controllerRealTimeProductsPost = async (req, res, nuevoProducto) =>
 }
 
 // LOGICA "POST" DE /HOME-MONGODB
+// export const controllerMongoDbPost = async (req, res, newProduct) => {
+//     try {
+//         if (
+//             !newProduct.title ||
+//             !newProduct.description ||
+//             !newProduct.code ||
+//             !newProduct.price ||
+//             !newProduct.stock ||
+//             !newProduct.category
+//         ) {
+//             return res
+//                 .status(401)
+//                 .json({ status: "error", message: "Todos los campos son obligatorios" });
+//         }
+//         const product = await add(newProduct);
+//         return product
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send({ status: "error", message: "Error al agregar el producto" });
+//     }
+// };
 export const controllerMongoDbPost = async (req, res, newProduct) => {
-    try {
-        if (
-            !newProduct.title ||
-            !newProduct.description ||
-            !newProduct.code ||
-            !newProduct.price ||
-            !newProduct.stock ||
-            !newProduct.category
-        ) {
-            return res
-                .status(400)
-                .send({ status: "error", message: "Todos los campos son obligatorios" });
-        }
-        const product = await add(newProduct);
-        return product
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({ status: "error", message: "Error al agregar el producto" });
+    if (
+        !newProduct.title ||
+        !newProduct.description ||
+        !newProduct.code ||
+        !newProduct.price ||
+        !newProduct.stock ||
+        !newProduct.category
+    ) {
+        const errorInfo = generateProductErrorInfo(newProduct);
+        throw CustomError.createError({
+            name: "Error al agregar producto.",
+            cause: errorInfo,
+            message: "Todos los campos son obligatorios.",
+            code: EErrors.INCOMPLETE_FIELDS
+        });
     }
+    const product = await add(newProduct);
+    return product
 };
+
 
 // LOGICA "GET" DINAMICA DE /HOME-MONGODB
 export const controllerMongoDbDinamico = async (pid) => {
@@ -182,14 +209,12 @@ export const controllerStock = async (req, res) => {
     console.log("LLEGO?");
     const cid = req.params.cid;
     try {
-        // let cart = await cartsModel.findById(cid).populate("products.product");
         let cart = await populateCart(cid)
         const { products } = cart;
         for (const item of products) {
             const pid = item.product._id.toString();
             const quantity = item.quantity;
 
-            // await cartDao.subtractStock(pid, quantity);
             await getCartUser(pid, quantity);
         }
         cart.products = [];
@@ -204,21 +229,59 @@ export const controllerStock = async (req, res) => {
 import TicketServices from "../DAO/TicketsDAO.js"
 const ticketDao = new TicketServices()
 
-// METODO "POST" PARA CREAR UN ID CON SUS RESPECTIVOS CAMPOS OBLIGATORIOS
-export const controllerTicket = async (req, res) => {
-    try {
-        const amount = req.session.sessionDataPurchase[8]
-        console.log(amount);
-        const purchaser = req.session.emailUser;
+// METODO "POST" PARA CREAR UN TICKET CON SUS RESPECTIVOS CAMPOS OBLIGATORIOS
+// export const controllerTicket = async (req, res) => {
+//     try {
+//         const amount = req.session.sessionDataPurchase[8]
+//         console.log(amount);
+//         const purchaser = req.session.emailUser;
 
+//         const generatedTicket = await ticketDao.addTickets(amount, purchaser);
+//         console.log("Ticket generado exitosamente:", generatedTicket);
+//         req.session.generatedTicket = generatedTicket
+
+//         // res.status(201).json({ message: "Ticket generado exitosamente", ticket: generatedTicket });
+//         res.redirect("/home-mongodb")
+//     } catch (error) {
+//         console.error("Error en el controlador:", error);
+//         res.status(500).json({ error: "Ocurrió un error al generar el ticket" });
+//     }
+// };
+
+export const controllerTicket = async (req, res) => {
+    const amount = req.session.sessionDataPurchase[8]
+    console.log(amount);
+    const purchaser = req.session.emailUser;
+
+    if (!amount || !purchaser) {
+        const tickerError = generateTicketErrorInfo(amount, purchaser)
+        new CustomError({
+            name: "Error al generar el ticket",
+            cause: tickerError,
+            message: "Todos los campos son obligatorios.",
+            code: EErrors.TICKET_ERROR
+        })
+    } else{
         const generatedTicket = await ticketDao.addTickets(amount, purchaser);
         console.log("Ticket generado exitosamente:", generatedTicket);
         req.session.generatedTicket = generatedTicket
-
-        // res.status(201).json({ message: "Ticket generado exitosamente", ticket: generatedTicket });
         res.redirect("/home-mongodb")
-    } catch (error) {
-        console.error("Error en el controlador:", error);
-        res.status(500).json({ error: "Ocurrió un error al generar el ticket" });
     }
 };
+
+
+// RUTA RELATIVA QUE MUESTRA UN NUMERO DINAMICO (100 EN ESTE CASO) DE PRODUCTOS PROVENIENTES DE "FAKER"
+export const controllerMock = async (req, res) => {
+    try {
+        const productsMap = await serviceFaker(100)
+        const products = productsMap.map(p => p.product)
+        const price = productsMap.map(price => price.price)
+        const color = productsMap.map(color => color.color)
+        const dataBase = [products, price, color]
+
+        res.render("mockingProducts", { data: dataBase })
+    } catch (error) {
+        res.status(500).send("Error al mostrar el mock de productos.")
+        console.log("Error al mostrar el mock de productos.");
+    }
+}

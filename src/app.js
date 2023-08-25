@@ -19,10 +19,6 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 //-----------express-session-----------
 
-//-----------prueba-----------
-import { createUser, getAll, getByEmail } from "./DAO/sessions.js"
-//-----------prueba-----------
-
 //-----------passport-github2-----------
 import passport from "passport"
 import initializePassport from "./config/passport.config.js"
@@ -32,6 +28,14 @@ import initializePassport from "./config/passport.config.js"
 import config from "./config/config.js"
 //-----------dotenv-----------
 
+//-----------compression GZIP-----------
+import compression from "express-compression";
+//-----------compression GZIP-----------
+
+//-----------errorHandler-----------
+import errorMiddleware from "./middlewares/errors/index.js"
+//-----------errorHandler-----------
+
 import MessagesManager from "./DAO/MessagesDAO.js";
 import { fileURLToPath } from "url";
 const message2 = new MessagesManager()
@@ -39,7 +43,7 @@ const message2 = new MessagesManager()
 const app = express();
 const PORT = config.port
 const httpServer = app.listen(PORT, () =>
-  console.log(`Running on the ${PORT}`)
+console.log(`Running on the ${PORT}`)
 );
 const io = new Server(httpServer);
 
@@ -49,13 +53,14 @@ app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.engine("handlebars", handlebars.engine()); // HANDLEBARS
+app.use(compression())// GZIP
 
 
 // CONEXION MONGO ATLAS
 const CONNECTION_MONGOATLAS = config.mongo_atlas
 mongoose.connect(CONNECTION_MONGOATLAS)
-  .then(() => console.log("Base de datos conectada"))
-  .catch(err => console.log(err))
+.then(() => console.log("Base de datos conectada"))
+.catch(err => console.log(err))
 // CONEXION MONGO ATLAS
 //-----------session-----------
 app.use(cookieParser())
@@ -67,56 +72,57 @@ app.use(
     resave: false,
     saveUninitialized: false,
     // cookie: {
-    //   maxAge: 7 * 24 * 60 * 60 * 1000,
-    // },
-    store: MongoStore.create({
-      mongoUrl:
+      //   maxAge: 7 * 24 * 60 * 60 * 1000,
+      // },
+      store: MongoStore.create({
+        mongoUrl:
         MONGOSTORE,
-      mongoOptions: {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      },
-      ttl: 100000000,
-    }),
-  })
-);
-//-----------session-----------
+        mongoOptions: {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        },
+        ttl: 100000000,
+      }),
+    })
+    );
+    //-----------session-----------
+    
+    // //-----------passport-github2-----------
+    initializePassport()
+    app.use(passport.initialize())
+    app.use(passport.session())
+    // //-----------passport-github2-----------
+    
+    app.use(cart);
+    app.use(products);
+    app.use(viewsRouter);
+    app.use(errorMiddleware)// errorHandler
+    
+  io.on("connection", async (socket) => {
+    console.log("Nuevo cliente conectado.")
+    
+    const data = await product3.getProducts()
+    io.emit("productos-actualizados", data)
+    
+    socket.on("delete-product", async (id) => {
+      await product3.deleteProduct(parseInt(id));
+    });
 
-// //-----------passport-github2-----------
-initializePassport()
-app.use(passport.initialize())
-app.use(passport.session())
-// //-----------passport-github2-----------
+    socket.on("message", (data) => {
+      console.log("cliente dice: " + data);
+    })
+    
+    const horaFull = new Date
+    const hora = horaFull.getHours().toString().padStart(2, "0")
+    const minutos = horaFull.getMinutes().toString().padStart(2, "0")
+    const segundos = horaFull.getSeconds().toString().padStart(2, "0")
+    
+    socket.on("prueba", async data => {
+      console.log(data);
+      await message2.addMessages({ user: data[1] === "" ? "Client" : data[1], message: data[0], hour: `${hora}:${minutos}:${segundos}` })
+    })
 
-app.use(cart);
-app.use(products);
-app.use(viewsRouter);
-
-io.on("connection", async (socket) => {
-  console.log("Nuevo cliente conectado.")
-
-  const data = await product3.getProducts()
-  io.emit("productos-actualizados", data)
-
-  socket.on("delete-product", async (id) => {
-    await product3.deleteProduct(parseInt(id));
+    const contenidoDelChat = await message2.getMessages()
+    socket.emit("contenidoChat", `${contenidoDelChat}`)
+    
   });
-
-  socket.on("message", (data) => {
-    console.log("cliente dice: " + data);
-  })
-
-  const horaFull = new Date
-  const hora = horaFull.getHours().toString().padStart(2, "0")
-  const minutos = horaFull.getMinutes().toString().padStart(2, "0")
-  const segundos = horaFull.getSeconds().toString().padStart(2, "0")
-
-  socket.on("prueba", async data => {
-    console.log(data);
-    await message2.addMessages({ user: data[1] === "" ? "Client" : data[1], message: data[0], hour: `${hora}:${minutos}:${segundos}` })
-  })
-
-  const contenidoDelChat = await message2.getMessages()
-  socket.emit("contenidoChat", `${contenidoDelChat}`)
-
-});

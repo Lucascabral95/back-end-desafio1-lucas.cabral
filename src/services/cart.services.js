@@ -1,5 +1,5 @@
 import cartsModel from "../DAO/models/carts.model.js"
-import TicketDAO  from "../DAO/TicketsDAO.js";
+import TicketDAO from "../DAO/TicketsDAO.js";
 
 const ticketService = new TicketDAO()
 

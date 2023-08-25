@@ -6,6 +6,9 @@ import {
     cartsModelFindByIdAndUpdate,
 
 } from "../services/cart.services.js"
+import CustomError from "../services/errors/CustomError.js";
+import EErrors from "../services/errors/enums.js";
+import { generateAddToCartErrorInfo, generateTicketErrorInfo } from "../services/errors/info.js";
 
 export const controllersApiCartsDB = async (req, res) => {
     try {
@@ -41,33 +44,58 @@ export const controllersApiCartDBPost = async (req, res) => {
         res.status(400).send({ status: "error", message: "Error al crear un nuevo carrito" })
     }
 }
+//----------------------------------------------------------------------------------------------
+// export const controllersApiCartDBDinamicoProductsDinamico = async (req, res) => {
+//     try {
+//         const cid = req.params.cid;
+//         const pid = req.params.pid;
 
+//         let cart = await cartsModelFindById(cid);
+
+//         if (!cart) {
+//             return res.status(404).json({ error: "Carrito no encontrado" });
+//         }
+
+//         const existingProduct = cart.products.find((product) => product.product.toString() === pid.toString());
+
+//         if (existingProduct) {
+//             existingProduct.quantity++;
+//         } else {
+//             cart.products.push({ product: pid, quantity: 1 });
+//         }
+
+//         let result = await cart.save();
+
+//         res.status(201).json(result);
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// }
 export const controllersApiCartDBDinamicoProductsDinamico = async (req, res) => {
-    try {
-        const cid = req.params.cid;
-        const pid = req.params.pid;
-
+    const cid = req.params.cid;
+    const pid = req.params.pid;
         let cart = await cartsModelFindById(cid);
-
         if (!cart) {
-            return res.status(404).json({ error: "Carrito no encontrado" });
-        }
-
-        const existingProduct = cart.products.find((product) => product.product.toString() === pid.toString());
-
-        if (existingProduct) {
-            existingProduct.quantity++;
+            res.send("sorry pero es incorrecto")
+            const errorInfo = generateAddToCartErrorInfo(cid);
+            throw CustomError.createError({
+                name: "Error al agregar producto",
+                cause: errorInfo,
+                message: "Error al agregar el producto al carrito.",
+                code: EErrors.ADDTOCART_ERROR
+            });
         } else {
-            cart.products.push({ product: pid, quantity: 1 });
+            const existingProduct = cart.products.find((product) => product.product.toString() === pid.toString());
+            if (existingProduct) {
+                existingProduct.quantity++;
+            } else {
+                cart.products.push({ product: pid, quantity: 1 });
+            }
+            let result = await cart.save();
+            res.status(201).json(result);
         }
-
-        let result = await cart.save();
-
-        res.status(201).json(result);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
 }
+//----------------------------------------------------------------------------------------------
 
 export const controllersApiCartDBPutProductsPut = async (req, res) => {
     try {

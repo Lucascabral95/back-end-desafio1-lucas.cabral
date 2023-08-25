@@ -27,7 +27,8 @@ import {
 
 import {
     controllerStock,
-    controllerTicket
+    controllerTicket,
+    controllerMock,
 } from "../controllers/views.router.controllers.js"
 
 //--------------------------------------controllers de esta ruta-------------------------------------------------------------
@@ -55,7 +56,7 @@ viewsRouter.get("/api/session/dentro", auth, apiSessionDentro)
 viewsRouter.get("/api/session/register", authDenied, apiSessionRegister)
 
 //------------------------------------------------------------------------------------------------------------------------------
-// METODO "POST" PARA REGISTRARTE. AL HACERLO, LA CONTRASEÑA SE HASHEA CON BCRYP Y SE LEE EN EL LOGIN. TAMBIEN SE CREA UN CART CON SU ID 
+// METODO "POST" PARA REGISTRARTE. AL HACERLO, LA CONTRASEÑA SE HASHEA CON BCRYPT Y SE LEE EN EL LOGIN. TAMBIEN SE CREA UN CART CON SU ID 
 // EN REFERENCIA A LA COLECCION CARTS.
 viewsRouter.post("/api/session/register", apiSessionRegisterPost)
 
@@ -135,14 +136,21 @@ viewsRouter.get("/completed/purchase", accessDeniedAdmin, async (req, res) => {
         const ticketAmount = tickets.map(id => id.amount)
 
         const total = ticketId.length
-        const mockTicket = [ ticketId,ticketDatatime,ticketPurchaser,ticketCode,ticketAmount,total ]
+        const mockTicket = [ticketId, ticketDatatime, ticketPurchaser, ticketCode, ticketAmount, total]
 
-        res.render("completedPurchase", { ticket: dataTicket, mock: mockTicket})
+        res.render("completedPurchase", { ticket: dataTicket, mock: mockTicket })
     } catch (error) {
         console.log("Error", error);
         res.status(500).send("An error occurred.");
     }
 })
+
+// RUTA RELATIVA QUE MUESTRA UN NUMERO DINAMICO (100 EN ESTE CASO) DE PRODUCTOS PROVENIENTES DE "FAKER"
+viewsRouter.get("/mockingproducts", controllerMock)
+
+
+
+
 
 export default viewsRouter;
 

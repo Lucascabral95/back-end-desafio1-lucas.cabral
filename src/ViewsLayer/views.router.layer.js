@@ -19,7 +19,6 @@ import {
     cartsModelFindByIdService
 } from "../services/views.router.services.js"
 
-
 // RUTA "GET" DE /API/SESSION/DENTRO
 export const apiSessionDentro = async (req, res) => {
     let user = req.session.emailUser
@@ -186,7 +185,9 @@ export const homeMongodbPost = async (req, res) => {
     try {
         let newProduct = req.body;
         await controllerMongoDbPost(req, res, newProduct);
-        res.redirect("/home-mongoDB");
+        res.setHeader('Refresh', '1')
+        // res.redirect("/home-mongoDB");
+        res.send({status:"success", message:"Producto agragado exitosamente."})
     } catch (error) {
         console.log(error);
         res.status(500).send({ status: "error", message: "Error al agregar el producto" });
@@ -240,7 +241,6 @@ export const cartsParams = async (req, res) => {
         const quantity = cart.products.map((prod) => prod.quantity);
         const totalPrice = price.map((p, index) => parseFloat(p) * parseFloat(quantity[index]));
         const totalPriceFull = totalPrice.reduce((accumulator, current) => accumulator + current, 0);
-        // const totalPriceFullWithComa = totalPriceFull.toLocaleString();
         const totalPriceFullWithComa = totalPriceFull
         const cartIdAll = cartAll.map((i) => i._id);
         const userEmailSession = req.session.emailUser

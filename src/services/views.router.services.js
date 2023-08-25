@@ -8,6 +8,7 @@ import ProductModel from "../DAO/models/products.model.js"
 import { userModel } from "../DAO/models/user.js";
 import ProductsManager2 from "../DAO/productsDAO.js"
 import CartService from "../DAO/models/carts.model.js"
+import { generatorProducts } from "../mocks/products.js";
 
 import CartsManager from "../DAO/CartsDAO.js";
 const cartDao = new CartsManager()
@@ -123,3 +124,9 @@ export const cartsModelFindByIdService = async (cid) => {
         throw error;
     }
 };
+
+
+export const serviceFaker = async (num) => {
+    const products = generatorProducts(num)
+    return products
+}

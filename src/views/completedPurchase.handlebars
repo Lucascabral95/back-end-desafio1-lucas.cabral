@@ -34,7 +34,6 @@
             style="color: blue; font-weight: bolder; text-align: center; font-size: 2rem; margin-top: 7%; margin-bottom: 2%">
             Todos los Tickets generados por este Carrito ({{mock.[5]}} en total) </h2>
 
-        {{#each mock.[0] as |ticketId index|}}
         <table style="margin-top: 3.5%;" class="table table-striped col-12">
             <thead>
                 <tr>
@@ -46,6 +45,7 @@
                 </tr>
             </thead>
             <tbody>
+                {{#each mock.[0] as |ticketId index|}}
                 <tr>
                     <td scope="col">{{ticketId}}</td>
                     <td scope="col">{{lookup ../mock.[3] index}}</td>
@@ -53,9 +53,9 @@
                     <td scope="col">{{lookup ../mock.[4] index}}</td>
                     <td scope="col">{{lookup ../mock.[2] index}}</td>
                 </tr>
+                {{/each}}
             </tbody>
         </table>
-        {{/each}}
 
     </div>
 

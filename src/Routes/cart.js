@@ -38,6 +38,38 @@ cart.delete("/api/cartsDB/:cid/products/:pid", controllerApiCartDBDinamicoProduc
 // LOGICA "DELETE" PARA ELIMINAR DE mongoDB ATLAS TODOS LOS PRODUCTOS DE UN CARRITO SEGUN SU ID. 
 cart.delete("/api/cartsDB/:cid", controllerApiCartDBDinamicoDelete)
 
+
+// import CustomError from "../services/errors/CustomError.js"
+// import EErrors from "../services/errors/enums.js"
+// import { generateUserErrorInfo } from "../services/errors/info.js"
+
+// const usuarios = []
+
+// cart.get("/usuario", async (req, res) => {
+//     res.send({ status: "success", payload: usuarios })
+// })
+
+// cart.post('/usuario', (req, res) => {
+//     const { first_name, last_name, email } = req.body;
+//     if (!first_name || !last_name || !email) {
+//         CustomError.createError({
+//             name: 'Error al registrar usuario',
+//             cause: generateUserErrorInfo({ first_name, last_name, email }),
+//             message: 'Error al intentar crear el usuario',
+//             code: EErrors.INVALID_TYPES
+//         })
+//     }
+//     const user = {
+//         first_name,
+//         last_name,
+//         email
+//     }
+//     usuarios.push(user);
+//     res.send({ status: 'success', payload: user })
+// })
+
+
+
 export default cart
 
 
@@ -67,7 +99,7 @@ export default cart
 // const cart2 = new CartsManager2()
 // const cart1 = new CartManager()
 
-// // ESTE ES TODO EL CODIGO DE "CARTS" QUE SE PIDE PARA LA "SEGUNDA PRE-ENTREGA DEL PROYECTO FINAL" //  
+// // ESTE ES TODO EL CODIGO DE "CARTS" QUE SE PIDE PARA LA "SEGUNDA PRE-ENTREGA DEL PROYECTO FINAL" //
 // // CODIGO CON PETICIONES "GET", "POST", "PUT" Y "DELETE" DE "MONGO ATLAS" Y "POPULATE".
 
 // // RUTA "GET" PARA OBTENER TODOS LOS CARRITOS CON SUS REPECTIVOS PRODUCTOS DENTRO (SI ES QUE LOS HAY). CON "POPULATE"
@@ -97,7 +129,7 @@ export default cart
 //     }
 // });
 
-// // LOGICA DE METODO "POST" PARA CREAR UN NUEVO "CARRITO" QUE SE AGREGARA EN LA COLECCION DE "CARTS" DE mongoDB ATLAS. 
+// // LOGICA DE METODO "POST" PARA CREAR UN NUEVO "CARRITO" QUE SE AGREGARA EN LA COLECCION DE "CARTS" DE mongoDB ATLAS.
 // cart.post("/api/cartsDB", async (req, res) => {
 //     try {
 //         const body = req.body
@@ -211,7 +243,7 @@ export default cart
 //     }
 // });
 
-// // LOGICA "DELETE" PARA ELIMINAR DE mongoDB ATLAS TODOS LOS PRODUCTOS DE UN CARRITO SEGUN SU ID. 
+// // LOGICA "DELETE" PARA ELIMINAR DE mongoDB ATLAS TODOS LOS PRODUCTOS DE UN CARRITO SEGUN SU ID.
 // cart.delete("/api/cartsDB/:cid", async (req, res) => {
 //     try {
 //         const cid = req.params.cid;
