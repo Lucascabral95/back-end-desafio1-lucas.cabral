@@ -8,7 +8,10 @@ import {
 } from "../services/cart.services.js"
 import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
-import { generateAddToCartErrorInfo, generateTicketErrorInfo } from "../services/errors/info.js";
+import {
+    generateAddToCartErrorInfo,
+    generateTicketErrorInfo,
+} from "../services/errors/info.js";
 
 export const controllersApiCartsDB = async (req, res) => {
     try {
@@ -74,26 +77,26 @@ export const controllersApiCartDBPost = async (req, res) => {
 export const controllersApiCartDBDinamicoProductsDinamico = async (req, res) => {
     const cid = req.params.cid;
     const pid = req.params.pid;
-        let cart = await cartsModelFindById(cid);
-        if (!cart) {
-            res.send("sorry pero es incorrecto")
-            const errorInfo = generateAddToCartErrorInfo(cid);
-            throw CustomError.createError({
-                name: "Error al agregar producto",
-                cause: errorInfo,
-                message: "Error al agregar el producto al carrito.",
-                code: EErrors.ADDTOCART_ERROR
-            });
+    let cart = await cartsModelFindById(cid);
+    if (!cart) {
+        res.send("sorry pero es incorrecto")
+        const errorInfo = generateAddToCartErrorInfo(cid, pid);
+        throw CustomError.createError({
+            name: "Error al agregar producto",
+            cause: errorInfo,
+            message: "Error al agregar el producto al carrito.",
+            code: EErrors.ADDTOCART_ERROR
+        });
+    } else {
+        const existingProduct = cart.products.find((product) => product.product.toString() === pid.toString());
+        if (existingProduct) {
+            existingProduct.quantity++;
         } else {
-            const existingProduct = cart.products.find((product) => product.product.toString() === pid.toString());
-            if (existingProduct) {
-                existingProduct.quantity++;
-            } else {
-                cart.products.push({ product: pid, quantity: 1 });
-            }
-            let result = await cart.save();
-            res.status(201).json(result);
+            cart.products.push({ product: pid, quantity: 1 });
         }
+        let result = await cart.save();
+        res.status(201).json(result);
+    }
 }
 //----------------------------------------------------------------------------------------------
 

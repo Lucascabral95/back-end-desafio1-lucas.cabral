@@ -24,8 +24,9 @@ export const generateTicketErrorInfo = (amount, purchaser) => {
     * purchaser: necesita ser un String, recibió: ${purchaser}`
 }
 
-export const generateAddToCartErrorInfo = (cid) => {
+export const generateAddToCartErrorInfo = (cid, pid) => {
     return `Una o mas propiedades estaban incompletas o no son validas.
     Lista de propiedades requeridas:
-    * Id de carrito: necesita ser un Number: recibió: ${cid}`
+    * Id de carrito: necesita ser un String: recibió: ${cid}
+    * Id de producto: necesita ser un String: recibió: ${pid}`
 }

@@ -15,6 +15,9 @@ export default (error, req, res, next) => {
     case EErrors.ADDTOCART_ERROR:
       res.status(400).send({ status: "error", error: error.name });
       break;
+    case EErrors.GENERATECART_ERROR:
+      res.status(400).send({ status: "error", error: error.name });
+      break;
     default:
       res.status(500).send({ status: "error", error: "Unhandled error" });
   }

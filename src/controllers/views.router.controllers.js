@@ -250,24 +250,23 @@ const ticketDao = new TicketServices()
 
 export const controllerTicket = async (req, res) => {
     const amount = req.session.sessionDataPurchase[8]
-    console.log(amount);
     const purchaser = req.session.emailUser;
 
     if (!amount || !purchaser) {
         const tickerError = generateTicketErrorInfo(amount, purchaser)
-        new CustomError({
-            name: "Error al generar el ticket",
+        throw CustomError.createError({
+            name: "Error al generar el ticket.",
             cause: tickerError,
             message: "Todos los campos son obligatorios.",
             code: EErrors.TICKET_ERROR
         })
     } else{
         const generatedTicket = await ticketDao.addTickets(amount, purchaser);
-        console.log("Ticket generado exitosamente:", generatedTicket);
         req.session.generatedTicket = generatedTicket
         res.redirect("/home-mongodb")
     }
 };
+
 
 
 // RUTA RELATIVA QUE MUESTRA UN NUMERO DINAMICO (100 EN ESTE CASO) DE PRODUCTOS PROVENIENTES DE "FAKER"
