@@ -1,6 +1,7 @@
 import { Router } from "express"
 const cart = Router()
 import { promises as fs } from "fs"
+import { addLogger } from "../utils/logger.js"
 //------------------------------------ IMPORTACIONES DE VIEWSLAYER ---------------------------------------
 import {
     controllersApiCartsDB,
@@ -15,59 +16,28 @@ import {
 //------------------------------------ IMPORTACIONES DE VIEWSLAYER ---------------------------------------
 
 // RUTA "GET" PARA OBTENER TODOS LOS CARRITOS CON SUS REPECTIVOS PRODUCTOS DENTRO (SI ES QUE LOS HAY). CON "POPULATE"
-cart.get("/api/cartsdb", controllersApiCartsDB)
+cart.get("/api/cartsdb", addLogger, controllersApiCartsDB)
 
 // RUTA "GET" PARA OBTENER TODOS LOS CARRITOS SEGUN SU ID CON SUS REPECTIVOS PRODUCTOS DENTRO (SI ES QUE LOS TIENE). CON "POPULATE"
-cart.get("/api/cartsdb/:cid", controllersApiCartsDBDinamico)
+cart.get("/api/cartsdb/:cid", addLogger, controllersApiCartsDBDinamico)
 
 // LOGICA DE METODO "POST" PARA CREAR UN NUEVO "CARRITO" QUE SE AGREGARA EN LA COLECCION DE "CARTS" DE mongoDB ATLAS. 
-cart.post("/api/cartsDB", controllersApiCartDBPost)
+cart.post("/api/cartsDB", addLogger, controllersApiCartDBPost)
 
 // LOGICA DE METODO "POST" PARA AGREGAR UN "PRODUCTO" SEGUN SU ID EN UN "CARRITO" ESPECIFICO SEGUN SU ID.
-cart.post("/api/cartsDB/:cid/products/:pid", controllersApiCartDBDinamicoProductsDinamico)
+cart.post("/api/cartsDB/:cid/products/:pid", addLogger, controllersApiCartDBDinamicoProductsDinamico)
 
 // LOGICA DE METODO "PUT" PARA MODIFICAR SOLO LA "QUANTITY" DEL PRODUCTO SELECCIONADO EN EL CARRITO SELECCIONADO.
-cart.put("/api/cartsDB/:cid/products/:pid", controllersApiCartDBPutProductsPut)
+cart.put("/api/cartsDB/:cid/products/:pid", addLogger, controllersApiCartDBPutProductsPut)
 
 // LOGICA DE METODO "PUT" QUE PERMITE ACTUALIZAR EL CARRITO SELECCIONADO POR "/:CID" CON UN ARREGLO DE PRODUCTOS QUE LE PASO POR EL BODY, escribir { "product": "(+ el _id del producto a agregar)"}
-cart.put("/api/cartsDb/:cid", controllerApiCartDBDinamicoPut)
+cart.put("/api/cartsDb/:cid", addLogger, controllerApiCartDBDinamicoPut)
 
-// LOGICA "DELETE" PARA ELIMINAR DE mongoDB ATLAS UN PRODUCTO SELECCINADO DE UN CARRITO SEGUN SU ID.
-cart.delete("/api/cartsDB/:cid/products/:pid", controllerApiCartDBDinamicoProductsDinamicoDelete)
+// LOGICA "DELETE" PARA ELIMINAR DE mongoDB ATLAS UN PRODUCTO SELECCIONADO DE UN CARRITO SEGUN SU ID.
+cart.delete("/api/cartsDB/:cid/products/:pid", addLogger, controllerApiCartDBDinamicoProductsDinamicoDelete)
 
 // LOGICA "DELETE" PARA ELIMINAR DE mongoDB ATLAS TODOS LOS PRODUCTOS DE UN CARRITO SEGUN SU ID. 
-cart.delete("/api/cartsDB/:cid", controllerApiCartDBDinamicoDelete)
-
-
-// import CustomError from "../services/errors/CustomError.js"
-// import EErrors from "../services/errors/enums.js"
-// import { generateUserErrorInfo } from "../services/errors/info.js"
-
-// const usuarios = []
-
-// cart.get("/usuario", async (req, res) => {
-//     res.send({ status: "success", payload: usuarios })
-// })
-
-// cart.post('/usuario', (req, res) => {
-//     const { first_name, last_name, email } = req.body;
-//     if (!first_name || !last_name || !email) {
-//         CustomError.createError({
-//             name: 'Error al registrar usuario',
-//             cause: generateUserErrorInfo({ first_name, last_name, email }),
-//             message: 'Error al intentar crear el usuario',
-//             code: EErrors.INVALID_TYPES
-//         })
-//     }
-//     const user = {
-//         first_name,
-//         last_name,
-//         email
-//     }
-//     usuarios.push(user);
-//     res.send({ status: 'success', payload: user })
-// })
-
+cart.delete("/api/cartsDB/:cid", addLogger, controllerApiCartDBDinamicoDelete)
 
 
 export default cart

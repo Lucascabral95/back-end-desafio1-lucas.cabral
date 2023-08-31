@@ -10,15 +10,16 @@ import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
 import {
     generateAddToCartErrorInfo,
-    generateTicketErrorInfo,
 } from "../services/errors/info.js";
 
 export const controllersApiCartsDB = async (req, res) => {
     try {
         const carts = await cartsModelFindPopulate();
         res.json(carts)
+        req.logger.info(`Peticion GET a /api/cartsDB exitosa`)
     } catch (error) {
         res.status(500).json({ error: error.message });
+        req.logger.fatal(`Error al mostrar Carts`)
     }
 }
 
@@ -28,10 +29,12 @@ export const controllersApiCartsDBDinamico = async (req, res) => {
         const cart = await cartsModelFindByIdPopulate(cid)
 
         if (!cart) {
+            req.logger.fatal(`Carrito con _id: ${cid} no encontrado.`)
             return res.status(404).json({ error: "Carrito no encontrado" });
         }
 
         res.send({ status: "Success", cart: cart })
+        req.logger.info(`Carrito con _id: ${cid} encontrado.`)
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
@@ -43,8 +46,10 @@ export const controllersApiCartDBPost = async (req, res) => {
         const newCart = await cartsModelCreate(body)
 
         res.send({ status: "success", message: "Exito al crear un nuevo carrito" })
+        req.logger.info(`Exito al crear nuevo carrito.`)
     } catch (error) {
         res.status(400).send({ status: "error", message: "Error al crear un nuevo carrito" })
+        req.logger.fatal(`Error al crear nuevo carrito.`)
     }
 }
 //----------------------------------------------------------------------------------------------
@@ -93,6 +98,7 @@ export const controllersApiCartDBDinamicoProductsDinamico = async (req, res) => 
             existingProduct.quantity++;
         } else {
             cart.products.push({ product: pid, quantity: 1 });
+            req.logger.info(`Producto agregado al carrito exitosamente.`)
         }
         let result = await cart.save();
         res.status(201).json(result);
@@ -109,12 +115,14 @@ export const controllersApiCartDBPutProductsPut = async (req, res) => {
         const cart = await cartsModelFindById(cid);
 
         if (!cart) {
+            req.logger.fatal(`Carrito no encontrado`)
             return res.status(404).json({ error: "Carrito no encontrado" });
         }
 
         const existingProduct = cart.products.find((product) => product.product.toString() === pid.toString());
 
         if (!existingProduct) {
+            req.logger.fatal(`Producto no encontrado en el carrito.`)
             return res.status(404).json({ error: "Producto no encontrado en el carrito" });
         }
 
@@ -127,8 +135,10 @@ export const controllersApiCartDBPutProductsPut = async (req, res) => {
         let result = await cart.save();
 
         res.status(200).json({ status: "Success", message: "Éxito al modificar la cantidad del producto seleccionado.", result: result, });
+        req.logger.info(`Exito al modificar la cantidad del producto con _id: ${pid}.`)
     } catch (error) {
         res.status(500).json({ status: "Error", message: "Error al modificar la cantidad del producto seleccionado.", error: error.message, });
+        req.logger.fatal(`Error al modificar la cantidad del producto seleccionado.`)
     }
 }
 
@@ -139,8 +149,10 @@ export const controllerApiCartDBDinamicoPut = async (req, res) => {
         await cartsModelFindByIdAndUpdate(cid, product)
 
         res.send({ status: "Success", message: "Exito al actualizar el carrito." })
+        req.logger.info(`Exito al actualizar carrito.`)
     } catch (error) {
         res.send({ status: "Error", message: "Error al actualizar el carrito." })
+        req.logger.fatal(`Error al actualizar carrito.`)
     }
 }
 
@@ -152,12 +164,14 @@ export const controllerApiCartDBDinamicoProductsDinamicoDelete = async (req, res
         const cart = await cartsModelFindById(cid);
 
         if (!cart) {
+            req.logger.fatal("Carrito no encontrado.")
             return res.status(404).json({ error: "Carrito no encontrado" });
         }
 
         const productIndex = cart.products.find((p) => p._id.toString() === pid.toString());
 
         if (productIndex === -1) {
+            req.logger.fatal("Producto no encontrado en el carrito.")
             return res.status(404).json({ error: "Producto no encontrado en el carrito" });
         }
 
@@ -165,8 +179,10 @@ export const controllerApiCartDBDinamicoProductsDinamicoDelete = async (req, res
         await cart.save();
 
         res.json({ status: "Success", message: "Éxito al eliminar el producto del carrito.", cart: cart });
+        req.logger.info(`Exito al eliminar el producto con _id: ${pid} del carrito.`)
     } catch (error) {
         res.send({ status: "Error", message: "Error al eliminar el producto del carrito." });
+        req.logger.fatal("Error al eliminar el producto del carrito.")
     }
 }
 
@@ -181,8 +197,10 @@ export const controllerApiCartDBDinamicoDelete = async (req, res) => {
         const result = await cart.save();
 
         res.status(200).json({ status: "Success", message: "Éxito al eliminar el carrito.", result: result, });
+        req.logger.info(`Exito al eliminar todos los productos del carrito con _id: ${cid}.`)
     } catch (error) {
         res.status(500).json({ status: "Error", message: "Error al eliminar el carrito.", result: result });
+        req.logger.fatal("Error al eliminar el carrito.")
     }
 }
 

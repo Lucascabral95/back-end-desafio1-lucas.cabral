@@ -7,6 +7,7 @@ export const getAll = async () => {
         result = await userModel.find()
     } catch (error) {
         console.log(error);
+        // req.logger.fatal("Error al mostrar los usuarios.")
     }
     return result
 }
@@ -18,6 +19,7 @@ export const getByEmail = async (email) => {
         return result
     } catch (error) {
         console.log(error);
+        // req.logger.fatal("Error al encontrar usuario por su ID.")
         throw error;
     }
 }
@@ -28,6 +30,7 @@ export const createUser = async (user) => {
         result = await userModel.create(user)
     } catch (error) {
         console.log(error);
+        // req.logger.fatal("Error al crear usuario nuevo.")
     }
     return result
 }

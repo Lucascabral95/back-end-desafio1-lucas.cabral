@@ -14,8 +14,6 @@ import {
 import cartsModel from "../DAO/models/carts.model.js"
 import { createHash, isValidPassword } from "../utils.js";
 import { generateToken } from "../jwt.js";
-// import { generatorProducts } from "../mocks/products.js";
-import cart from "../Routes/cart.js";
 //-----------Custom Error------------------------------
 import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
@@ -91,7 +89,7 @@ export const controllerApiSessionRegister = async (user) => {
         const savedUser = await createUser(newUser);
         return savedUser;
     } catch (error) {
-        console.error("Error al registrar el usuario y el carrito:", error.message)
+        // console.error("Error al registrar el usuario y el carrito:", error.message)
         return null;
     }
 };
@@ -102,6 +100,7 @@ export const controllerApiSessionLogin = async (req, res, user) => {
         const busquedaData = await getByEmail(user.email);
 
         if (!busquedaData || !isValidPassword(busquedaData, user.password)) {
+            // req.logger.fatal(`Error al intentar iniciar sesión con ${busquedaData.email}`);
             return res.render("login-error", {});
         } else if (busquedaData.email === null || typeof busquedaData.email === "undefined") {
             return res.render("login-error", {});
@@ -123,7 +122,9 @@ export const controllerApiSessionLogin = async (req, res, user) => {
             //----------------
             // propiedades de JWT
             const token_access = generateToken(user.email);
-            console.log(user.email, token_access);
+            req.logger.debug(`Email del usuario: ${user.email}`)
+            req.logger.debug(`Token JWT del usuario: ${token_access}`)
+            req.logger.info(`Inicio de sesion exitoso con email: ${busquedaData.email}`)
             req.session.emailJwt = user.email;
             return res.cookie("authToken", token_access, { httpOnly: true }).redirect("/api/session/current");
         }
@@ -206,7 +207,6 @@ export const controllerMongoDbDinamico = async (pid) => {
 
 // LOGICA "POST" PARA DESCONTAR STOCK DE PRODUCTOS SEGUN SU _ID EN MONGODB ATLAS. 
 export const controllerStock = async (req, res) => {
-    console.log("LLEGO?");
     const cid = req.params.cid;
     try {
         let cart = await populateCart(cid)
@@ -220,8 +220,9 @@ export const controllerStock = async (req, res) => {
         cart.products = [];
         await cart.save();
         res.send(cart);
+        req.logger.info("¡¡¡Compra y descuento del stock exitosos!!! ")
     } catch (error) {
-        console.error("Error:", error);
+        req.logger.fatal("Error:", error)
         res.status(500).send("Error de servidor");
     }
 }
@@ -253,6 +254,7 @@ export const controllerTicket = async (req, res) => {
     const purchaser = req.session.emailUser;
 
     if (!amount || !purchaser) {
+        req.logger.fatal("Todos los campos son obligatorios.")
         const tickerError = generateTicketErrorInfo(amount, purchaser)
         throw CustomError.createError({
             name: "Error al generar el ticket.",
@@ -260,14 +262,12 @@ export const controllerTicket = async (req, res) => {
             message: "Todos los campos son obligatorios.",
             code: EErrors.TICKET_ERROR
         })
-    } else{
+    } else {
         const generatedTicket = await ticketDao.addTickets(amount, purchaser);
         req.session.generatedTicket = generatedTicket
         res.redirect("/home-mongodb")
     }
 };
-
-
 
 // RUTA RELATIVA QUE MUESTRA UN NUMERO DINAMICO (100 EN ESTE CASO) DE PRODUCTOS PROVENIENTES DE "FAKER"
 export const controllerMock = async (req, res) => {
@@ -279,8 +279,22 @@ export const controllerMock = async (req, res) => {
         const dataBase = [products, price, color]
 
         res.render("mockingProducts", { data: dataBase })
+        req.logger.info("Peticion GET a /mockingproducts exitosa.")
     } catch (error) {
         res.status(500).send("Error al mostrar el mock de productos.")
-        console.log("Error al mostrar el mock de productos.");
+        req.logger.fatal("Error al mostrar el mock de productos.")
+    }
+}
+
+// RUTA RELATIVA QUE MUESTRA EN TERMINAL LOS LOGGER DE WINSTON 
+export const controllerLoggerExamples = async (req, res) => {
+    try {
+        req.logger.warning("Hola, soy warn")
+        req.logger.fatal("Hola, soy fatal")
+        req.logger.debug("Hola, soy debug")
+        res.send({ message: "¡Prueba de logger!" })
+    } catch (error) {
+        console.log("Error al generar en la terminar la lista de errores.");
+        next(error)
     }
 }

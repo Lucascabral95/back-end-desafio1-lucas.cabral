@@ -35,8 +35,10 @@ export const apiProductsDBDinamico = async (req, res) => {
 
         if (productoBuscado) {
             res.send({ status: "success", payload: productoBuscado });
+            req.logger.info(`Solicitud GET a /api/productsdb/:pid exitosa. Producto buscado: ${productoBuscado.title}`)
         } else {
             res.send({ message: "Producto no encontrado" })
+            req.logger.fatal(`Producto con _id: ${pid} no encontrado.`)
         }
 
     } catch (error) {
@@ -49,8 +51,10 @@ export const apiProductsDBPost = async (req, res) => {
         let content = req.body
         const results = await addProducts(content)
         res.send({ status: "success", payload: results })
+        req.logger.info("Exito al agregar producto.")
     } catch (error) {
         res.status(400).send({ status: "error", error })
+        req.logger.fatal("Error al agregar producto.")
     }
 }
 
@@ -60,8 +64,10 @@ export const apiProductsDBDinamicoDelete = async (req, res) => {
         let result = await deleteProductById(pid)
         if (result) {
             res.send({ status: "success", payload: result })
+            req.logger.info(`Exito al eliminar el producto con _id: ${pid}`)
         } else {
             res.send({ status: "success", message: "Se elimino el producto." })
+            req.logger.fatal(`Error al eliminar el producto con _id: ${pid}`)
         }
     } catch (error) {
         res.status(400).send({ status: "error", message: "Error al intentar eliminar el producto." })
@@ -75,8 +81,10 @@ export const apiProductsDBDinamicoPut = async (req, res) => {
         const result = updateProduct(pid, productoAModificar)
 
         res.send({ status: "success", payload: result })
+        req.logger.info(`Exito al modificar el producto con _id: ${pid}`)
     } catch (error) {
         res.status(400).send({ status: "error", message: "Producto no encontrado." })
+        req.logger.fatal(`Error al modificar el producto con _id: ${pid}`)
     }
 }
 
@@ -90,9 +98,10 @@ export const apiProducts = async (req, res) => {
             res.send(limiteDeProductos)
         } else {
             res.send(productos)
+            req.logger.info(`Peticion GET para /api/productos exitosa.`)
         }
     } catch (error) {
-        console.log("Error al leer productos.json", error)
+        req.logger.fatal("Error al leer productos.json")
         res.status(500).send({ status: "error", message: "Error al leer productos.json" })
     }
 }
@@ -104,14 +113,14 @@ export const apiProductosDinamico = async (req, res) => {
         const productorPorId = productos.find(prod => prod.id === pid)
 
         if (!productorPorId) {
-            console.log(`Producto con ${pid} no encontrado.`)
+            req.logger.fatal(`Producto con _id: ${pid} no encontrado.`)
             res.send(productos)
         } else {
             res.send(productorPorId)
+            req.logger.info(`Producto con _id: ${pid} encontrado. ${productorPorId.title}.`)
         }
-
     } catch (error) {
-        console.log("Error al encontrar encontrar producto buscado por Id.")
+        req.logger.fatal("Error al encontrar encontrar producto buscado por Id.")
         res.status(500).send({ status: "error", message: "No se encontro el producto del Id indicado." })
     }
 }
@@ -119,15 +128,17 @@ export const apiProductosDinamico = async (req, res) => {
 export const apiProductosPost = async (req, res) => {
     try {
         const nuevoProducto = req.body
-        
+
         if (!nuevoProducto.title || !nuevoProducto.description || !nuevoProducto.code || !nuevoProducto.price || !nuevoProducto.stock || !nuevoProducto.category) {
+            req.logger.fatal("Todos los campos son obligatorios")
             return res.status(400).send({ status: "error", message: "Todos los campos son obligatorios" });
         }
-        
+
         const productos = await addProductsByIdManager(nuevoProducto)
         res.status(201).send({ status: "success", message: "Exito al agregar nuevo producto." })
+        req.logger.info(`Exito al agregar nuevo producto: ${productos.title}`)
     } catch (error) {
-        console.log("Error al leer o escribir en productos.json");
+        req.logger.fatal(`Error al leer o escribir en productos.json`)
         res.status(400).send({ status: "error", message: "Error al leer o escribir en productos.json" });
     }
 }
@@ -138,15 +149,16 @@ export const apiProductosPut = async (req, res) => {
         const productoActualizado = req.body
         await updateProductMaanger(pid, productoActualizado)
         const productoExistente = await getProductByIdManagerTwo(pid)
-        
+
         if (!productoExistente) {
             res.status(404).send({ status: "error", message: `No se encontró ningún producto con el id ${pid}` });
+            req.logger.fatal(`No se encontro ningun producto con _id: ${pid}`)
         } else {
             res.status(201).send({ status: "success", message: `Exito al modificar el producto con id ${pid}` })
+            req.logger.info(`Exito al modificar producto con _id: ${pid}.`)
         }
-        
     } catch (error) {
-        console.log("Error al modificar el producto elegido productos.json", error);
+        req.logger.fatal("Error al modificar el producto elegido productos.json", error);
         res.status(404).send({ status: "error", message: "Error al intentar modificar producto en productos.json" });
     }
 }
@@ -158,13 +170,15 @@ export const apiProductosDinamicoDelete = async (req, res) => {
 
         if (!productoExistente) {
             res.status(404).send({ status: "error", message: `No se encontró ningún producto con el id ${pid}` });
+            req.logger.fatal(`No se encontró ningún producto con el id ${pid}`)
         } else {
             await deleteProductManager(pid)
             res.status(201).send({ status: "success", message: `Exito al eliminar producto con id ${pid}` })
+            req.logger.info(`Exito al eliminar producto con _id ${pid}`)
         }
 
     } catch (error) {
-        console.log("Error al eliminar producto en productos.json", error)
+        req.logger.fatal(`Error al eliminar producto en productos.json`)
         res.status(404).send({ status: "error", message: "Error al eliminar producto en productos.json." })
     }
 }

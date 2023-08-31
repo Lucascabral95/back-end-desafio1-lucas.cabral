@@ -2,6 +2,7 @@ import { Router } from "express";
 const viewsRouter = Router();
 import passport from "passport"
 import { auth, authDenied, lockUser, accessDeniedAdmin } from "../middlewares/auth.js"
+import { addLogger } from "../utils/logger.js";
 //--------------------------------------JWT-------------------------------------------
 import { authToken } from "../jwt.js"
 //--------------------------------------JWT-------------------------------------------
@@ -29,6 +30,7 @@ import {
     controllerStock,
     controllerTicket,
     controllerMock,
+    controllerLoggerExamples,
 } from "../controllers/views.router.controllers.js"
 
 //--------------------------------------controllers de esta ruta-------------------------------------------------------------
@@ -47,49 +49,49 @@ viewsRouter.get("/api/session/githubcallback", authDenied, passport.authenticate
 );
 // PASSPORT-GITHUB2
 
-// RUTA RAIZ DE "/API/SESSION" CON HANDLEBARS. ACA TE REDIRIGE EL SERVIDOR AL LOGUEARTE EN GITHUB Y EN EL LOGIN DE MONGO-DB ATLAS
-viewsRouter.get("/api/session/dentro", auth, apiSessionDentro)
+// RUTA RAIZ DE "/API/SESSION/DENTRO" CON HANDLEBARS. ACA TE REDIRIGE EL SERVIDOR AL LOGUEARTE EN GITHUB Y EN EL LOGIN DE MONGO-DB ATLAS
+viewsRouter.get("/api/session/dentro", auth, addLogger, apiSessionDentro)
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 // DESAFIO DE COOKIES, SESSIONS & STORAGE
 // METODO "GET" PARA VER EL REGISTRO DE USUARIOS
-viewsRouter.get("/api/session/register", authDenied, apiSessionRegister)
+viewsRouter.get("/api/session/register", authDenied, addLogger, apiSessionRegister)
 
 //------------------------------------------------------------------------------------------------------------------------------
 // METODO "POST" PARA REGISTRARTE. AL HACERLO, LA CONTRASEÑA SE HASHEA CON BCRYPT Y SE LEE EN EL LOGIN. TAMBIEN SE CREA UN CART CON SU ID 
 // EN REFERENCIA A LA COLECCION CARTS.
-viewsRouter.post("/api/session/register", apiSessionRegisterPost)
+viewsRouter.post("/api/session/register", addLogger, apiSessionRegisterPost)
 
 //------------------------------------------------------------------------------------------------------------------------------
 // METODO "GET" PARA VER EL LOGIN DE USUARIOS
-viewsRouter.get("/api/session/login", authDenied, apiSessionLogin)
+viewsRouter.get("/api/session/login", authDenied, addLogger, apiSessionLogin)
 
 // METODO "POST" PARA LOGUEARTE CON LA CONTRASEÑA YA HASHEADA DEL REGISTER. AL LOGUEARTE CORRECTAMENTE SE GENERA UN TOKEN "JWT" Y SE ALMACENA EN 
 // COOKIE "authToken" DONDE EL SERVIDOR LA LEE Y VERIFICA EN "/API/SESSION/CURRENT", SI ES CORRECTO EL TOKEN, EL MIDDLEWARE "authToken" TE DEJA ENTRAR EN DICHA RUTA
-viewsRouter.post("/api/session/login", apiSessionLoginPost)
+viewsRouter.post("/api/session/login", addLogger, apiSessionLoginPost)
 
 // RUTA "GET" CON DOS MIDDLEWARES DONDE SOLO SE PUEDE ACCEDER LUEGO DE LOGUEARTE CORRECTAMENTE Y QUE EL SERVIDOR LEA CORRECTAMENTE TU TOKEN "JWT"
 // ENVIADO DESDE LA COOKIE "authToken" Y SE ASEGURE QUE SEA EL TOKEN CORRECTO ASOCIADO AL USUARIO EN CUESTION.
 // Esta ruta te muestra todos los datos con los que te registraste: nombre, apellido, edad, email, rol (user), e .ID del cart generado.
-viewsRouter.get("/api/session/current", auth, authToken, apiSessionCurrent)
+viewsRouter.get("/api/session/current", auth, authToken, addLogger, apiSessionCurrent)
 //---------------------------JWT------------------------------------------
 
 // // LOGICA PARA CERRAR SESSION AL IR A ESTA RUTA.
-viewsRouter.get("/api/session/logout", auth, apiSessionLogout)
+viewsRouter.get("/api/session/logout", auth, addLogger, apiSessionLogout)
 // DESAFIO DE COOKIES, SESSIONS & STORAGE
 //--------------------------------------------------------------------------------------------------------------------------------------------
 
 // RUTA RAIZ DEL PROYECTO
-viewsRouter.get("/", rutaRaiz)
+viewsRouter.get("/", addLogger, rutaRaiz)
 
 // RUTA "GET" PARA /HOME
-viewsRouter.get("/home", homeProducts)
+viewsRouter.get("/home", addLogger, homeProducts)
 
 // RUTA "GET" PARA /REALTIMEPRODUCTS
-viewsRouter.get("/realtimeproducts", realTimeProducts)
+viewsRouter.get("/realtimeproducts", addLogger, realTimeProducts)
 
-// RUTA "POSTA" PARA /REALTIMEPRODUCTS
-viewsRouter.post("/realtimeproducts", realTimeProductsPost)
+// RUTA "POST" PARA /REALTIMEPRODUCTS
+viewsRouter.post("/realtimeproducts", addLogger, realTimeProductsPost)
 
 // RUTA "DELETE" PARA /REALTIMEPRODUCTS
 viewsRouter.delete("/realtimeproducts", async (req, res) => {
@@ -97,33 +99,33 @@ viewsRouter.delete("/realtimeproducts", async (req, res) => {
 
 // RUTA "GET" PARA IR AL CHAT /CHAT
 // viewsRouter.get("/chat", auth, getChat)
-viewsRouter.get("/chat", lockUser, getChat)
+viewsRouter.get("/chat", lockUser, addLogger, getChat)
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
 // RUTA "GET" QUE RENDERIZA CON PAGINATION Y AGGREGATION LA VISTA "PRODUCTS.HANDLEBARS"
-viewsRouter.get("/home-mongoDB", auth, homeMongoDB)
+viewsRouter.get("/home-mongoDB", auth, addLogger, homeMongoDB)
 
 // METODO "POST" PARA AGREGAR UN DOCUMENTO NUEVO POR MEDIO DE UN FORMULARIO. 
-viewsRouter.post("/home-mongoDB", homeMongodbPost)
+viewsRouter.post("/home-mongoDB", addLogger, homeMongodbPost)
 
 // METODO "DELETE" PARA ELIMINAR POR _ID UN PRODUCTO DE mongoDB ATLAS.
-viewsRouter.delete("/home-mongodb/:pid", homeMongodbDinamica)
+viewsRouter.delete("/home-mongodb/:pid", addLogger, homeMongodbDinamica)
 
 // RENDERIZA LA VISTA "cardId"
 // viewsRouter.get("/carts/:cid", cartsParams)
-viewsRouter.get("/carts/:cid/purchase", accessDeniedAdmin, cartsParams)
+viewsRouter.get("/carts/:cid/purchase", addLogger, accessDeniedAdmin, cartsParams)
 
 // METODO "POST" PARA RESTAR LA CANTIDAD DE STOCK DE UNA COMPRA /CARTS/:PID/:STOCK
-viewsRouter.post("/cart/:cid/buy", controllerStock)
+viewsRouter.post("/cart/:cid/buy", addLogger, controllerStock)
 
 // METODO "POST" PARA CREAR UN ID CON SUS RESPECTIVOS CAMPOS OBLIGATORIOS
-viewsRouter.post("/cart/:cid/purchase", controllerTicket)
+viewsRouter.post("/cart/:cid/purchase", addLogger, controllerTicket)
 
 
 import TicketDAO from "../DAO/TicketsDAO.js";
 const ticketService = new TicketDAO
 //RENDERIZA VISTA "GET" DE /COMPLETED/PURCHASE
-viewsRouter.get("/completed/purchase", accessDeniedAdmin, async (req, res) => {
+viewsRouter.get("/completed/purchase", accessDeniedAdmin, addLogger, async (req, res) => {
     try {
         const dataTicket = req.session.generatedTicket
         const tid = req.session.emailUser
@@ -139,15 +141,85 @@ viewsRouter.get("/completed/purchase", accessDeniedAdmin, async (req, res) => {
         const mockTicket = [ticketId, ticketDatatime, ticketPurchaser, ticketCode, ticketAmount, total]
 
         res.render("completedPurchase", { ticket: dataTicket, mock: mockTicket })
+        req.logger.info("Peticion GET a /mockingPurchase exitosa.")
     } catch (error) {
-        console.log("Error", error);
+        req.logger.fatal("Error", error)
         res.status(500).send("An error occurred.");
     }
 })
 
 // RUTA RELATIVA QUE MUESTRA UN NUMERO DINAMICO (100 EN ESTE CASO) DE PRODUCTOS PROVENIENTES DE "FAKER"
-viewsRouter.get("/mockingproducts", controllerMock)
+viewsRouter.get("/mockingproducts", addLogger, controllerMock)
 
+// RUTA REALTIVA QUE AL EJECUTARLO MUESTRA EN CONSOLA LOS LOGGERS CON SUS NIVELES CORRESPONDIENTES
+viewsRouter.get("/logger", addLogger, controllerLoggerExamples)
+
+
+// RUTA PARA PROBAR ARTILLERY
+viewsRouter.get("/operacionsencilla", (req, res) => {
+    let sum = 0
+    for ( let i = 0; i < 1000000; i++) {
+        sum += i 
+    }
+    res.send({ sum })
+})
+
+viewsRouter.get("/operacioncompleja", (req, res) => {
+    let sum = 0
+    for ( let i = 0; i < 5e8; i++) {
+        sum += i 
+    }
+    res.send({ sum })
+})
+
+
+
+import bcrypt from "bcrypt"
+
+
+const users = [];
+
+// Ruta para registrar un usuario
+viewsRouter.post('/registerTest', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        // Hash de la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Guardar usuario en la "base de datos"
+        users.push({ username, password: hashedPassword });
+
+        res.status(201).send({ message: 'Usuario registrado exitosamente.', payload: users});
+    } catch (error) {
+        res.status(500).send('Error en el registro.');
+    }
+});
+
+// Ruta para el inicio de sesión
+viewsRouter.post('/loginTest', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        // Buscar al usuario en la "base de datos"
+        const user = users.find(user => user.username === username);
+
+        if (!user) {
+            return res.status(404).send('Usuario no encontrado.');
+        }
+
+        // Comparar las contraseñas
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (passwordMatch) {
+            res.send('Inicio de sesión exitoso.');
+        } else {
+            res.status(401).send('Credenciales incorrectas.');
+        }
+    } catch (error) {
+        res.status(500).send('Error en el inicio de sesión.');
+    }
+});
 
 
 

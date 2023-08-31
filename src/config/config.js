@@ -11,5 +11,6 @@ export default {
     mongo_atlas: process.env.CONNECTION_MONGOATLAS,
     mongoStore: process.env.MONGOSTORE,
     key_mongoStore: process.env.KEY_SECRET_MONGOSTORE,
-    persitencia: process.env.PERSITENCE
+    persitencia: process.env.PERSITENCE,
+    loggers: process.env.LOGGER_ENV
 }

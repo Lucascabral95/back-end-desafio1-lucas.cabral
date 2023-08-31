@@ -16,6 +16,7 @@ import {
     apiProductosDinamicoDelete
 } from "../controllers/products.controllers.js"
 //--------------------------------------- IMPORTACIONES DE CONTROLLERS ---------------------------------------------
+import { addLogger } from "../utils/logger.js";
 
 // PETICIONES GET, POST, PUT, DELETE CONECTADA CON ---MongoDB--- 
 
@@ -28,33 +29,33 @@ import {
 products.get("/api/productsDB", apiProductsDB)
 
 // RUTA PARA VER LOS PRODUCTOS SEGUN SU ID. Conectado a MongoDB
-products.get("/api/productsDB/:pid", apiProductsDBDinamico)
+products.get("/api/productsDB/:pid", addLogger, apiProductsDBDinamico)
 
 // RUTA "POST" PARA AGREGAR PRODUCTOS CON SUS RESPECTIVOS CAMPOS OBLIGATORIOS. Conectado a MongoDB
-products.post("/api/productsDB", apiProductsDBPost)
+products.post("/api/productsDB", addLogger, apiProductsDBPost)
 
 // RUTA DELETE PARA ELIMINAR PRODUCTOS SEGUN SU ID. Conectado a MongoDB
-products.delete("/api/productsDB/:pid", apiProductsDBDinamicoDelete)
+products.delete("/api/productsDB/:pid", addLogger, apiProductsDBDinamicoDelete)
 
 // RUTA PARA MODIFICAR PRODUCTOS SEGUN SU ID. Conectado a MongoDB
-products.put("/api/productsDB/:pid", apiProductsDBDinamicoPut)
+products.put("/api/productsDB/:pid", addLogger, apiProductsDBDinamicoPut)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // PETICIONES GET, POST, PUT Y DELETE CON ---FILESYSTEM---
 // RUTA PARA VER TODOS LOS PRODUCTOS. INCLUSO CON ?LIMIT=(+ NUMERO) PODES VER ELEGIR LA CANTIDAD DE PRODUCTOS QUE DESEAS VER.
-products.get("/api/productos", apiProducts)
+products.get("/api/productos", addLogger, apiProducts)
 
 // RUTA PARA VER PRODUCTOS SEGUN SU ID
-products.get("/api/productos/:pid", apiProductosDinamico)
+products.get("/api/productos/:pid", addLogger, apiProductosDinamico)
 
 // METODO POST DE API/PRODUCTOS. PARA AGREGAR MAS PRODUCTOS AL PRODUCTOS.JSON
-products.post("/api/productos", apiProductosPost)
+products.post("/api/productos", addLogger, apiProductosPost)
 
 // METODO PUT PARA MODIFICAR PRODUCTOS SEGUN SU ID. (EN EL CLIENTE DESEADO PONER METODO PUT CON LA RUTA DEL ID A CAMBIAR, Y CAMBIAR SUS PROPIEDADES CON TODOS LOS CAMPOS OBLIGATORIOS)
-products.put("/api/productos/:pid", apiProductosPut)
+products.put("/api/productos/:pid", addLogger, apiProductosPut)
 
 // METODO DELETE PARA ELIMINAR UN PRODUCTO SEGUN SU ID.
-products.delete("/api/productos/:pid", apiProductosDinamicoDelete)
+products.delete("/api/productos/:pid", addLogger, apiProductosDinamicoDelete)
 
 export default products
 

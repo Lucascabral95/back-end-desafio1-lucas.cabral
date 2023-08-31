@@ -5,13 +5,13 @@ class ProductsManager {
         this.model = productsModel
     }
 
-    getAllProducts = async () => {
+    getAllProducts = async (req) => {
         try {
             let productos = this.model.find()
-            console.log("Exito al buscar producto por id.");
+            console.log("Exito al buscar productos.");
             return productos
         } catch (error) {
-            console.log("error al buscar productor por id");
+            console.log("Error al buscar productos.");
         }
     };
 
@@ -65,23 +65,23 @@ class ProductsManager {
 
     subtractStock = async (pid, stock) => {
         try {
-            let findProduct = await this.model.findById({ _id: pid});
-      
+            let findProduct = await this.model.findById({ _id: pid });
+
             if (!findProduct) {
-              return { status: "error", msg: "No se encontro el producto." };
+                return { status: "error", msg: "No se encontro el producto." };
             }
-            
+
             if (findProduct.stock < stock) {
-              return { status: "error", msg: "Stock Insuficiente." };
+                return { status: "error", msg: "Stock Insuficiente." };
             } else {
-              findProduct.stock -= stock;
-              await findProduct.save();
-              return { status: "success", payload: findProduct };
+                findProduct.stock -= stock;
+                await findProduct.save();
+                return { status: "success", payload: findProduct };
             }
-          } catch (error) {
+        } catch (error) {
             console.log("Error al intentar restar el stock.", error);
             throw error;
-          }
+        }
     }
 }
 
