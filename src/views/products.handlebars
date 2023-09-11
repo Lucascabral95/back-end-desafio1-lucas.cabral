@@ -2,6 +2,7 @@
 
     <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
     <a href="completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
+    <a href="api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
 
     {{#if productossFull.[9] }}
     <div class="datos-session-mongoDB">
@@ -9,7 +10,7 @@
             MongoDB Atlas:
             {{productossFull.[7]}} </h2>
         <h3 style="text-align: center; font-weigth: bolder; font-size: 2.8rem; margin-top: 1%; color: blue">
-            Tu rol es de: {{productossFull.[8]}} </h3>
+            Tu rol es de: {{productossFull.[16]}} </h3>
         <h4 data-otro-valor="{{productossFull.[13]}}" style="text-align: center; font-size: 2rem; font-weight: 600"> El
             _ID de tu carrito es:
             {{productossFull.[13]}} </h4>
@@ -60,9 +61,13 @@
                             <th scope="col">Price</th>
                             <th scope="col">Stock</th>
                             <th scope="col">Category</th>
+                            <th scope="col">Owner</th>
                             {{#if productossFull.[15]}}
                             <th>Agregar al carrito</th>
                             {{/if}}
+
+                            <th> Eliminar producto </th>
+
                         </tr>
                     </thead>
                     {{#if productossFull.[15]}}
@@ -76,10 +81,20 @@
                             <td>{{lookup ../productossFull.[4] @index}}</td>
                             <td>{{lookup ../productossFull.[5] @index}}</td>
                             <td>{{lookup ../productossFull.[6] @index}}</td>
+                            <td>{{lookup ../productossFull.[19] @index}}</td>
                             <td>
-                                <button class="btn btn-info" id="boton-add"
-                                    onclick="funcionAddToCart('{{lookup ../productossFull.[0] @index}}', '{{lookup ../productossFull.[14] @index}}')">Add
-                                    to cart</button>
+                                <button class="btn btn-info" id="boton-add" onclick="funcionAddToCart('{{lookup ../productossFull.[0] @index}}', 
+                                    '{{lookup ../productossFull.[14] @index}}',
+                                    '{{lookup ../productossFull.[22] @index}}',
+                                    '{{lookup ../productossFull.[19] @index}}'
+                                    )">Add to cart</button>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger" id="button-delete" onclick="deleteProductById('{{lookup ../productossFull.[19] @index}}', 
+                                    '{{lookup ../productossFull.[0] @index}}',
+                                    '{{lookup ../productossFull.[22] @index}}'
+                                    )">
+                                    Delete Product</button>
                             </td>
                         </tr>
                         {{/each}}
@@ -143,7 +158,8 @@
             {{#if datosExtras.[9]}}
             <div>
                 <h2 class="text-center mt-4 mb-4 ">Formulario para agregar mas productos o eliminar uno segun su _id.
-                    <span style="color:red">(Se actualiza en tiempo real)</span>
+                    <span style="color:red">(Se actualiza en tiempo real). <br> Tu rol es de: {{productossFull.[16]}}
+                    </span>
                 </h2>
 
                 <div class="col-12" style="display: flex; justify-content: space-evenly">
@@ -170,12 +186,21 @@
                             <label for="category">category:</label>
                             <input type="text" name="category" required>
                             <br>
+                            <label for="category">owner:</label>
+                            <input type="text" name="owner" value="{{productossFull.[20]}}" readonly>
+                            <br>
                             <button type="submit" class="btn btn-primary">Agregar</button>
                         </form>
                     </div>
 
                     <div class="mb-4" style="width: 30%">
                         <label for="id">Ingrese el ID del producto a eliminar:</label>
+                        {{#if productossFull.[17] }}
+                        <p style="color: blue; font-weight: 600;"> *Al tener un rol {{productossFull.[16]}} solo podes
+                            eliminar los productos que agregaste.
+                            Un admin puedo eliminar todos
+                            los que quiere. * </p>
+                        {{/if}}
                         <input type="text" id="idMongo" name="id" required>
                         <button type="submit" id="boton-mongo" onclick="funcionMongo()" class="btn btn-primary">Eliminar
                             producto</button>
@@ -186,11 +211,11 @@
                 </div>
 
                 {{else}}
-                <h4 class="title-bloqueo-crud"> ¡Disculpanos! Al no ser Admin no tenes derecho a agregar o eliminar
+
+                <h4 class="title-bloqueo-crud"> ¡Disculpanos! Al tener un rol "{{productossFull.[16]}}" no tenes derecho
+                    a agregar o eliminar
                     productos 🛑 </h4>
-
                 {{/if}}
-
 
             </div>
 

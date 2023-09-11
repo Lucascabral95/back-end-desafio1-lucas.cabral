@@ -1,0 +1,21 @@
+<div class="container changeRole">
+    <a href="/api/session/logout" class="btn btn-danger" id="log">LOGOUT</a>
+    <a href="/home-mongodb" class="btn btn-primary">Ir a la seccion de productos</a>
+    <a href="completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
+
+    <h4 class="text-center title"> Pagina para cambiar tu rol de usuario. <br>
+        Actualmente es de: {{role.[0]}}
+    </h4>
+
+    <div class="contenedor">
+        <p class="texto">¿Querés cambiar tu rol de: a un rol de "{{role.[3]}}"?</p>
+        <a onclick="changeYes()" class="btn btn-primary si"> Si </a>
+        <a onclick="changeNo()" class="btn btn-danger si"> No </a>
+    </div>
+
+    <div class="img">
+        <img src="https://i.pinimg.com/564x/fa/b5/9e/fab59e8f321031810b4788a3d9d18f91.jpg" alt="Pikachu pensando"
+            class="img-img">
+    </div>
+
+</div>

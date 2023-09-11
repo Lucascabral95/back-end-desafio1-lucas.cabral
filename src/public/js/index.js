@@ -1,3 +1,7 @@
+// import Swal from "sweetalert2";
+
+// import Swal from "sweetalert2";
+
 const socket = io();
 
 // VISTA REALTIMEPRODUCTS.HANDLEBARS 
@@ -145,13 +149,128 @@ function terminarCompra(value) {
     });
 }
 
-function funcionAddToCart(value1, value2) {
-  fetch(`/api/cartsdb/${value2}/products/${value1}`, {
-    method: "POST"
-  })
-  alert(`¡¡¡Producto agregado al carrito exitosamente!!!`)
+// function funcionAddToCart(value1, value2) {
+//   fetch(`/api/cartsdb/${value2}/products/${value1}`, {
+//     method: "POST"
+//   })
+//   alert(`¡¡¡Producto agregado al carrito exitosamente!!!`)
+// }
+function funcionAddToCart(value1, value2, value3, value4) {
+
+  if (value3 !== value4) {
+    fetch(`/api/cartsdb/${value2}/products/${value1}`, {
+      method: "POST"
+    })
+    alert(`¡¡¡Producto agregado al carrito exitosamente!!!`)
+    console.log(value3, value4);
+  } else {
+    alert("No se puede agregar al carrito productos que vos mismo agregaste.")
+    console.log(value3, value4);
+  }
 }
 
 function notAddToCart() {
   alert("Teniedo un rol de 'Admin' no podes agregar productos al carrito")
+}
+
+function changePass() {
+  const value1 = document.getElementById("emailPass1").value;
+  const value2 = document.getElementById("emailPass2").value;
+
+  if (value1 === value2) {
+    fetch(`/email?email=${value1}`)
+      .then(response => {
+        if (response.ok) {
+          alert(`¡Cambio de contraseña exitoso!`);
+        } else {
+          alert("¡Error en la solicitud!");
+        }
+      })
+      .catch(error => {
+        console.error("Error en la solicitud:", error);
+      });
+  } else if (value1 === "" || value2 === "") {
+    alert(`Ambos campos son obligatorios.`);
+  } else {
+    alert("¡Error! Ambas contraseñas deben coincidir.");
+  }
+}
+
+
+function recoverPassword() {
+  const valueeEmail = document.getElementById("valueEmail").value;
+
+  fetch(`/email?email=${valueeEmail}`, {
+    method: "GET"
+  })
+    .then(response => {
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: `Se ha enviado un correo de recuperación de contraseña a: ${valueeEmail}.`,
+        });
+        setTimeout(() => {
+          window.location.href = '/generateLink';
+        }, 3500);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo recuperar la contraseña. Por favor, inténtalo de nuevo más tarde.',
+        });
+      }
+    })
+    .catch(error => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al procesar la solicitud. Por favor, inténtalo de nuevo más tarde.',
+      });
+    });
+}
+
+function changeNo() {
+  Swal.fire({
+    icon: 'warning',
+    title: '(?)',
+    text: 'No te cambiaste de rol.',
+  });
+}
+
+function changeYes(email) {
+  Swal.fire({
+    icon: 'success',
+    title: 'Success',
+    text: `¡Exito al cambiarte de rol!`,
+  });
+  fetch(`/api/users/premium/${email}`, {
+    method: "POST"
+  })
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.log(error);
+      throw error
+    })
+}
+
+function deleteProductById(owner, idProduct, emailUser) {
+
+  if (owner === emailUser || emailUser === "adminCoder@coder.com") {
+    fetch(`/home-mongodb/${idProduct}`,
+      { method: 'DELETE' })
+      .then(response => {
+        alert(`Producto con ID: ${idProduct} eliminador con exito ✅`)
+        console.log(owner, idProduct, emailUser);
+      })
+      .catch(error => {
+        alert(`Error al eliminar el producto.`)
+        console.log(error);
+      })
+  } else {
+    alert("No tenes permitido eliminar este producto. Solo el Admin y el usuario que lo creo puede eliminarlo.")
+    console.log(owner, idProduct, emailUser);
+  }
 }

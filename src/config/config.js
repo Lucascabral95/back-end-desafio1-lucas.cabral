@@ -12,5 +12,7 @@ export default {
     mongoStore: process.env.MONGOSTORE,
     key_mongoStore: process.env.KEY_SECRET_MONGOSTORE,
     persitencia: process.env.PERSITENCE,
-    loggers: process.env.LOGGER_ENV
+    loggers: process.env.LOGGER_ENV,
+    email_nodemailer: process.env.USER_EMAIL,
+    pass_nodemailer: process.env.EMAIL_PASS
 }

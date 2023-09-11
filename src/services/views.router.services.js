@@ -94,6 +94,28 @@ export const getByEmail = async (email) => {
     }
 }
 
+export const updatePasswordByEmail = async (email, newPassword) => {
+    try {
+        const user = await userModel.findOne({ email })
+        user.password = newPassword
+        await user.save()
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
+
+export const updateRoleByEmail = async (email, newRole) => {
+    try {
+        const user = await userModel.findOne({ email })
+        user.role = newRole
+        await user.save()
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
+
 export const createUser = async (user) => {
     let result
     try {

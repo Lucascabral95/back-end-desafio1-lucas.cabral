@@ -5,8 +5,7 @@
   "description": "practicas",
   "main": "no",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "start": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
@@ -48,6 +47,7 @@
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.7.5",
     "twilio": "^4.15.0",
+    "uuid": "^9.0.0",
     "winston": "^3.10.0"
   },
   "devDependencies": {

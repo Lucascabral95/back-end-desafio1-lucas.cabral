@@ -1,7 +1,7 @@
 import { Router } from "express";
 const viewsRouter = Router();
 import passport from "passport"
-import { auth, authDenied, lockUser, accessDeniedAdmin } from "../middlewares/auth.js"
+import { auth, authDenied, lockUser, accessDeniedAdmin, accessDeniedforAdmin } from "../middlewares/auth.js"
 import { addLogger } from "../utils/logger.js";
 //--------------------------------------JWT-------------------------------------------
 import { authToken } from "../jwt.js"
@@ -31,6 +31,13 @@ import {
     controllerTicket,
     controllerMock,
     controllerLoggerExamples,
+    controllerNodemailer,
+    controllerGenerateLink,
+    controllerLink,
+    controllerUsersPremium,
+    controllerRecoverPassword,
+    controllerChangePasswordGet,
+    controllerUsersPremiumPost,
 } from "../controllers/views.router.controllers.js"
 
 //--------------------------------------controllers de esta ruta-------------------------------------------------------------
@@ -149,77 +156,62 @@ viewsRouter.get("/completed/purchase", accessDeniedAdmin, addLogger, async (req,
 })
 
 // RUTA RELATIVA QUE MUESTRA UN NUMERO DINAMICO (100 EN ESTE CASO) DE PRODUCTOS PROVENIENTES DE "FAKER"
+// (LO PODES VER INCLUSO SI NO ESTAS LOGUEADO)
 viewsRouter.get("/mockingproducts", addLogger, controllerMock)
 
 // RUTA REALTIVA QUE AL EJECUTARLO MUESTRA EN CONSOLA LOS LOGGERS CON SUS NIVELES CORRESPONDIENTES
 viewsRouter.get("/logger", addLogger, controllerLoggerExamples)
 
+// RUTA REALTIVA QUE AL IR TE ENVIA UN EMAIL
+// viewsRouter.get("/logger", addLogger, controllerLoggerExamples)
+viewsRouter.get("/email", addLogger, authDenied, controllerNodemailer)
+
+// RUTA REALTIVA PARA CAMBIAR LA CONTRASEÑA
+viewsRouter.get("/generatelink", addLogger, authDenied, controllerGenerateLink)
+
+// RUTA REALTIVA PARA CAMBIAR LA CONTRASEÑA
+viewsRouter.get("/link/:linkToken", addLogger, authDenied, controllerLink)
+
+// RUTA REALTIVA PARA RENDERIZAR LA VISTA DEL ENVIO DE EMAIL
+viewsRouter.get("/recoverPassword", addLogger, authDenied, controllerRecoverPassword)
+
+// RUTA "POST" PARA CAMBIAR LA CONTRASEÑA DEL EMAIL DEL USUARIO POR MEDIO DEL LINK TEMPORAL GENERADO CON UUID
+viewsRouter.post("/changePassword", addLogger, authDenied, controllerChangePasswordGet)
+
+// RUTA REALTIVA PARA PERMITIR CAMBIAR EL ROL DE UN USUARIO, DE "USER" A "PREMIUM" Y VICEVERSA
+viewsRouter.get("/api/users/premium", addLogger, accessDeniedforAdmin, controllerUsersPremium)
+
+// RUTA "POST" QUE PERMITE CAMBIAR EL ROL DE UN USUARIO, DE "USER" A "PREMIUM" Y VICEVERSA
+viewsRouter.post("/api/users/premium/:uid", addLogger, controllerUsersPremiumPost)
+
+
+
+
+
+
+
+
+
+
+
 
 // RUTA PARA PROBAR ARTILLERY
 viewsRouter.get("/operacionsencilla", (req, res) => {
     let sum = 0
-    for ( let i = 0; i < 1000000; i++) {
-        sum += i 
+    for (let i = 0; i < 1000000; i++) {
+        sum += i
     }
     res.send({ sum })
 })
 
 viewsRouter.get("/operacioncompleja", (req, res) => {
     let sum = 0
-    for ( let i = 0; i < 5e8; i++) {
-        sum += i 
+    for (let i = 0; i < 5e8; i++) {
+        sum += i
     }
     res.send({ sum })
 })
 
-
-
-import bcrypt from "bcrypt"
-
-
-const users = [];
-
-// Ruta para registrar un usuario
-viewsRouter.post('/registerTest', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-
-        // Hash de la contraseña
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Guardar usuario en la "base de datos"
-        users.push({ username, password: hashedPassword });
-
-        res.status(201).send({ message: 'Usuario registrado exitosamente.', payload: users});
-    } catch (error) {
-        res.status(500).send('Error en el registro.');
-    }
-});
-
-// Ruta para el inicio de sesión
-viewsRouter.post('/loginTest', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-
-        // Buscar al usuario en la "base de datos"
-        const user = users.find(user => user.username === username);
-
-        if (!user) {
-            return res.status(404).send('Usuario no encontrado.');
-        }
-
-        // Comparar las contraseñas
-        const passwordMatch = await bcrypt.compare(password, user.password);
-
-        if (passwordMatch) {
-            res.send('Inicio de sesión exitoso.');
-        } else {
-            res.status(401).send('Credenciales incorrectas.');
-        }
-    } catch (error) {
-        res.status(500).send('Error en el inicio de sesión.');
-    }
-});
 
 
 

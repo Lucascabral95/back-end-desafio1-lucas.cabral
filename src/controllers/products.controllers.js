@@ -45,10 +45,13 @@ export const apiProductsDBDinamico = async (req, res) => {
         res.status(400).send({ status: "Error", message: "Error al obtener el producto seleccionado." });
     }
 }
-
+//------------------------------------------------------------------------------------------------------------------
 export const apiProductsDBPost = async (req, res) => {
     try {
         let content = req.body
+        if (!content.owner) {
+            content.owner = "premium";
+        }
         const results = await addProducts(content)
         res.send({ status: "success", payload: results })
         req.logger.info("Exito al agregar producto.")
@@ -57,6 +60,7 @@ export const apiProductsDBPost = async (req, res) => {
         req.logger.fatal("Error al agregar producto.")
     }
 }
+//------------------------------------------------------------------------------------------------------------------
 
 export const apiProductsDBDinamicoDelete = async (req, res) => {
     let { pid } = req.params

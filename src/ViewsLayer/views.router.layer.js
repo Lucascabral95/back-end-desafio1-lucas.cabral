@@ -16,7 +16,8 @@ import {
     getChatFromMongoAtlas,
     getPaginateHomeMongoDB,
     cartsModelFindService,
-    cartsModelFindByIdService
+    cartsModelFindByIdService,
+    getByEmail,
 } from "../services/views.router.services.js"
 
 // RUTA "GET" DE /API/SESSION/DENTRO
@@ -74,8 +75,16 @@ export const apiSessionLoginPost = async (req, res) => {
 // RUTA "GET" DE /API/SESSION/CURRENT
 export const apiSessionCurrent = async (req, res) => {
     try {
-        const datos = controllerHomeMongodb(req, res);
-        res.render("current", { datos });
+        const email = req.session.emailUser
+        const findUser = await getByEmail(email)
+        const name = findUser.first_name
+        const lastName = findUser.last_name
+        const age = findUser.age
+        const role = findUser.role
+        const cart = findUser.cart
+        const datas = [email, name, lastName, age, role, cart]
+
+        res.render("current", { datos: datas });
         req.logger.info("Peticion GET a /api/session/current exitosa.")
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener los datos de usuario.' });
@@ -143,8 +152,13 @@ export const homeMongoDB = async (req, res) => {
 
     const productoss = await getPaginateHomeMongoDB(category, limit, page, sort)
 
-    const productos = productoss.docs
+    const emailUser = req.session.emailUser
+    const findUser = await getByEmail(emailUser)
+    const roleUser = findUser.role
+    const roleView = roleUser === "premium" ? true : false; //Si el rol user es igual a "premium" sera true, sino sera false.
+    const roleOwner = roleUser === "admin" ? "admin" : emailUser
 
+    const productos = productoss.docs
     const buscadorId = productos.map(i => i._id)
     const buscadorTitle = productos.map(title => title.title)
     const buscadorDescription = productos.map(d => d.description)
@@ -152,22 +166,27 @@ export const homeMongoDB = async (req, res) => {
     const buscadorPrice = productos.map(p => p.price)
     const buscadorStock = productos.map(s => s.stock)
     const buscadorCategory = productos.map(ca => ca.category)
+    const buscadorOwner = productos.map(o => o.owner)
     const user = req.session.emailUser
     const rol = req.session.rol
     const existeRol = req.session.existRol
+    const ownerAdmin = roleUser === "admin" ? "admin" : user
+
+    const canDelete = buscadorOwner === emailUser ? true : false
     //------
     const userEmailGithub = req.session.emailUser.email
     const userAgeGithub = req.session.emailUser.age
     const userFirstNameGithub = req.session.emailUser.first_name
     const cartIdUser = req.session.data[3]
     const cartIdUserMap = Array(productos.length).fill(cartIdUser);
+    const arrayEmailUser = Array(productos.length).fill(emailUser);
     //------
-    const mostrarONo = req.session.rol === "Admin" ? false : true
+    const mostrarONo = roleUser === "Admin" ? false : true
     //------
     const productossFull = [buscadorId, buscadorTitle, buscadorDescription, buscadorCode, buscadorPrice,
-        buscadorStock, buscadorCategory, user, rol, existeRol,
-        userEmailGithub, userAgeGithub, userFirstNameGithub, cartIdUser, cartIdUserMap,
-        mostrarONo]
+        buscadorStock, buscadorCategory, user, rol, existeRol, userEmailGithub, userAgeGithub, 
+        userFirstNameGithub, cartIdUser, cartIdUserMap, mostrarONo, roleUser, 
+        roleView, roleOwner, buscadorOwner, ownerAdmin, canDelete, arrayEmailUser]
 
     const totalDocss = productoss.totalDocs
     const limitt = productoss.limit
@@ -178,7 +197,7 @@ export const homeMongoDB = async (req, res) => {
     const hasNextPage = productoss.hasNextPage
     const prevPage = productoss.prevPage
     const nextPage = productoss.nextPage
-    const accesoProductos = req.session.rol === "Admin" ? true : false;
+    const accesoProductos = roleUser === "premium" || roleUser === "admin" ? true : false;
 
     const bloqueoProductos = true
 
@@ -305,8 +324,8 @@ export const cartsParams = async (req, res) => {
             precioTotalArray
         ];
 
-        res.render("cartId", { datos });
         req.logger.info(`Exito al cargar los datos de tu carrito con _id: ${cid}`)
+        res.render("cartId", { datos });
     } catch (error) {
         res.render("emptyCart")
     }

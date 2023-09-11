@@ -10,21 +10,34 @@ import {
     getCartUser,
     populateCart,
     serviceFaker,
+    updatePasswordByEmail,
+    updateRoleByEmail,
 } from "../services/views.router.services.js"
 import cartsModel from "../DAO/models/carts.model.js"
 import { createHash, isValidPassword } from "../utils.js";
+import bcrypt from "bcrypt"
 import { generateToken } from "../jwt.js";
+import { sendMail } from "../services/nodemailer.js";
+import Swal from 'sweetalert2'
 //-----------Custom Error------------------------------
 import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
 import { generateProductErrorInfo, generateTicketErrorInfo } from "../services/errors/info.js";
 //-----------Custom Error------------------------------
+//------ UUID (para generar links temporales) ---------
+import { v4 as uuidv4 } from 'uuid';
+//------ UUID (para generar links temporales) ---------
+
 
 // LOGIGA DE /API/SESSION/CURRENT
-export const controllerHomeMongodb = (req, res) => {
+export const controllerHomeMongodb = async (req, res) => {
     try {
         const emailJwt = req.session.emailJwt;
         const dataUserCookie = req.cookies.dataUser || {};
+
+        // const email = req.session.emailUser
+        // const findUser = await getByEmail(email)
+        // const role = findUser.role
 
         const dataUserFirstName = req.session.data[0];
         const dataUserLastName = req.session.data[1];
@@ -89,7 +102,6 @@ export const controllerApiSessionRegister = async (user) => {
         const savedUser = await createUser(newUser);
         return savedUser;
     } catch (error) {
-        // console.error("Error al registrar el usuario y el carrito:", error.message)
         return null;
     }
 };
@@ -152,27 +164,6 @@ export const controllerRealTimeProductsPost = async (req, res, nuevoProducto) =>
 }
 
 // LOGICA "POST" DE /HOME-MONGODB
-// export const controllerMongoDbPost = async (req, res, newProduct) => {
-//     try {
-//         if (
-//             !newProduct.title ||
-//             !newProduct.description ||
-//             !newProduct.code ||
-//             !newProduct.price ||
-//             !newProduct.stock ||
-//             !newProduct.category
-//         ) {
-//             return res
-//                 .status(401)
-//                 .json({ status: "error", message: "Todos los campos son obligatorios" });
-//         }
-//         const product = await add(newProduct);
-//         return product
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).send({ status: "error", message: "Error al agregar el producto" });
-//     }
-// };
 export const controllerMongoDbPost = async (req, res, newProduct) => {
     if (
         !newProduct.title ||
@@ -194,12 +185,12 @@ export const controllerMongoDbPost = async (req, res, newProduct) => {
     return product
 };
 
-
 // LOGICA "GET" DINAMICA DE /HOME-MONGODB
 export const controllerMongoDbDinamico = async (pid) => {
     try {
         const prod = await deleteProductById(pid);
         return prod;
+        
     } catch (error) {
         throw error;
     }
@@ -228,6 +219,7 @@ export const controllerStock = async (req, res) => {
 }
 
 import TicketServices from "../DAO/TicketsDAO.js"
+// import { log } from "winston";
 const ticketDao = new TicketServices()
 
 // METODO "POST" PARA CREAR UN TICKET CON SUS RESPECTIVOS CAMPOS OBLIGATORIOS
@@ -298,3 +290,134 @@ export const controllerLoggerExamples = async (req, res) => {
         next(error)
     }
 }
+
+export const controllerNodemailer = async (req, res) => {
+    let email = req.query.email
+    try {
+        const linkToken = uuidv4()
+        const expirationTime = Math.floor(Date.now() / 1000) + 3600 // tiempo en segundos para que expire este link temporal para restablecer la contraseña (1 hora)
+        const enlace = `http://localhost:8080/link/${linkToken}?expira=${expirationTime}`
+
+        let option = ({
+            from: " Proyecto de Backend <lucasgamerpolar10@gmail.com>",
+            to: email,
+            subject: "Link para restablecer contraseña. Expira en 1 hora.",
+            html: `
+            <div>
+            <p> Para actualizar su contraseña, </p> <a href="${enlace}"> clickeá acá. </a>
+            </div>
+            `,
+            attachments: []
+        })
+
+        const findEmail = await getByEmail(email)
+
+        if (findEmail) {
+            let result = await sendMail(option)
+            res.cookie("emailRecuperacion", email, { maxAge: 3600000 }); // tiempo en milisegundos que se guardara la cookie (1 hora)
+            res.send({ status: "success", result: "Email sent" })
+            req.logger.info(`Exito al enviar correo a ${email}`)
+        } else {
+            req.logger.fatal(`Email no existente en la base de datos.`);
+        }
+
+    } catch (error) {
+        req.logger.fatal(`Error al enviar correo a ${email}`);
+    }
+}
+
+export const controllerGenerateLink = async (req, res) => {
+    res.render("generateLink");
+};
+
+export const controllerLink = async (req, res) => {
+    const linkToken = req.params.linkToken;
+    const expirationTime = req.query.expira;
+
+    const tiempoRestante = expirationTime - Math.floor(Date.now() / 1000);
+    const emailCheck = req.cookies.emailRecuperacion
+    console.log(emailCheck);
+
+    if (tiempoRestante > 0) {
+        res.render("change-password", { email: emailCheck })
+    } else {
+        res.render("expirationPage")
+    }
+}
+
+export const controllerRecoverPassword = async (req, res) => {
+    res.render("recoverPassword")
+}
+
+export const controllerChangePassword = async (req, res) => {
+    try {
+        const password = req.body
+        const user = req.cookies.emailRecuperacion
+
+        const findEmail = await findEmail(user)
+        const emailPass = findEmail.password
+        console.log(emailPass);
+
+        if (password) {
+
+        } else {
+            req.logger.fatal("Ingrese una contraseña.")
+        }
+
+    } catch (error) {
+        req.logger.fatal("No se ha podido cambiar la contraseña.")
+    }
+}
+
+export const controllerChangePasswordGet = async (req, res) => {
+    const newPassword = req.body.password;
+    const user = req.cookies.emailRecuperacion;
+
+    try {
+        const findEmail = await getByEmail(user);
+
+        if (!findEmail) {
+            return res.status(404).send({ message: "Usuario no encontrado" });
+        }
+        const emailPassword = findEmail.password;
+        const isPasswordValid = await bcrypt.compare(newPassword, emailPassword);
+
+        if (isPasswordValid) {
+            req.logger.warning("La contraseña debe ser distinta a la orignal.");
+            res.send({ message: "Error al cambiar la contraseña. Debe ser diferente a la orignal" });
+        } else {
+            const passHasheada = await createHash(newPassword)
+            await updatePasswordByEmail(user, passHasheada)
+            req.logger.info("Exito al cambiar la contraseña.");
+            res.status(401).send({ message: "Exito al cambiar la contraseña" });
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).send({ message: "Error interno del servidor" });
+    }
+}
+
+
+export const controllerUsersPremium = async (req, res) => {
+    const email = req.session.emailUser
+    const findUser = await getByEmail(email)
+    const roleOfEmail = findUser.role
+    const idOfEmail = findUser._id
+
+    const changeRole = findUser.role === "user" ? "premium" : "user"
+    const data = [roleOfEmail, idOfEmail, email, changeRole]
+
+    res.render("changeRole", { role: data })
+}
+
+export const controllerUsersPremiumPost = async (req, res) => {
+    const uid = req.params.uid
+    const email = req.session.emailUser
+    const findUser = await getByEmail(email)
+    const role = findUser.role
+    const changeRole = role === "user" ? "premium" : "user"
+
+    await updateRoleByEmail(email, changeRole)
+    console.log("Exito al cambiar de Role de usuario.");
+}
+
