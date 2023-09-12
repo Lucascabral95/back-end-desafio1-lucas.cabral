@@ -184,8 +184,8 @@ export const homeMongoDB = async (req, res) => {
     const mostrarONo = roleUser === "Admin" ? false : true
     //------
     const productossFull = [buscadorId, buscadorTitle, buscadorDescription, buscadorCode, buscadorPrice,
-        buscadorStock, buscadorCategory, user, rol, existeRol, userEmailGithub, userAgeGithub, 
-        userFirstNameGithub, cartIdUser, cartIdUserMap, mostrarONo, roleUser, 
+        buscadorStock, buscadorCategory, user, rol, existeRol, userEmailGithub, userAgeGithub,
+        userFirstNameGithub, cartIdUser, cartIdUserMap, mostrarONo, roleUser,
         roleView, roleOwner, buscadorOwner, ownerAdmin, canDelete, arrayEmailUser]
 
     const totalDocss = productoss.totalDocs
@@ -258,13 +258,12 @@ export const getChat = async (req, res) => {
     req.logger.info("Peticion GET a /chat exitosa.")
 }
 
-// RUTA "GET" PARA /CARTS/:CID
+// RUTA "GET" PARA /CARTS/:CID/PURCHASE
 export const cartsParams = async (req, res) => {
+    const cartAll = await cartsModelFindService();
+    const cid = req.params.cid;
+    const cart = await cartsModelFindByIdService(cid)
     try {
-        const cartAll = await cartsModelFindService();
-        const cid = req.params.cid;
-        const cart = await cartsModelFindByIdService(cid)
-
         const cartId = cart._id;
         const productId = cart.products.map((prod) => prod.product._id);
         const title = cart.products.map((prod) => prod.product.title);
@@ -327,7 +326,7 @@ export const cartsParams = async (req, res) => {
         req.logger.info(`Exito al cargar los datos de tu carrito con _id: ${cid}`)
         res.render("cartId", { datos });
     } catch (error) {
+        console.log(cart);
         res.render("emptyCart")
     }
 };
-

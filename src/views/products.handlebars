@@ -1,4 +1,4 @@
-<section>
+<section id="section-mongodb">
 
     <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
     <a href="completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
@@ -49,6 +49,10 @@
                     <li><a class="dropdown-item" href="/home-mongodb?sort=-price"> Mayor precio </a></li>
                 </ul>
             </div>
+
+            <h5 class="text-center" style="font-size: 1.6rem; font-weight: bolder; color: brown"> 
+                ** Recordatorio: los productos que agregues solo vos y el admin podran eliminarlos, 
+                y tampoco podras agregarlos al carrito. **</h5>
 
             <div class="col-12">
                 <table style="margin-top: 3.5%;" class="table table-striped col-12">
@@ -193,7 +197,7 @@
                         </form>
                     </div>
 
-                    <div class="mb-4" style="width: 30%">
+                    {{!-- <div class="mb-4" style="width: 30%">
                         <label for="id">Ingrese el ID del producto a eliminar:</label>
                         {{#if productossFull.[17] }}
                         <p style="color: blue; font-weight: 600;"> *Al tener un rol {{productossFull.[16]}} solo podes
@@ -207,7 +211,7 @@
                         <p style="font-weight: bolder; font-size: 1.1rem; color: red">Por favor, cuando elimine un
                             producto,
                             refresque la pagina asi ve los cambios.</p>
-                    </div>
+                    </div> --}}
                 </div>
 
                 {{else}}

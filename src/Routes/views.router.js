@@ -119,7 +119,7 @@ viewsRouter.post("/home-mongoDB", addLogger, homeMongodbPost)
 viewsRouter.delete("/home-mongodb/:pid", addLogger, homeMongodbDinamica)
 
 // RENDERIZA LA VISTA "cardId"
-// viewsRouter.get("/carts/:cid", cartsParams)
+// viewsRouter.get("/carts/:cid/purchase", cartsParams)
 viewsRouter.get("/carts/:cid/purchase", addLogger, accessDeniedAdmin, cartsParams)
 
 // METODO "POST" PARA RESTAR LA CANTIDAD DE STOCK DE UNA COMPRA /CARTS/:PID/:STOCK

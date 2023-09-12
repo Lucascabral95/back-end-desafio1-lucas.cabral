@@ -274,3 +274,4 @@ function deleteProductById(owner, idProduct, emailUser) {
     console.log(owner, idProduct, emailUser);
   }
 }
+

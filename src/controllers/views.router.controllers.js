@@ -389,7 +389,8 @@ export const controllerChangePasswordGet = async (req, res) => {
             const passHasheada = await createHash(newPassword)
             await updatePasswordByEmail(user, passHasheada)
             req.logger.info("Exito al cambiar la contraseña.");
-            res.status(401).send({ message: "Exito al cambiar la contraseña" });
+            // res.status(401).send({ message: "Exito al cambiar la contraseña" });
+            res.render("successChangePassword")
         }
     } catch (error) {
         console.error("Error:", error);
