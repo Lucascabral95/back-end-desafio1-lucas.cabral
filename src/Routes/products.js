@@ -26,7 +26,7 @@ import { addLogger } from "../utils/logger.js";
 // CON "?CATEGORY=" PARA FILTRAR LA CATEGORIA DE PRODUCTOS DESEADA (¡¡¡ BUSCAR LAS CATEGORIAS SEGUN FIGURAN, SON CASE SENSITIVE !!!) 
 
 // products.get("/api/productsDB", apiProductsDB)
-products.get("/api/productsDB", apiProductsDB)
+products.get("/api/productsDB", addLogger, apiProductsDB)
 
 // RUTA PARA VER LOS PRODUCTOS SEGUN SU ID. Conectado a MongoDB
 products.get("/api/productsDB/:pid", addLogger, apiProductsDBDinamico)

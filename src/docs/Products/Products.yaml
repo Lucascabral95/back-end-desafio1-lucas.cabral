@@ -1,0 +1,190 @@
+paths:
+  /api/productsdb:
+    get:
+      summary: Obtiene todos los productos de la Base de Datos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Los productos fueron obtenidos satisfactoriamente de la Base de Datos mediante una página de 7 productos por página.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Products"
+        "500":
+          description: Error al obtener los productos de la Base de Datos. Posiblemente por un error de servidor
+    post:
+      summary: Agregar un nuevo producto a la Base de Datos
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/addProduct"
+      responses:
+        "200":
+          description: El producto se agregó exitosamente a la Base de Datos
+        "400":
+          description: Error al agregar producto a la Base de Datos
+  /api/productsdb/{pid}:
+    get:
+      summary: Obtiene un solo producto según su _id
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: _id del producto que desea solicitar
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Producto encontrado por su _id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+        "500":
+          description: Error al obtener el producto deseado
+    put:
+      summary: Actualiza un producto según su _id
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: _id del producto a actualizar
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/updateProduct"
+      responses:
+        "200":
+          description:
+        "400":
+          description:
+    delete:
+      summary: Elimina de la Base de Datos un producto según su _id
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: _id del producto que desea eliminar de la Base de Datos
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Éxito al eliminar el producto de la Base de Datos
+        "400":
+          description: Error al eliminar el producto de la Base de Datos
+
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id autogenerado de MongoDB del producto
+        title:
+          type: string
+          description: Título del producto
+        description:
+          type: string
+          description: Descripción del producto
+        code:
+          type: string
+          description: Código del producto
+        price:
+          type: string
+          description: Precio del producto
+        stock:
+          type: number
+          description: Unidades del producto en el inventario
+        category:
+          type: string
+          description: Categoría del producto
+        owner:
+          type: string
+          description: Email del cliente que creó el producto.
+      example:
+        _id: "sdjbfh32uy374637874"
+        title: Camiseta Selección Argentina
+        description: Adidas
+        code: A01
+        price: "60000"
+        stock: 500
+        category: Deportes
+        owner: Ejemplo@hotmail.com
+
+  requestBodies:
+    updateProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Título del producto
+        description:
+          type: string
+          description: Descripción del producto
+        code:
+          type: string
+          description: Código del producto
+        price:
+          type: string
+          description: Precio del producto
+        stock:
+          type: number
+          description: Unidades del producto en el inventario
+        category:
+          type: string
+          description: Categoría del producto
+      example:
+        title: Teclado Gamer
+        description: Razer
+        code: A02
+        price: "120000"
+        stock: 152
+        category: Informatica
+
+    addProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Título del producto
+        description:
+          type: string
+          description: Descripción del producto
+        code:
+          type: string
+          description: Código del producto
+        price:
+          type: string
+          description: Precio del producto
+        stock:
+          type: number
+          description: Unidades del producto en el inventario
+        category:
+          type: string
+          description: Categoría del producto
+      example:
+        title: Teclado Gamer
+        description: Razer
+        code: A02
+        price: "120000"
+        stock: 152
+        category: Informatica
+

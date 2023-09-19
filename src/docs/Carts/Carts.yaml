@@ -1,0 +1,515 @@
+paths:
+  /api/cartsdb:
+    get:
+      summary: Obtiene todos los carritos de la Base de datos
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Los carritos fueron obtenidos satisfactoriamente de la Base de Datos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CartProducts"
+        "500":
+          description: Error al obtener los carritos de la Base de Datos. Posiblemente por un error de servidor
+    post:
+      summary: Se crea un nuevo carrito y se agrega en la Base de Datos
+      tags:
+        - Carts
+      responses:
+        "201":
+          description: Éxito al crear un nuevo carrito
+        "400":
+          description: Error al crear un nuevo carrito
+
+  /api/cartsdb/{cid}:
+    get:
+      summary: Se obtiene un carrito según _id con sus respectivos productos dentro (si los hay)
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: _id del carrito que desea solicitar
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Carrito encontrado por su _id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartProducts"
+        "404":
+          description: Carrito no encontrado
+        "500":
+          description: Error al obtener el carrito deseado
+    put:
+      summary: Se agrega un arreglo de productos en un carrito según su _id
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: _id del carrito a seleccionar
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/updateCartWithProduct"
+      responses:
+        "200":
+          description: Éxito al actualizar el carrito
+        "400":
+          description: Error al actualizar el carrito
+    delete:
+      summary: Elimina de MongoDB todos los productos de un carrito según su _id
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: _id del carrito para eliminar todos sus productos
+      responses:
+        "200":
+          description: Éxito al eliminar todos los productos del carrito
+        "400":
+          description: Error al eliminar todos los productos del carrito
+
+  /api/cartsdb/{cid}/products/{pid}:
+    post:
+      summary: Agrega un producto según su _id a un carrito según su _id
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: _id del carrito a donde agregar el producto
+        - name: pid
+          in: path
+          required: true
+          description: _id del producto a agregar al carrito
+      responses:
+        "200":
+          description: Producto agregado exitosamente al carrito seleccionado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "400":
+          description: Error al agregar el producto al carrito seleccionado
+    put:
+      summary: Actualiza la cantidad de un producto en un carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: _id del carrito
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: _id del producto a actualizar en el carrito
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/updateQuantityInCart"
+      responses:
+        "200":
+          description: Éxito al modificar la cantidad del producto seleccionado en el carrito indicado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "400":
+          description: Error al modificar la cantidad del producto seleccionado en el carrito indicado
+    delete:
+      summary: Elimina un producto indicado por su _id de un carrito seleccionado por su _id
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: _id del carrito
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: _id del producto a eliminar en un carrito seleccionado
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Éxito al eliminar el producto del carrito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cart"
+        "400":
+          description: Error al eliminar el producto del carrito
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id autogenerado de MongoDB para el carrito
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: "#/components/schemas/Product"
+              quantity:
+                type: number
+                description: Cantidad del producto seleccionado por _id
+
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id del producto
+        title:
+          type: string
+          description: Título del producto
+        description:
+          type: string
+          description: Descripción del producto
+        code:
+          type: string
+          description: Código del producto
+        price:
+          type: number
+          description: Precio del producto
+        stock:
+          type: string
+          description: Stock disponible del producto
+        category:
+          type: string
+          description: Categoría del producto
+        owner:
+          type: string
+          description: Email del usuario que agregó el producto
+
+    CartProducts:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id autogenerado de MongoDB para el carrito
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: "#/components/schemas/Product"
+              quantity:
+                type: number
+                description: Cantidad del producto seleccionado por _id
+
+  requestBodies:
+    updateCartWithProduct:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              product:
+                type: string
+                description: _id del producto a aumentar su cantidad en +1
+      example:
+      product: "dskjf8374hf843h8"
+
+    updateQuantityInCart:
+      type: object
+      properties:
+        quantity:
+          type: number
+          description: Actualiza la cantidad de un producto X en un carrito X
+      example:
+      quantity: 5
+
+
+# paths:
+#   /api/cartsdb:
+#     get:
+#       summary: Obtiene todos los carritos de la Base de datos
+#       tags:
+#         - Carts
+#       responses:
+#         "200":
+#           description: Los carritos fueron obtenidos satisfactoriamente de la Base de Datos
+#           content:
+#             application/json:
+#               schema:
+#                 type: array
+#                 items:
+#                   $ref: "#/components/schemas/CartProducts"
+#         "500":
+#           description: Error al obtener los carritos de la Base de Datos. Posiblemente por un error de servidor
+#     post:
+#       summary: Se crea un nuevo carrito y se agrega en la Base de Datos
+#       tags:
+#         - Carts
+#       responses:
+#         "201":
+#           description: Éxito al crear un nuevo carrito
+#         "400":
+#           description: Error al crear un nuevo carrito
+
+#   /api/cartsdb/{cid}:
+#     get:
+#       summary: Se obtiene un carrito según _id con sus respesctivos productos dentro (si los hay)
+#       tags:
+#         - Carts
+#       parameters:
+#         - name: cid
+#           in: path
+#           required: true
+#           description: _id del carrito que desea solicitar
+#           schema:
+#             type: string
+#       responses:
+#         "200":
+#           description: Carrito encontrado por su _id
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: "#/components/schemas/CartProducts"
+#         "404":
+#           description: Carrito no encontrado
+#         "500":
+#           description: Error al obtener el carrito deseado
+#     put:
+#       summary: Se agrega un arreglo de productos en un carrito segun su _id
+#       tags:
+#         - Carts
+#       parameters:
+#         - name: cid
+#           in: path
+#           required: true
+#           description: _id del carrito a seleccionar
+#           schema:
+#             type: string
+#       requestBody:
+#         required: true
+#         content:
+#           application/json:
+#             schema:
+#               $ref: "#/components/requestBodies/updateCartWithProduct"
+#       responses:
+#         "200":
+#           description: Éxito al actualizar el carrito
+#         "400":
+#           description: Error al actualizar el carrito
+#     delete:
+#       summary: Elimina de MongoDB todos los productos de un carrito según su _id
+#       tags:
+#         - Carts
+#       parameters:
+#         - name: cid
+#           in: path
+#           required: true
+#           description: _id del carrito para eliminar todos sus productos
+#       responses:
+#         "200":
+#           description: Éxito al eliminar todos los productos del carrito
+#         "400":
+#           description: Error al eliminar todos los productos del carrito
+
+#   /api/cartsdb/{cid}/products/{pid}:
+#     post:
+#       summary: Agrega un producto según su _id a un carrito según su _id
+#       tags:
+#         - Carts
+#       parameters:
+#         - name: cid
+#           in: path
+#           required: true
+#           description: _id del carrito a donde agregar el producto
+#         - name: pid
+#           in: path
+#           required: true
+#           description: _id del producto a agregar al carrito
+#       responses:
+#         "200":
+#           description: Producto agregado exitosamente al carrito seleccionado
+#             content:
+#               application/json: 
+#                 schema:
+#                   type: array
+#                     items:
+#                       $ref: "#/components/schemas/Cart"
+#         "400":
+#           description: Error al agregar el producto al carrito seleccionado
+#     put:
+#       summary: Actualiza la cantidad de un producto en un carrito
+#       tags:
+#         - Carts
+#       parameters:
+#         - name: cid
+#           in: path
+#           required: true
+#           description: _id del carrito
+#         - name: pid
+#           in: path
+#           required: true
+#           description: _id del producto a actualizar en el carrito
+#       requestBody:
+#         required: true
+#         content:
+#           application/json:
+#             schema:
+#               $ref: "#/components/requestBodies/updateQuantityInCart"
+#       responses:
+#         "200":
+#           description: Éxito al modificar la cantidad del producto seleccionado en el carrito indicado
+#             content:
+#               application/json: 
+#                 schema: 
+#                   type: array
+#                     items:
+#                       $ref: "#/components/schemas/Cart"
+#         "400":
+#           description: Error al modificar la cantidad del producto seleccionado en el carrito indicado
+#     delete:
+#       summary: Elimina un producto indicado por su _id de un carrito seleccionado por su _id
+#       tags:
+#         - Carts
+#       parameters:
+#         - name: cid
+#           in: path
+#           required: true
+#           description: _id del carrito
+#         - name: pid
+#           in: path
+#           required: true
+#           description: _id del producto a eliminar en un carrito seleccionado
+#       responses:
+#         "200":
+#           description: Éxito al eliminar el producto del carrito
+#             content: 
+#               application/json: 
+#                 schema: 
+#                   type: array
+#                     items:
+#                       $ref: "#/components/schemas/Cart"
+#         "400":
+#           description: Error al eliminar el producto del carrito
+
+
+# components:
+#   schemas:
+#     Cart:
+#       type: object
+#       properties:
+#         _id:
+#           type: string
+#           description: Id autogenerado de MongoDB para el carrito
+#         products:
+#           type: array
+#             _id: 
+#               type: String
+#               description: _id del producto agregado al carrito. Luego en "GET" se hara un populate con $ref "#/components/schemas/Product
+#             quantity: 
+#               type: String  
+#               description: Cantidad del producto seleccionado por _id. Luego en "GET" se hara un populate con $ref "#/components/schemas/Product
+
+#     Product:
+#       type: object
+#       properties:
+#         _id:
+#           type: string
+#           description: Id del producto
+#         title:
+#           type: string
+#           description: Título del producto
+#         description:
+#           type: string
+#           description: Descripción del producto
+#         code:
+#           type: string
+#           description: Código del producto
+#         price:
+#           type: number
+#           description: Precio del producto
+#         stock:
+#           type: string
+#           description: Stock disponible del producto
+#         category:
+#           type: string
+#           description: Categoría del producto
+#         owner:
+#           type: string
+#           description: Email del usuario que agregó el producto
+      
+#       CartProducts:
+#         type: object
+#         properties: 
+#           _id: 
+#             type: string
+#             description: Id autogenerado de MongoDB para el carrito
+#           products:
+#             type: array
+#             description: Array que contiene todos los producto agregados con sus cantidades a comprar
+#               product:
+#                 content:
+#                   application/json:
+#                     schema:
+#                       type: array
+#                         items:
+#                           "#/components/schemas/Product" 
+#               quantity: 
+#                 type: number
+#                 description: Cantidad del producto seleccinado por _id
+
+#   requestBodies:
+#     updateCartWithProduct:
+#       type: object
+#       properties:
+#         product:
+#           type: string
+#           description: _id del producto a aumentar su cantidad en +1
+#       example:
+#       product: "dskjf8374hf843h8"
+
+#     updateQuantityInCart:
+#       type: object
+#       properties:
+#         quantity:
+#           type: number
+#           description: Actualiza la cantidad de un producto X en un carrito X
+#       example:
+#       quantity: 5
+
+

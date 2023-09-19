@@ -39,6 +39,11 @@ import errorMiddleware from "./middlewares/errors/index.js"
 //----------- logger -----------
 import { addLogger } from "./utils/logger.js";
 //----------- logger -----------
+//----------- swagger -----------
+import swaggerJsdoc from "swagger-jsdoc"
+import swaggerUiExpress from "swagger-ui-express"
+import { swaggerOptions } from "./utils/swagger-options.js";
+//----------- swagger -----------
 
 
 import MessagesManager from "./DAO/MessagesDAO.js";
@@ -60,12 +65,11 @@ app.use(express.urlencoded({ extended: true }));
 app.engine("handlebars", handlebars.engine()); // HANDLEBARS
 app.use(compression())// GZIP
 
-
 // CONEXION MONGO ATLAS
 const CONNECTION_MONGOATLAS = config.mongo_atlas
 mongoose.connect(CONNECTION_MONGOATLAS)
-  .then(() => console.log("Base de datos conectada"))
-  .catch(err => console.log(err))
+.then(() => console.log("Base de datos conectada"))
+.catch(err => console.log(err))
 // CONEXION MONGO ATLAS
 //-----------session-----------
 app.use(cookieParser())
@@ -77,32 +81,34 @@ app.use(
     resave: false,
     saveUninitialized: false,
     // cookie: {
-    //   maxAge: 7 * 24 * 60 * 60 * 1000,
-    // },
-    store: MongoStore.create({
-      mongoUrl:
+      //   maxAge: 7 * 24 * 60 * 60 * 1000,
+      // },
+      store: MongoStore.create({
+        mongoUrl:
         MONGOSTORE,
-      mongoOptions: {
+        mongoOptions: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       },
       ttl: 100000000,
     }),
   })
-);
-//-----------session-----------
-
-//-----------passport-github2-----------
-initializePassport()
-app.use(passport.initialize())
-app.use(passport.session())
-//-----------passport-github2-----------
-
-app.use(cart);
-app.use(products);
-app.use(viewsRouter);
-app.use(errorMiddleware)// errorHandler
-//----------- logger -----------
+  );
+  //-----------session-----------
+  
+  //-----------passport-github2-----------
+  initializePassport()
+  app.use(passport.initialize())
+  app.use(passport.session())
+  //-----------passport-github2-----------
+  
+  app.use(cart);
+  app.use(products);
+  app.use(viewsRouter);
+  app.use(errorMiddleware)// errorHandler
+  const specs = swaggerJsdoc(swaggerOptions) // SWAGGER
+  app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs)) // SWAGGER
+  //----------- logger -----------
 app.use(addLogger)
 //----------- logger -----------
 

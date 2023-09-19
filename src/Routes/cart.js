@@ -16,10 +16,10 @@ import {
 //------------------------------------ IMPORTACIONES DE VIEWSLAYER ---------------------------------------
 
 // RUTA "GET" PARA OBTENER TODOS LOS CARRITOS CON SUS REPECTIVOS PRODUCTOS DENTRO (SI ES QUE LOS HAY). CON "POPULATE"
-cart.get("/api/cartsdb", addLogger, controllersApiCartsDB)
+cart.get("/api/cartsDB", addLogger, controllersApiCartsDB)
 
-// RUTA "GET" PARA OBTENER TODOS LOS CARRITOS SEGUN SU ID CON SUS REPECTIVOS PRODUCTOS DENTRO (SI ES QUE LOS TIENE). CON "POPULATE"
-cart.get("/api/cartsdb/:cid", addLogger, controllersApiCartsDBDinamico)
+// RUTA "GET" PARA OBTENER UN CARRITO SEGUN SU ID CON SUS REPECTIVOS PRODUCTOS DENTRO (SI ES QUE LOS TIENE). CON "POPULATE"
+cart.get("/api/cartsDB/:cid", addLogger, controllersApiCartsDBDinamico)
 
 // LOGICA DE METODO "POST" PARA CREAR UN NUEVO "CARRITO" QUE SE AGREGARA EN LA COLECCION DE "CARTS" DE mongoDB ATLAS. 
 cart.post("/api/cartsDB", addLogger, controllersApiCartDBPost)
@@ -31,7 +31,7 @@ cart.post("/api/cartsDB/:cid/products/:pid", addLogger, controllersApiCartDBDina
 cart.put("/api/cartsDB/:cid/products/:pid", addLogger, controllersApiCartDBPutProductsPut)
 
 // LOGICA DE METODO "PUT" QUE PERMITE ACTUALIZAR EL CARRITO SELECCIONADO POR "/:CID" CON UN ARREGLO DE PRODUCTOS QUE LE PASO POR EL BODY, escribir { "product": "(+ el _id del producto a agregar)"}
-cart.put("/api/cartsDb/:cid", addLogger, controllerApiCartDBDinamicoPut)
+cart.put("/api/cartsDB/:cid", addLogger, controllerApiCartDBDinamicoPut)
 
 // LOGICA "DELETE" PARA ELIMINAR DE mongoDB ATLAS UN PRODUCTO SELECCIONADO DE UN CARRITO SEGUN SU ID.
 cart.delete("/api/cartsDB/:cid/products/:pid", addLogger, controllerApiCartDBDinamicoProductsDinamicoDelete)

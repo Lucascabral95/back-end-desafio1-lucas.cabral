@@ -45,10 +45,10 @@ export const controllersApiCartDBPost = async (req, res) => {
         const body = req.body
         const newCart = await cartsModelCreate(body)
 
-        res.send({ status: "success", message: "Exito al crear un nuevo carrito" })
+        res.status(200).send({ message: "Exito al crear un nuevo carrito" })
         req.logger.info(`Exito al crear nuevo carrito.`)
     } catch (error) {
-        res.status(400).send({ status: "error", message: "Error al crear un nuevo carrito" })
+        res.status(400).send({ message: "Error al crear un nuevo carrito" })
         req.logger.fatal(`Error al crear nuevo carrito.`)
     }
 }
@@ -89,7 +89,7 @@ export const controllersApiCartDBDinamicoProductsDinamico = async (req, res) => 
         throw CustomError.createError({
             name: "Error al agregar producto",
             cause: errorInfo,
-            message: "Error al agregar el producto al carrito.",
+            message: "Error al agregar el producto al carrito seleccionado.",
             code: EErrors.ADDTOCART_ERROR
         });
     } else {
@@ -101,7 +101,7 @@ export const controllersApiCartDBDinamicoProductsDinamico = async (req, res) => 
             req.logger.info(`Producto agregado al carrito exitosamente.`)
         }
         let result = await cart.save();
-        res.status(201).json(result);
+        res.status(200).json({ message: "Producto agregado exitosamente al carrito seleccionado", payload: result});
     }
 }
 //----------------------------------------------------------------------------------------------
@@ -134,7 +134,7 @@ export const controllersApiCartDBPutProductsPut = async (req, res) => {
 
         let result = await cart.save();
 
-        res.status(200).json({ status: "Success", message: "Éxito al modificar la cantidad del producto seleccionado.", result: result, });
+        res.status(200).json({ message: "Éxito al modificar la cantidad del producto seleccionado.", result: result });
         req.logger.info(`Exito al modificar la cantidad del producto con _id: ${pid}.`)
     } catch (error) {
         res.status(500).json({ status: "Error", message: "Error al modificar la cantidad del producto seleccionado.", error: error.message, });
@@ -148,11 +148,11 @@ export const controllerApiCartDBDinamicoPut = async (req, res) => {
         const product = req.body;
         await cartsModelFindByIdAndUpdate(cid, product)
 
-        res.send({ status: "Success", message: "Exito al actualizar el carrito." })
+        res.status(400).send({ message: "Exito al actualizar el carrito." })
         req.logger.info(`Exito al actualizar carrito.`)
     } catch (error) {
-        res.send({ status: "Error", message: "Error al actualizar el carrito." })
-        req.logger.fatal(`Error al actualizar carrito.`)
+        res.status(400).send({ message: "Error al actualizar el carrito." })
+        req.logger.fatal(`Error al actualizar el carrito.`)
     }
 }
 
@@ -178,10 +178,10 @@ export const controllerApiCartDBDinamicoProductsDinamicoDelete = async (req, res
         cart.products.splice(productIndex, 1);
         await cart.save();
 
-        res.json({ status: "Success", message: "Éxito al eliminar el producto del carrito.", cart: cart });
+        res.status(200).json({ message: "Éxito al eliminar el producto del carrito.", cart: cart });
         req.logger.info(`Exito al eliminar el producto con _id: ${pid} del carrito.`)
     } catch (error) {
-        res.send({ status: "Error", message: "Error al eliminar el producto del carrito." });
+        res(400).send({ message: "Error al eliminar el producto del carrito." });
         req.logger.fatal("Error al eliminar el producto del carrito.")
     }
 }
@@ -196,10 +196,10 @@ export const controllerApiCartDBDinamicoDelete = async (req, res) => {
 
         const result = await cart.save();
 
-        res.status(200).json({ status: "Success", message: "Éxito al eliminar el carrito.", result: result, });
+        res.status(200).json({ status: "Success", message: "Éxito al eliminar todos los productos del carrito.", result: result, });
         req.logger.info(`Exito al eliminar todos los productos del carrito con _id: ${cid}.`)
     } catch (error) {
-        res.status(500).json({ status: "Error", message: "Error al eliminar el carrito.", result: result });
+        res.status(500).json({ status: "Error", message: "Error al eliminar todos los productos del carrito.", result: result });
         req.logger.fatal("Error al eliminar el carrito.")
     }
 }

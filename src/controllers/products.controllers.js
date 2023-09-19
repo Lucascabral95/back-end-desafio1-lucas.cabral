@@ -11,20 +11,40 @@ import {
     deleteProductManager
 } from "../services/products.services.js"
 
+// export const apiProductsDB = async (req, res) => {
+//     const limit = parseInt(req.query.limit) || 7 // Especifica la cantidad de elementos a mostrar. Si no especifico esa cantidad, por defecto el numero despues del ||
+//     const page = parseInt(req.query.page) || 1 // Especifica la pagina en la que quiero estar. Si no especifico, mostrar en la pagina que se pone despues del ||
+//     const sort = req.query.sort // Sirve para odenar numeros y palabras. Si pongo ?sort=-price, se ordenaran los precios de manera descendente, sino se ordenaran de manera ascendente 
+//     const category = req.query.category // Sirve para filtrar los productos segun su categoria (estas son case sensitive)
+//     const title = req.query.title // Sirve para filtrar los productos segun su titulo (estas son case sensitive)
+
+//     const existeCategory = category ? { category } : null
+//     const existeTitle = title ? { title } : null
+
+//     const productos = await productsModelPaginate(existeCategory, existeTitle, limit, page, sort)
+
+//     res.send(productos)
+//     console.log(productos);
+// }
 export const apiProductsDB = async (req, res) => {
-    const limit = parseInt(req.query.limit) || 7 // Especifica la cantidad de elementos a mostrar. Si no especifico esa cantidad, por defecto el numero despues del ||
-    const page = parseInt(req.query.page) || 1 // Especifica la pagina en la que quiero estar. Si no especifico, mostrar en la pagina que se pone despues del ||
-    const sort = req.query.sort // Sirve para odenar numeros y palabras. Si pongo ?sort=-price, se ordenaran los precios de manera descendente, sino se ordenaran de manera ascendente 
-    const category = req.query.category // Sirve para filtrar los productos segun su categoria (estas son case sensitive)
-    const title = req.query.title // Sirve para filtrar los productos segun su titulo (estas son case sensitive)
-
-    const existeCategory = category ? { category } : null
-    const existeTitle = title ? { title } : null
-
-    const productos = await productsModelPaginate(existeCategory, existeTitle, limit, page, sort)
-
-    res.send(productos)
-    console.log(productos);
+    try {
+        const limit = parseInt(req.query.limit) || 7 // Especifica la cantidad de elementos a mostrar. Si no especifico esa cantidad, por defecto el numero despues del ||
+        const page = parseInt(req.query.page) || 1 // Especifica la pagina en la que quiero estar. Si no especifico, mostrar en la pagina que se pone despues del ||
+        const sort = req.query.sort // Sirve para odenar numeros y palabras. Si pongo ?sort=-price, se ordenaran los precios de manera descendente, sino se ordenaran de manera ascendente 
+        const category = req.query.category // Sirve para filtrar los productos segun su categoria (estas son case sensitive)
+        const title = req.query.title // Sirve para filtrar los productos segun su titulo (estas son case sensitive)
+    
+        const existeCategory = category ? { category } : null
+        const existeTitle = title ? { title } : null
+    
+        const productos = await productsModelPaginate(existeCategory, existeTitle, limit, page, sort)
+    
+        res.send({ status: "success", payload: productos })
+        req.logger.info("Productos obtenidos exitosamente de la Base de Datos.")
+    } catch (error) {
+        req.logger.fatal("Error al obtener los productos de la Base de Datos")
+        res.status(500).send("Error al obtener los productos de la Base de Datos")
+    }
 }
 
 export const apiProductsDBDinamico = async (req, res) => {
@@ -53,7 +73,7 @@ export const apiProductsDBPost = async (req, res) => {
             content.owner = "premium";
         }
         const results = await addProducts(content)
-        res.send({ status: "success", payload: results })
+        res.status(200).send({ message: "El producto se agregó exitosamente a la Base de Datos", payload: results })
         req.logger.info("Exito al agregar producto.")
     } catch (error) {
         res.status(400).send({ status: "error", error })
@@ -63,18 +83,18 @@ export const apiProductsDBPost = async (req, res) => {
 //------------------------------------------------------------------------------------------------------------------
 
 export const apiProductsDBDinamicoDelete = async (req, res) => {
-    let { pid } = req.params
     try {
+        let { pid } = req.params
         let result = await deleteProductById(pid)
         if (result) {
-            res.send({ status: "success", payload: result })
-            req.logger.info(`Exito al eliminar el producto con _id: ${pid}`)
-        } else {
-            res.send({ status: "success", message: "Se elimino el producto." })
+            res.status(400).send({ message: "Producto no encontrado en la Base de Datos" })
             req.logger.fatal(`Error al eliminar el producto con _id: ${pid}`)
+        } else {
+            res.status(200).send({ message: "Exito al eliminar el producto de la Base de Datos.", payload: result })
+            req.logger.info(`Exito al eliminar el producto de la Base de Datos segun su _id: ${pid}`)
         }
     } catch (error) {
-        res.status(400).send({ status: "error", message: "Error al intentar eliminar el producto." })
+        res.status(400).send({ status: "error", message: "Error al eliminar el producto de la Base de Datos segun su _id." })
     }
 }
 
