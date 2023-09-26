@@ -6,7 +6,7 @@
   "main": "no",
   "scripts": {
     "start": "nodemon src/app.js",
-    "test": "mocha test/Products.test.js --timeout 10000"
+    "test": "mocha test/Products.test.js"
   },
   "repository": {
     "type": "git",
@@ -58,6 +58,8 @@
     "mocha": "^10.2.0",
     "node-sass": "^9.0.0",
     "sass": "^1.63.3",
-    "sass-watch": "^0.1.0"
+    "sass-watch": "^0.1.0",
+    "supertest": "^6.3.3",
+    "supertest-session": "^5.0.1"
   }
 }

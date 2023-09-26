@@ -132,7 +132,7 @@ export const controllerApiSessionLogin = async (req, res, user) => {
             //----------------
             req.session.data = [busquedaData.first_name, busquedaData.last_name, busquedaData.age, busquedaData.cart]
             //----------------
-            // propiedades de JWT
+            // propiedades de JWT.redirect("/api/session/current");
             const token_access = generateToken(user.email);
             req.logger.debug(`Email del usuario: ${user.email}`)
             req.logger.debug(`Token JWT del usuario: ${token_access}`)
@@ -219,7 +219,6 @@ export const controllerStock = async (req, res) => {
 }
 
 import TicketServices from "../DAO/TicketsDAO.js"
-// import { log } from "winston";
 const ticketDao = new TicketServices()
 
 // METODO "POST" PARA CREAR UN TICKET CON SUS RESPECTIVOS CAMPOS OBLIGATORIOS

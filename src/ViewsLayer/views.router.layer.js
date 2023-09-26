@@ -84,7 +84,8 @@ export const apiSessionCurrent = async (req, res) => {
         const cart = findUser.cart
         const datas = [email, name, lastName, age, role, cart]
 
-        res.render("current", { datos: datas });
+        res.cookie('emailCurrent', email);
+        res.render("current", { datos: datas })
         req.logger.info("Peticion GET a /api/session/current exitosa.")
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener los datos de usuario.' });

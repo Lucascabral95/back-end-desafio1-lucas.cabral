@@ -189,12 +189,6 @@ viewsRouter.post("/api/users/premium/:uid", addLogger, controllerUsersPremiumPos
 
 
 
-
-
-
-
-
-
 // RUTA PARA PROBAR ARTILLERY
 viewsRouter.get("/operacionsencilla", (req, res) => {
     let sum = 0

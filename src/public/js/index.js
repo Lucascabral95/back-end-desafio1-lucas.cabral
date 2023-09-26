@@ -149,12 +149,6 @@ function terminarCompra(value) {
     });
 }
 
-// function funcionAddToCart(value1, value2) {
-//   fetch(`/api/cartsdb/${value2}/products/${value1}`, {
-//     method: "POST"
-//   })
-//   alert(`¡¡¡Producto agregado al carrito exitosamente!!!`)
-// }
 function funcionAddToCart(value1, value2, value3, value4) {
 
   if (value3 !== value4) {

@@ -15,7 +15,8 @@ import {
 export const controllersApiCartsDB = async (req, res) => {
     try {
         const carts = await cartsModelFindPopulate();
-        res.json(carts)
+        // res.json(carts)
+        res.status(200).json(carts)
         req.logger.info(`Peticion GET a /api/cartsDB exitosa`)
     } catch (error) {
         res.status(500).json({ error: error.message });
