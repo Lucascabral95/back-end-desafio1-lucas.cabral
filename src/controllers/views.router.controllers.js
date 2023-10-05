@@ -1,6 +1,4 @@
 // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO //
-// CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO //
-// CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO // CAPA DE SERVICIO //
 import {
     getByEmail,
     createUser,
@@ -11,14 +9,19 @@ import {
     populateCart,
     serviceFaker,
     updatePasswordByEmail,
-    updateRoleByEmail,
 } from "../services/views.router.services.js"
+import {
+    getAllDocuments,
+    getDocumentById,
+} from "../services/documents.services.js"
 import cartsModel from "../DAO/models/carts.model.js"
+import { documentModel } from "../DAO/models/user.js";
+import TicketServices from "../DAO/TicketsDAO.js"
+const ticketDao = new TicketServices()
 import { createHash, isValidPassword } from "../utils.js";
 import bcrypt from "bcrypt"
 import { generateToken } from "../jwt.js";
 import { sendMail } from "../services/nodemailer.js";
-import Swal from 'sweetalert2'
 //-----------Custom Error------------------------------
 import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
@@ -28,17 +31,11 @@ import { generateProductErrorInfo, generateTicketErrorInfo } from "../services/e
 import { v4 as uuidv4 } from 'uuid';
 //------ UUID (para generar links temporales) ---------
 
-
 // LOGIGA DE /API/SESSION/CURRENT
 export const controllerHomeMongodb = async (req, res) => {
     try {
         const emailJwt = req.session.emailJwt;
         const dataUserCookie = req.cookies.dataUser || {};
-
-        // const email = req.session.emailUser
-        // const findUser = await getByEmail(email)
-        // const role = findUser.role
-
         const dataUserFirstName = req.session.data[0];
         const dataUserLastName = req.session.data[1];
         const dataUserAge = req.session.data[2];
@@ -89,7 +86,15 @@ export const controllerApiSessionRegister = async (user) => {
         }
 
         const newCart = cartsModel({ products: [] });
+        //--------------------------------------------
+        //--------------------------------------------
+        //--------------------------------------------
+        const newDocument = documentModel({ documents: [] })
+        //--------------------------------------------
+        //--------------------------------------------
+        //--------------------------------------------        
         const savedCart = await newCart.save();
+        const savedDocument = await newDocument.save()
         const newUser = {
             first_name: user.first_name,
             last_name: user.last_name,
@@ -98,8 +103,16 @@ export const controllerApiSessionRegister = async (user) => {
             password: createHash(user.password),
             role: user.role,
             cart: savedCart._id,
+            documents: savedDocument._id,
+            //-------------------------------------------- 
+            dni: "",
+            domicilio: ""
+            //--------------------------------------------        
         };
         const savedUser = await createUser(newUser);
+        //-------------------para poner hora y fecha al crear usuario--------------------------
+        await savedUser.updateLastConnection();
+        //-------------------para poner hora y fecha al crear usuario--------------------------
         return savedUser;
     } catch (error) {
         return null;
@@ -138,6 +151,19 @@ export const controllerApiSessionLogin = async (req, res, user) => {
             req.logger.debug(`Token JWT del usuario: ${token_access}`)
             req.logger.info(`Inicio de sesion exitoso con email: ${busquedaData.email}`)
             req.session.emailJwt = user.email;
+            //-------------------para actualizar hora y fecha al crear usuario--------------------------
+            //-------------------para actualizar hora y fecha al crear usuario--------------------------
+            //-------------------para actualizar hora y fecha al crear usuario--------------------------
+            await busquedaData.updateLastConnection();
+            // console.log(busquedaData.last_connection);
+            // res.cookie("idDocument", busquedaData.documents.toString())
+            res.cookie("idDocument", busquedaData.documents ? busquedaData.documents.toString() : "");
+            req.session.lastConnection = busquedaData.last_connection
+            // req.session.idDocument = busquedaData.documents.toString()
+            // console.log(`Cookie session: ${req.session.idDocument}`)
+            //-------------------para actualizar hora y fecha al crear usuario--------------------------
+            //-------------------para actualizar hora y fecha al crear usuario--------------------------
+            //-------------------para actualizar hora y fecha al crear usuario--------------------------
             return res.cookie("authToken", token_access, { httpOnly: true }).redirect("/api/session/current");
         }
     } catch (error) {
@@ -190,7 +216,7 @@ export const controllerMongoDbDinamico = async (pid) => {
     try {
         const prod = await deleteProductById(pid);
         return prod;
-        
+
     } catch (error) {
         throw error;
     }
@@ -218,8 +244,6 @@ export const controllerStock = async (req, res) => {
     }
 }
 
-import TicketServices from "../DAO/TicketsDAO.js"
-const ticketDao = new TicketServices()
 
 // METODO "POST" PARA CREAR UN TICKET CON SUS RESPECTIVOS CAMPOS OBLIGATORIOS
 // export const controllerTicket = async (req, res) => {
@@ -397,27 +421,171 @@ export const controllerChangePasswordGet = async (req, res) => {
     }
 }
 
-
-export const controllerUsersPremium = async (req, res) => {
-    const email = req.session.emailUser
-    const findUser = await getByEmail(email)
-    const roleOfEmail = findUser.role
-    const idOfEmail = findUser._id
-
-    const changeRole = findUser.role === "user" ? "premium" : "user"
-    const data = [roleOfEmail, idOfEmail, email, changeRole]
-
-    res.render("changeRole", { role: data })
+export const getAllDocumentss = async (req, res) => {
+    try {
+        const document = await getAllDocuments()
+        res.send(document)
+    } catch (error) {
+        res.status(400).send({ status: "error", message: "Error al obtener los productos" })
+    }
 }
 
-export const controllerUsersPremiumPost = async (req, res) => {
-    const uid = req.params.uid
-    const email = req.session.emailUser
-    const findUser = await getByEmail(email)
-    const role = findUser.role
-    const changeRole = role === "user" ? "premium" : "user"
+export const getDocumentByIdd = async (req, res) => {
+    try {
+        const did = req.params.did
+        const document = await getDocumentById(did)
 
-    await updateRoleByEmail(email, changeRole)
-    console.log("Exito al cambiar de Role de usuario.");
+        res.send(document)
+    } catch (error) {
+        res.status(400).send({ status: "error", message: "Error al mostrar el documento" })
+    }
 }
 
+export const addDataInDocument = async (req, res) => {
+    try {
+        const did = req.params.did
+        const { name, reference } = req.body
+        const findDocument = await getDocumentById(did)
+
+        if (!findDocument) {
+            res.status(400).send("No se encontro el documento")
+        }
+
+        if (!name || !reference) {
+            res.send("Name y Reference son campos obligatorios.")
+        } else {
+            findDocument.documents.push({ name, reference })
+            await findDocument.save();
+            res.send("Exito al agregar datos al documento.")
+        }
+
+    } catch (error) {
+        res.status(400).send({ status: "error", message: "Error al agregar datos al documento" })
+    }
+}
+
+
+export const apiUserData = async (req, res) => {
+    try {
+        const user = req.session.emailUser;
+        let findUser = await getByEmail(user);
+
+        if (!findUser) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+        const { identificacion, domicilio } = req.body;
+        findUser.dni = identificacion;
+        findUser.domicilio = domicilio;
+        await findUser.save();
+        req.logger.info(findUser);
+
+        // res.status(200).json({ message: 'Operación exitosa' });
+        // res.redirect("/api/users/premium")
+        setTimeout(() => {
+            res.redirect("/api/users/premium")
+        }, 1000);
+    } catch (error) {
+        req.logger.fatal('Error en chequeo:', error);
+        res.status(500).json({ error: 'Hubo un error en el servidor' });
+    }
+};
+
+export const completedPurchase = async (req, res) => {
+    try {
+        const dataTicket = req.session.generatedTicket
+        const tid = req.session.emailUser
+        let tickets = await ticketDao.getTicketByCart(tid)
+        const ticketId = tickets.map(id => id._id.toString())
+        const ticketDatatime = tickets.map(id => id.purchase_dateTime)
+        const ticketPurchaser = tickets.map(id => id.purchaser)
+        const ticketCode = tickets.map(id => id.code)
+        const ticketAmount = tickets.map(id => id.amount)
+        //-----------------------------------------------
+        const idDocument = req.cookies.idDocument
+        const find = await getDocumentById(idDocument)
+        const findPhoto = find.documents.filter(i => i.image === "profile")
+        let documentReference
+        if (findPhoto) {
+            documentReference = findPhoto.map(n => n.reference)
+        }
+        const ultimoValor = documentReference[documentReference.length - 1]
+        const length = documentReference.length
+        const referenceLength = length === 0 ? false : true
+        //-----------------------------------------------
+        const total = ticketId.length
+        const mockTicket = [ticketId, ticketDatatime, ticketPurchaser, ticketCode, ticketAmount, total, 
+            ultimoValor, referenceLength, tid,  ]
+
+        res.render("completedPurchase", { ticket: dataTicket, mock: mockTicket })
+        req.logger.info("Peticion GET a /mockingPurchase exitosa.")
+    } catch (error) {
+        req.logger.fatal("Error", error)
+        res.status(500).send("An error occurred.");
+    }
+}
+
+
+
+
+
+
+// export const controllerUsersPremium = async (req, res) => {
+//     const email = req.session.emailUser
+//     const findUser = await getByEmail(email)
+//     const roleOfEmail = findUser.role
+//     const idOfEmail = findUser._id
+//     const changeRole = findUser.role === "user" ? "premium" : "user"
+//     const accessToPremium = findUser.domicilio.trim() === "" ? false : true
+
+//     const data = [roleOfEmail, idOfEmail, email, changeRole, accessToPremium,]
+//     res.render("changeRole", { role: data })
+// }
+
+// export const controllerUsersPremiumPost = async (req, res) => {
+//     const uid = req.params.uid
+//     const email = req.session.emailUser
+//     const findUser = await getByEmail(email)
+//     const role = findUser.role
+//     const changeRole = role === "user" ? "premium" : "user"
+
+//     await updateRoleByEmail(email, changeRole)
+//     console.log("Exito al cambiar de Role de usuario.");
+// }
+
+// export const uploadPhotos = async (req, res) => {
+//     const idDocument = req.cookies.idDocument
+//     const find = await getDocumentById(idDocument)
+//     const documentName = find.documents.map(n => n.name)
+//     const documentReference = find.documents.map(n => n.reference)
+//     const ultimoValor = documentReference[documentReference.length - 1]
+//     const length = documentName.length
+//     const condicionalLength = length === 0 ? false : true;
+
+//     const dataDocument = [find, documentName, documentReference, ultimoValor, condicionalLength,
+//     ]
+//     res.render("uploadPictures", { data: dataDocument })
+// }
+
+// export const uploaderPhotosPost = async (req, res) => {
+//     if (!req.file) {
+//         return res.status(400).send({ status: "error", error: "No se pudo guardar la imagen" })
+//     } else {
+//         console.log(req.file.originalname);
+//         const originalname = req.file.originalname
+//         const idDocu = req.cookies.idDocument
+
+//         const newData = {
+//             name: originalname,
+//             reference: `/documents/profiles/${originalname}`
+//         }
+//         const docu = await getDocumentById(idDocu)
+//         docu.documents.push(newData)
+//         await docu.save();
+//         res.cookie("myAvatar", `/documents/profiles/${originalname}`)
+//         // res.send({ status: "success", message: "User created", newData })
+//         // res.redirect("/api/users/documents")
+//         setTimeout(() => {
+//             res.redirect("/api/users/documents");
+//         }, 1000);
+//     }
+// }

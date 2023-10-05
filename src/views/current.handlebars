@@ -1,86 +1,55 @@
-{{!-- <section class="section-current">
-    <div class="container">
-
-        <h3 class="current-title">Tus datos de usuario vistos en "/api/session/current" con middleware de autenticación
-            de JWT.</h3>
-
-        <p class="data-current"> Tu email de sesión con Json Web Token es: <span class="data-dos-current">
-                {{datos.email}}.
-
-                <p class="data-current"> Tu nombre de sesión con Json Web Token es: <span class="data-dos-current">
-                        {{datos.firstName}}.
-
-                        <p class="data-current"> Tu apellido de sesión con Json Web Token es: <span
-                                class="data-dos-current"> {{datos.lastName}}.
-
-                                <p class="data-current"> Tu edad de sesión con Json Web Token es: <span
-                                        class="data-dos-current"> {{datos.age}} años.
-
-                                        <p class="data-current"> Tu rol de sesión con Json Web Token es: <span
-                                                class="data-dos-current"> {{datos.role}}.
-
-                                                <p class="data-current"> El ._id de tu cart generado con Json Web Token
-                                                    es: <span class="data-dos-current"> {{datos.cart}}.
-                                                    </span> </p>
-
-                                                <p class="data-current">- Accediste a esta pagina gracias a Json Web
-                                                    Token.</p>
-
-                                                <p class="data-current">- Ademas tu contraseña esta hasheada con bcrypt
-                                                    y leída en el login con el metodo "compareSync" de bcrypt. </p>
-
-                                                <img class="img-current"
-                                                    src="https://i.pinimg.com/564x/93/c2/98/93c298c36aca5b3950486fa07aa7c2af.jpg"
-                                                    alt="Pikachu feliz">
-
-                                                <a href="/home-mongodb" class="btn btn-primary logout-current">Ir a la
-                                                    sección de productos</a>
-
-                                                <a href="/api/session/logout"
-                                                    class="btn btn-danger logout-current">Logout</a>
-
+<div class="container-fluid">
+    <div class="header-mongodb">
+        <div>
+            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+            <a href="/completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
+            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
+            <a href="/api/users/documents" class="btn btn-info bc">Cambiar foto de perfil</a>
+        </div>
+        <div style="display: flex">
+            <div style="display: flex; align-items:center">
+                <p style="font-size: 1.4rem;
+                            color: blue;
+                            font-weight: bolder;
+                            position: relative;
+                            right: 10%;" class="texto-perfil">
+                    Usuario: {{datos.[0]}}
+                </p>
+            </div>
+            {{#if datos.[7] }}
+            <a href="/api/users/documents">
+                <img class="cuadro-foto-perfil" src="{{datos.[6]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a href="/api/users/documents">
+                <img class="cuadro-foto-perfil" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
     </div>
-</section> --}}
-<section class="section-current">
-    <div class="container">
-
-        <h3 class="current-title">Tus datos de usuario vistos en "/api/session/current" con middleware de autenticación
-            de JWT.</h3>
-
-        <p class="data-current"> Tu email de sesión con Json Web Token es: <span class="data-dos-current">
-                {{datos.[0]}}.
-
-                <p class="data-current"> Tu nombre de sesión con Json Web Token es: <span class="data-dos-current">
-                        {{datos.[1]}}.
-
-                        <p class="data-current"> Tu apellido de sesión con Json Web Token es: <span
-                                class="data-dos-current"> {{datos.[2]}}.
-
-                                <p class="data-current"> Tu edad de sesión con Json Web Token es: <span
-                                        class="data-dos-current"> {{datos.[3]}} años.
-
-                                        <p class="data-current"> Tu rol de sesión con Json Web Token es: <span
-                                                class="data-dos-current"> {{datos.[4]}}.
-
-                                                <p class="data-current"> El ._id de tu cart generado con Json Web Token
-                                                    es: <span class="data-dos-current"> {{datos.[5]}}.
-                                                    </span> </p>
-
-                                                <p class="data-current">- Accediste a esta pagina gracias a Json Web
-                                                    Token.</p>
-
-                                                <p class="data-current">- Ademas tu contraseña esta hasheada con bcrypt
-                                                    y leída en el login con el metodo "compareSync" de bcrypt. </p>
-
-                                                <img class="img-current"
-                                                    src="https://i.pinimg.com/564x/93/c2/98/93c298c36aca5b3950486fa07aa7c2af.jpg"
-                                                    alt="Pikachu feliz">
-
-                                                <a href="/home-mongodb" class="btn btn-primary logout-current">Ir a la
-                                                    sección de productos</a>
-
-                                                <a href="/api/session/logout"
-                                                    class="btn btn-danger logout-current">Logout</a>
-
-    </div>
-</section>
+    <section class="section-current">
+        <div class="container">
+            <h3 class="current-title">Tus datos de usuario vistos en "/api/session/current" con middleware de
+                autenticación de JWT.</h3>
+            <p class="data-current"> Tu email de sesión con Json Web Token es: <span
+                    class="data-dos-current">{{datos.[0]}}</span></p>
+            <p class="data-current"> Tu nombre de sesión con Json Web Token es: <span
+                    class="data-dos-current">{{datos.[1]}}</span></p>
+            <p class="data-current"> Tu apellido de sesión con Json Web Token es: <span
+                    class="data-dos-current">{{datos.[2]}}</span></p>
+            <p class="data-current"> Tu edad de sesión con Json Web Token es: <span
+                    class="data-dos-current">{{datos.[3]}} años.</span></p>
+            <p class="data-current"> Tu rol de sesión con Json Web Token es: <span
+                    class="data-dos-current">{{datos.[4]}}</span></p>
+            <p class="data-current"> El ._id de tu cart generado con Json Web Token es: <span
+                    class="data-dos-current">{{datos.[5]}}</span></p>
+            <p class="data-current">- Accediste a esta página gracias a Json Web Token.</p>
+            <p class="data-current">- Además, tu contraseña está hasheada con bcrypt y leída en el login con el método
+                "compareSync" de bcrypt.</p>
+            <img class="img-current" src="https://i.pinimg.com/564x/93/c2/98/93c298c36aca5b3950486fa07aa7c2af.jpg"
+                alt="Pikachu feliz">
+            <a href="/home-mongodb" class="btn btn-primary logout-current">Ir a la sección de productos</a>
+            <a href="/api/session/logout" class="btn btn-danger logout-current">Logout</a>
+        </div>
+    </section>
+</div>

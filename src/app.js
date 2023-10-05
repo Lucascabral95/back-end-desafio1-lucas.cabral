@@ -1,8 +1,11 @@
 import express, { json } from "express";
 import { promises as fs } from "fs";
+//--------------routers-----------------
 import products from "./Routes/products.js";
 import viewsRouter from "./Routes/views.router.js";
+import users from "./Routes/users.router.js";
 import cart from "./Routes/cart.js";
+//--------------routers-----------------
 import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
@@ -101,10 +104,10 @@ app.use(
   app.use(passport.initialize())
   app.use(passport.session())
   //-----------passport-github2-----------
-  
   app.use(cart);
   app.use(products);
   app.use(viewsRouter);
+  app.use(users)
   app.use(errorMiddleware)// errorHandler
   const specs = swaggerJsdoc(swaggerOptions) // SWAGGER
   app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs)) // SWAGGER

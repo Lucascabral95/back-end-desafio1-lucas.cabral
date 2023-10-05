@@ -5,7 +5,6 @@
 const socket = io();
 
 // VISTA REALTIMEPRODUCTS.HANDLEBARS 
-
 const div = document.getElementById("tabla-productos-socket");
 
 socket.on("productos-actualizados", data => {
@@ -269,3 +268,28 @@ function deleteProductById(owner, idProduct, emailUser) {
   }
 }
 
+// pedido de la cuarta practica integradora
+
+function cargarFoto() {
+  Swal.fire({
+    icon: 'success',
+    title: 'Success',
+    text: `¡Éxito al cargar foto de perfil!`,
+  });
+}
+
+function cargarFotoProducto() {
+  Swal.fire({
+    icon: 'success',
+    title: 'Success',
+    text: `¡Éxito al cargar foto del producto!`,
+  });
+}
+
+function enviarDatos() {
+  Swal.fire({
+    icon: 'success',
+    title: 'Success',
+    text: `¡Éxito al agregar datos personales!`,
+  });
+}

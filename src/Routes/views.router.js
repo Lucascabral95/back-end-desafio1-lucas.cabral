@@ -1,7 +1,7 @@
 import { Router } from "express";
 const viewsRouter = Router();
 import passport from "passport"
-import { auth, authDenied, lockUser, accessDeniedAdmin, accessDeniedforAdmin } from "../middlewares/auth.js"
+import { auth, authDenied, lockUser, accessDeniedAdmin } from "../middlewares/auth.js"
 import { addLogger } from "../utils/logger.js";
 //--------------------------------------JWT-------------------------------------------
 import { authToken } from "../jwt.js"
@@ -34,10 +34,13 @@ import {
     controllerNodemailer,
     controllerGenerateLink,
     controllerLink,
-    controllerUsersPremium,
     controllerRecoverPassword,
     controllerChangePasswordGet,
-    controllerUsersPremiumPost,
+    getAllDocumentss,
+    getDocumentByIdd,
+    addDataInDocument,
+    apiUserData,
+    completedPurchase,
 } from "../controllers/views.router.controllers.js"
 
 //--------------------------------------controllers de esta ruta-------------------------------------------------------------
@@ -128,32 +131,8 @@ viewsRouter.post("/cart/:cid/buy", addLogger, controllerStock)
 // METODO "POST" PARA CREAR UN ID CON SUS RESPECTIVOS CAMPOS OBLIGATORIOS
 viewsRouter.post("/cart/:cid/purchase", addLogger, controllerTicket)
 
-
-import TicketDAO from "../DAO/TicketsDAO.js";
-const ticketService = new TicketDAO
 //RENDERIZA VISTA "GET" DE /COMPLETED/PURCHASE
-viewsRouter.get("/completed/purchase", accessDeniedAdmin, addLogger, async (req, res) => {
-    try {
-        const dataTicket = req.session.generatedTicket
-        const tid = req.session.emailUser
-        let tickets = await ticketService.getTicketByCart(tid)
-
-        const ticketId = tickets.map(id => id._id.toString())
-        const ticketDatatime = tickets.map(id => id.purchase_dateTime)
-        const ticketPurchaser = tickets.map(id => id.purchaser)
-        const ticketCode = tickets.map(id => id.code)
-        const ticketAmount = tickets.map(id => id.amount)
-
-        const total = ticketId.length
-        const mockTicket = [ticketId, ticketDatatime, ticketPurchaser, ticketCode, ticketAmount, total]
-
-        res.render("completedPurchase", { ticket: dataTicket, mock: mockTicket })
-        req.logger.info("Peticion GET a /mockingPurchase exitosa.")
-    } catch (error) {
-        req.logger.fatal("Error", error)
-        res.status(500).send("An error occurred.");
-    }
-})
+viewsRouter.get("/completed/purchase", accessDeniedAdmin, addLogger, completedPurchase)
 
 // RUTA RELATIVA QUE MUESTRA UN NUMERO DINAMICO (100 EN ESTE CASO) DE PRODUCTOS PROVENIENTES DE "FAKER"
 // (LO PODES VER INCLUSO SI NO ESTAS LOGUEADO)
@@ -178,37 +157,19 @@ viewsRouter.get("/recoverPassword", addLogger, authDenied, controllerRecoverPass
 // RUTA "POST" PARA CAMBIAR LA CONTRASEÑA DEL EMAIL DEL USUARIO POR MEDIO DEL LINK TEMPORAL GENERADO CON UUID
 viewsRouter.post("/changePassword", addLogger, authDenied, controllerChangePasswordGet)
 
-// RUTA REALTIVA PARA PERMITIR CAMBIAR EL ROL DE UN USUARIO, DE "USER" A "PREMIUM" Y VICEVERSA
-viewsRouter.get("/api/users/premium", addLogger, accessDeniedforAdmin, controllerUsersPremium)
+// RUTAS SOLICITADAS EN LA CUARTA PRACTICA INTEGRADORA 
+// RUTA "POST" QUE AGREGA EN EL ESQUEMA DE LOS USUARIOS EL DNI Y EL DOMICILIO DEL USUARIO EN SESSION
+viewsRouter.post("/api/user/data", addLogger, apiUserData)
 
-// RUTA "POST" QUE PERMITE CAMBIAR EL ROL DE UN USUARIO, DE "USER" A "PREMIUM" Y VICEVERSA
-viewsRouter.post("/api/users/premium/:uid", addLogger, controllerUsersPremiumPost)
+// RUTA RELATIVA QUE MUESTRA TODOS LOS DOCUMENTOS
+viewsRouter.get("/api/documents", getAllDocumentss)
 
+// RUTA RELATIVA QUE MUESTRA UN DOCUMENTO SEGUN SU _ID
+viewsRouter.get("/api/documents/:did", getDocumentByIdd)
 
-
-
-
-
-// RUTA PARA PROBAR ARTILLERY
-viewsRouter.get("/operacionsencilla", (req, res) => {
-    let sum = 0
-    for (let i = 0; i < 1000000; i++) {
-        sum += i
-    }
-    res.send({ sum })
-})
-
-viewsRouter.get("/operacioncompleja", (req, res) => {
-    let sum = 0
-    for (let i = 0; i < 5e8; i++) {
-        sum += i
-    }
-    res.send({ sum })
-})
-
-
-
-
+// RUTA "POST" QUE EN UN DOCUMENTO INDICADO AGREGA UN NOMBRE Y UNA REFERENCIA 
+viewsRouter.post("/api/documents/:did", addDataInDocument);
+// RUTAS SOLICITADAS EN LA CUARTA PRACTICA INTEGRADORA 
 
 export default viewsRouter;
 
@@ -220,6 +181,22 @@ export default viewsRouter;
 
 
 
+// RUTA PARA PROBAR ARTILLERY
+// viewsRouter.get("/operacionsencilla", (req, res) => {
+//     let sum = 0
+//     for (let i = 0; i < 1000000; i++) {
+//         sum += i
+//     }
+//     res.send({ sum })
+// })
+
+// viewsRouter.get("/operacioncompleja", (req, res) => {
+//     let sum = 0
+//     for (let i = 0; i < 5e8; i++) {
+//         sum += i
+//     }
+//     res.send({ sum })
+// })
 
 
 

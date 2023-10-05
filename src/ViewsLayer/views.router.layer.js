@@ -1,9 +1,6 @@
 // ESTA ES LA CAPA DE VISTA // ESTA ES LA CAPA DE VISTA // ESTA ES LA CAPA DE VISTA // ESTA ES LA CAPA DE VISTA  // 
-// ESTA ES LA CAPA DE VISTA // ESTA ES LA CAPA DE VISTA // ESTA ES LA CAPA DE VISTA // ESTA ES LA CAPA DE VISTA  //
-// ESTA ES LA CAPA DE VISTA // ESTA ES LA CAPA DE VISTA // ESTA ES LA CAPA DE VISTA // ESTA ES LA CAPA DE VISTA  //
 import Swal from 'sweetalert2';
 import {
-    controllerHomeMongodb,
     controllerApiSessionRegister,
     controllerApiSessionLogin,
     controllerRealTimeProductsPost,
@@ -19,6 +16,10 @@ import {
     cartsModelFindByIdService,
     getByEmail,
 } from "../services/views.router.services.js"
+
+import {
+    getDocumentById
+} from '../services/documents.services.js';
 
 // RUTA "GET" DE /API/SESSION/DENTRO
 export const apiSessionDentro = async (req, res) => {
@@ -82,8 +83,21 @@ export const apiSessionCurrent = async (req, res) => {
         const age = findUser.age
         const role = findUser.role
         const cart = findUser.cart
-        const datas = [email, name, lastName, age, role, cart]
-
+        //--------------------------------------------------------------------------------
+        const idDocument = req.cookies.idDocument
+        const find = await getDocumentById(idDocument)
+        const findPhoto = find.documents.filter(i => i.image === "profile")
+        let documentReference
+        if (findPhoto) {
+            documentReference = findPhoto.map(n => n.reference)
+        }
+        const ultimoValor = documentReference[documentReference.length - 1]
+        const length = documentReference.length
+        const referenceLength = length === 0 ? false : true
+        console.log(ultimoValor, referenceLength)
+        //--------------------------------------------------------------------------------
+        const datas = [email, name, lastName, age, role, cart,
+            ultimoValor, referenceLength,]
         res.cookie('emailCurrent', email);
         res.render("current", { datos: datas })
         req.logger.info("Peticion GET a /api/session/current exitosa.")
@@ -94,13 +108,16 @@ export const apiSessionCurrent = async (req, res) => {
 };
 
 // RUTA "GET" DE /API/SESSION/LOGO
-export const apiSessionLogout = (req, res) => {
+export const apiSessionLogout = async (req, res) => {
+    const email = req.session.emailUser
+    const last = await getByEmail(email)
+    await last.updateLastConnection()
     req.session.destroy(error => {
+        req.logger.info(`Terminando conexion a las: ${last.last_connection}`);
         res.render("login")
         req.logger.info("¡¡¡Desloqueo exitoso!!!")
     })
 }
-
 //----------------------------------------------------------------------------------------------------
 
 // RUTA RAIZ "GET" DE /
@@ -172,7 +189,25 @@ export const homeMongoDB = async (req, res) => {
     const rol = req.session.rol
     const existeRol = req.session.existRol
     const ownerAdmin = roleUser === "admin" ? "admin" : user
-
+    const ultimaConexion = req.session.lastConnection || "No registra"
+    //-----------------------------
+    const modConection = ultimaConexion.split("T")[1].split(".")[0]  
+    const fechaNormal = ultimaConexion.split("T")[0]
+    const partesFecha = fechaNormal.split("-");
+    const fechaInvertida = partesFecha.reverse().join("-");
+    const UltimaConexionDefinitiva = `Ultima conexion 🕓: ${fechaInvertida} a las ${modConection}` 
+    //-----------------------------
+    const idDocument = req.cookies.idDocument
+    const find = await getDocumentById(idDocument)
+    const findPhoto = find.documents.filter(i => i.image === "profile")
+    let documentReference
+    if (findPhoto) {
+        documentReference = findPhoto.map(n => n.reference)
+    }
+    const ultimoValor = documentReference[documentReference.length - 1]
+    const length = documentReference.length
+    const referenceLength = length === 0 ? false : true
+    //-----------------------------
     const canDelete = buscadorOwner === emailUser ? true : false
     //------
     const userEmailGithub = req.session.emailUser.email
@@ -187,7 +222,8 @@ export const homeMongoDB = async (req, res) => {
     const productossFull = [buscadorId, buscadorTitle, buscadorDescription, buscadorCode, buscadorPrice,
         buscadorStock, buscadorCategory, user, rol, existeRol, userEmailGithub, userAgeGithub,
         userFirstNameGithub, cartIdUser, cartIdUserMap, mostrarONo, roleUser,
-        roleView, roleOwner, buscadorOwner, ownerAdmin, canDelete, arrayEmailUser]
+        roleView, roleOwner, buscadorOwner, ownerAdmin, canDelete, arrayEmailUser,
+        UltimaConexionDefinitiva, ultimoValor, referenceLength,]
 
     const totalDocss = productoss.totalDocs
     const limitt = productoss.limit

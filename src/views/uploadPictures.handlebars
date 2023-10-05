@@ -1,0 +1,126 @@
+<div class="container-fluid upload-photos">
+
+    <div class="header-mongodb">
+        <div>
+            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+            <a href="/home-mongodb" class="btn btn-info bc">Volver a la seccion de productos</a>
+            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
+            <a href="/completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
+        </div>
+        <div style="display: flex">
+            <div style="display: flex; align-items:center">
+                <p class="texto-perfil" style="font-size: 1.4rem;
+    color: blue;
+    font-weight: bolder;
+    position: relative;
+    right: 10%;"> Usuario: {{data.[0]}} </p>
+            </div>
+            {{#if data.[4] }}
+            <img class="cuadro-foto-perfil" src="{{data.[3]}}" alt="Foto de perfil">
+            {{else}}
+            <img class="cuadro-foto-perfil" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="text-center" style="font-size: 2.8rem; margin-top: 4%; margin-bottom: 4%; color: red;
+     font-weight: bolder">
+            Carga de fotos de perfil
+        </h2>
+
+        <div class="form" style="margin: auto; width: 50%">
+            <form action="/api/users/documents/profile" enctype="multipart/form-data" method="POST"
+                onsubmit="cargarFoto()">
+                <div class="form-group">
+                    <label style="font-size: 1.6rem; font-weight: 600" for="file">Subi una foto de perfil</label>
+                    <input class="form-control" type="file" name="file" required>
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-primary" type="submit">
+                </div>
+            </form>
+        </div>
+
+        {{#if data.[4]}}
+        <h5 class="text-center" style="color: blue">Ultima imagen de perfil subida </h5>
+        <div class="imagen-avatar" style="display: flex; justify-content:center">
+            <img style="width: 100px; height: auto" src="{{data.[3]}}" alt="Foto de perfil">
+        </div>
+
+        <h4 class="text-center" style="font-size: 2.4rem; mt-5 mb-5"> Tabla con los datos de todas las imagenes de
+            perfil subidas
+        </h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>N° de archivo</th>
+                    <th>Nombre del archivo</th>
+                    <th>Link a la imagen</th>
+                    <th>Imagen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each data.[2]}}
+                <tr>
+                    <td> {{@index}} </td>
+                    <td> {{lookup ../data.[1] @index}} </td>
+                    <td> <a href="{{this}}" style="color: red; font-weigth: 800">Link a la foto de perfil</a> </td>
+                    <td> <img style="width: 50px; height: 50px" src="{{this}}" alt=""> </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{/if}}
+
+        <h2 class="text-center" style="font-size: 2.8rem; margin-top: 6%; margin-bottom: 4%; color: red;
+     font-weight: bolder">
+            Carga de fotos de productos </h2>
+
+        <div class="form2" style="margin: auto; width: 50%">
+            <form action="/api/users/documents/products" enctype="multipart/form-data" method="POST"
+                onsubmit="cargarFotoProducto()">
+                <div class="form-group">
+                    <label style="font-size: 1.6rem; font-weight: 600" for="product"> Subí una foto de un producto
+                    </label>
+                    <input class="form-control" type="file" name="product" required>
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-primary" type="submit">
+                </div>
+            </form>
+        </div>
+
+        {{#if data.[8]}}
+        <h5 class="text-center" style="color: blue">Ultima imagen de perfil subida </h5>
+        <div class="imagen-avatar" style="display: flex; justify-content:center">
+            <img style="width: 100px; height: auto" src="{{data.[7]}}" alt="Foto de perfil">
+        </div>
+
+        <h4 class="text-center" style="font-size: 2.4rem; mt-5 mb-5"> Tabla con los datos de todas las imagenes de
+            perfil subidas
+        </h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>N° de archivo</th>
+                    <th>Nombre del archivo</th>
+                    <th>Link a la imagen</th>
+                    <th>Imagen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each data.[6]}}
+                <tr>
+                    <td> {{@index}} </td>
+                    <td> {{lookup ../data.[4] @index}} </td>
+                    <td> <a href="{{this}}" style="color: red; font-weigth: 800">Link a la foto de perfil</a> </td>
+                    <td> <img style="width: 50px; height: 50px" src="{{this}}" alt=""> </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{/if}}
+
+    </div>
+</div>

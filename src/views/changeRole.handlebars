@@ -1,21 +1,72 @@
-<div class="container changeRole">
-    <a href="/api/session/logout" class="btn btn-danger" id="log">LOGOUT</a>
-    <a href="/home-mongodb" class="btn btn-primary">Ir a la seccion de productos</a>
-    <a href="completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
+<div class="container-fluid">
 
-    <h4 class="text-center title"> Pagina para cambiar tu rol de usuario. <br>
-        Actualmente es de: {{role.[0]}}
-    </h4>
-
-    <div class="contenedor">
-        <p class="texto">¿Querés cambiar tu rol de: a un rol de "{{role.[3]}}"?</p>
-        <a onclick="changeYes()" class="btn btn-primary si"> Si </a>
-        <a onclick="changeNo()" class="btn btn-danger si"> No </a>
+    <div class="header-mongodb">
+        <div>
+            <a href="/api/session/logout" class="btn btn-danger" id="log">LOGOUT</a>
+            <a href="/home-mongodb" class="btn btn-primary">Ir a la seccion de productos</a>
+            <a href="/completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
+            <a href="/api/users/documents" class="btn btn-info bc">Cambiar foto de perfil</a>
+        </div>
+        <div style="display: flex">
+            <div style="display: flex; align-items:center">
+                <p style="font-size: 1.4rem;
+                            color: blue;
+                            font-weight: bolder;
+                            position: relative;
+                            right: 10%;" class="texto-perfil"> Usuario: {{role.[2]}} </p>
+            </div>
+            {{#if role.[6] }}
+            <a href="api/users/documents">
+                <img class="cuadro-foto-perfil" src="{{role.[5]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a href="api/users/documents">
+                <img class="cuadro-foto-perfil" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
     </div>
 
-    <div class="img">
-        <img src="https://i.pinimg.com/564x/fa/b5/9e/fab59e8f321031810b4788a3d9d18f91.jpg" alt="Pikachu pensando"
-            class="img-img">
+    <div class="container changeRole">
+        <h4 class="text-center title"> Pagina para cambiar tu rol de usuario. <br>
+            Actualmente es de: "{{role.[0]}}"
+        </h4>
+
+        {{#if role.[4]}}
+        <div class="contenedor">
+            <p class="texto" style="color: blue;"> Ahora que completaste los datos con tu DNI y tu domicilio; </p>
+            <p class="texto">¿Querés cambiar tu rol de: "{{role.[0]}}" a un rol de "{{role.[3]}}"?</p>
+            <a onclick="changeYes()" class="btn btn-primary si"> Si </a>
+            <a onclick="changeNo()" class="btn btn-danger si"> No </a>
+        </div>
+
+        <div class="img">
+            <img src="https://i.pinimg.com/564x/fa/b5/9e/fab59e8f321031810b4788a3d9d18f91.jpg" alt="Pikachu pensando"
+                class="img-img">
+        </div>
+        {{else}}
+        <div style="margin: auto; width: 50%">
+            <h3 class="text-center" style="color: blue"> Para poder cambiarte a un rol premium, por favor, primero llena
+                el
+                formulario con
+                tus datos </h3>
+            <form action="/api/user/data" method="post" onsubmit="enviarDatos()">
+                <div class="form-group">
+                    <label for="identificacion" style="font-weight: 700; font-size: 1.2rem">Ingrese su DNI</label>
+                    <input required placeholder="Ejemplo: 45234232" class="form-control" type="number"
+                        name="identificacion" id="identificacion">
+                </div>
+                <div class="form-group">
+                    <label for="domicilio" style="font-weight: 600; font-size: 1.1rem">Ingrese su domicilio</label>
+                    <input required placeholder="Ejemplo: Avenida Siempre Viva 123" class="form-control"="text"
+                        name="domicilio" id="domicilio">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">Enviar</button>
+                </div>
+            </form>
+        </div>
+        {{/if}}
     </div>
 
 </div>

@@ -1,8 +1,27 @@
-<section id="section-mongodb">
+<section id="section-mongodb" class="product-mongodb">
 
-    <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
-    <a href="completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
-    <a href="api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
+    <div class="header-mongodb">
+        <div>
+            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+            <a href="completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
+            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
+            <a href="api/users/documents" class="btn btn-info bc">Cambiar foto de perfil</a>
+        </div>
+        <div style="display: flex">
+            <div style="display: flex; align-items:center">
+                <p class="texto-perfil"> Usuario: {{productossFull.[7]}} </p>
+            </div>
+            {{#if productossFull.[25] }}
+            <a href="api/users/documents">
+                <img class="cuadro-foto-perfil" src="{{productossFull.[24]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a href="api/users/documents">
+                <img class="cuadro-foto-perfil" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
+    </div>
 
     {{#if productossFull.[9] }}
     <div class="datos-session-mongoDB">
@@ -14,6 +33,9 @@
         <h4 data-otro-valor="{{productossFull.[13]}}" style="text-align: center; font-size: 2rem; font-weight: 600"> El
             _ID de tu carrito es:
             {{productossFull.[13]}} </h4>
+        <h4 style="text-align: center; font-size: 2rem; font-weight: 600; color:red">
+            {{productossFull.[23]}}
+        </h4>
         <div class="div-boton-cart">
             <a href="/carts/{{productossFull.[13]}}/purchase" class="btn btn-primary bc">Ir al carrito de compras</a>
         </div>
@@ -50,8 +72,8 @@
                 </ul>
             </div>
 
-            <h5 class="text-center" style="font-size: 1.6rem; font-weight: bolder; color: brown"> 
-                ** Recordatorio: los productos que agregues solo vos y el admin podran eliminarlos, 
+            <h5 class="text-center" style="font-size: 1.6rem; font-weight: bolder; color: brown">
+                ** Recordatorio: los productos que agregues solo vos y el admin podran eliminarlos,
                 y tampoco podras agregarlos al carrito. **</h5>
 
             <div class="col-12">
@@ -196,22 +218,6 @@
                             <button type="submit" class="btn btn-primary">Agregar</button>
                         </form>
                     </div>
-
-                    {{!-- <div class="mb-4" style="width: 30%">
-                        <label for="id">Ingrese el ID del producto a eliminar:</label>
-                        {{#if productossFull.[17] }}
-                        <p style="color: blue; font-weight: 600;"> *Al tener un rol {{productossFull.[16]}} solo podes
-                            eliminar los productos que agregaste.
-                            Un admin puedo eliminar todos
-                            los que quiere. * </p>
-                        {{/if}}
-                        <input type="text" id="idMongo" name="id" required>
-                        <button type="submit" id="boton-mongo" onclick="funcionMongo()" class="btn btn-primary">Eliminar
-                            producto</button>
-                        <p style="font-weight: bolder; font-size: 1.1rem; color: red">Por favor, cuando elimine un
-                            producto,
-                            refresque la pagina asi ve los cambios.</p>
-                    </div> --}}
                 </div>
 
                 {{else}}
