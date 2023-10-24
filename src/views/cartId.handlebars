@@ -1,12 +1,4 @@
 <section class="section-carts">
-    {{!-- <div class="header">
-        <div>
-            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
-            <a href="/home-mongodb" class="btn btn-success">Ir a la sección de productos</a>
-            <a href="/api/users/premium" class="btn btn-warning bc">Cambiar rol de usuario</a>
-            <a href="/api/users/documents" class="btn btn-info bc">Cambiar foto de perfil</a>
-        </div>
-    </div> --}}
 
     {{> headerPrueba}}
 
@@ -42,7 +34,7 @@
 
             <h2 class="col-12 text-center titlee">Carrito de compras </h2>
             <div class="carrito-seleccionado">
-                
+
                 <h4 class="cart-selected" style="background-color: pink; padding: 3px; border-radius: 5px">🛒N°: <span
                         class="cart-texto">{{datos.[7]}} </h4>
                 <h4 class="cart-title"> Contenido del carrito </h4>
@@ -87,8 +79,9 @@
                         </tbody>
                     </table>
                     <p style="display: flex; justify-content: end; font-family: 'Great Vibes', cursive;">
-                       * Por favor, para poder realizar la compra asegurese de que todos los productos tengan al menos 1
-                        unidad. * 
+                        * Por favor, para poder realizar la compra asegurese de que todos los productos tengan al menos
+                        1
+                        unidad. *
                     </p>
                 </div>
             </div>
@@ -109,56 +102,3 @@
 </section>
 
 {{> footerPrueba}}
-
-
-{{!-- <section class="section-carts">
-
-    <div class="container">
-        <a href="/home-mongodb" class="btn btn-danger">Volver a la sección de productos</a>
-        <div class="row">
-
-            <h2 class="text-center titulo-cart">Carrito de compras asociado a: {{datos.[9]}} </h2>
-            <div class="carrito-seleccionado">
-                <h4 class="cart-selected">Carrito seleccionado _id: <span class="cart-texto">{{datos.[7]}} </h4>
-                <h4 class="cart-title"> Contenido del carrito </h4>
-            </div>
-
-            <div class="col-12 contenedor-carts">
-                <div class="col-12">
-                    <table style="margin-top: 3.5%;" class="table table-striped col-12">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID del producto</th>
-                                <th scope="col">Title</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Total price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each datos.[1]}}
-                            <tr>
-                                <th scope="row">{{this}}</th>
-                                <td>{{lookup ../datos.[2] @index}}</td>
-                                <td>{{lookup ../datos.[3] @index}}</td>
-                                <td>${{lookup ../datos.[4] @index}}</td>
-                                <td>${{lookup ../datos.[5] @index}}</td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="contenedor-precio-final">
-                <h4 class="precio-final">Precio total de todos los productos: <span
-                        class="precio-final-texto">${{datos.[6]}}</span> </h4>
-            </div>
-
-            <a type="submit" style="color: white; font-size: 18px; font-weight: 600" class="btn btn-info"
-                onclick="terminarCompra('{{datos.[7]}}')">Terminar compra</a>
-
-        </div>
-    </div>
-
-</section> --}}

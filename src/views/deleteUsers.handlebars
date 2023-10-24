@@ -1,16 +1,4 @@
 <div class="deleteUsers">
-    {{!-- <div class="header">
-        <div>
-            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
-            <a href="/home-mongodb" class="btn btn-success">Ir a la sección de productos</a>
-            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
-        </div>
-        <div class="contenedor-profile">
-            <div>
-                <p class="texto"> Admin del website </p>
-            </div>
-        </div>
-    </div> --}}
 
     {{> headerPrueba}}
 
@@ -47,19 +35,7 @@
         <div class="if">
             <img class="if-img" src="/img/pikachu-deleted.jpg" alt="Pikachu triste">
         </div>
-
-
-
-        <div class="ELIMINADOS">
-            <h5>Usuarios eliminados</h5>
-            {{#each deleted }}
-            <p> {{deleted}} </p>
-            {{/each }}
-        </div>
         {{/if }}
-
-
-
 
         {{#if response.cuentaEliminadaElse }}
         <h2 class="text-center titlee" style="margin-bottom: 4%;"> No se encontraron usuarios para eliminar </h2>
@@ -69,7 +45,6 @@
         {{/if }}
 
     </div>
-
 </div>
 
 {{> footerPrueba}}

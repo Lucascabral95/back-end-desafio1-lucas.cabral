@@ -245,33 +245,6 @@ function changeYes(email) {
 }
 
 // ELIMINAR PRODUCTO DEL CATALOGO SEGUND SU _ID
-// function deleteProductById(owner, idProduct, emailUser) {
-
-//   if (owner === emailUser || emailUser === "adminCoder@coder.com") {
-//     fetch(`/home-mongodb/${idProduct}`,
-//       { method: 'DELETE' })
-//       .then(response => {
-//         Swal.fire({
-//           icon: 'success',
-//           title: 'Success',
-//           text: `Producto con ID: ${idProduct} eliminado con exito ✅. `
-//         });
-//         window.location.href = '/home-mongodb';
-//         console.log(owner, idProduct, emailUser);
-//       })
-//       .catch(error => {
-//         alert(`Error al eliminar el producto.`)
-//         console.log(error);
-//       })
-//   } else {
-//     Swal.fire({
-//       icon: 'error',
-//       title: 'Error',
-//       text: `No tenes permitido eliminar este producto. Solo el Admin y el usuario que lo creo puede eliminarlo.`
-//     });
-//     console.log(owner, idProduct, emailUser);
-//   }
-// }
 function deleteProductById(owner, idProduct, emailUser) {
 
   if (owner === emailUser || emailUser === "adminCoder@coder.com") {
@@ -509,28 +482,6 @@ function eliminarDelCart(value1, value2) {
 }
 
 // DISMINUIR CANTIDAD DEL PRODUCTO EN EL CARRITO
-// function disminuirCantidad(value1, value2, value3) {
-
-//   fetch(`/api/cartsdb/${value1}/products/${value2}/discont`, {
-//     method: "POST"
-//   })
-//     .then(res => {
-//       Swal.fire({
-//         icon: 'success',
-//         title: 'Success',
-//         text: '¡Cantidad del producto disminuida exitosamente!',
-//       });
-//       console.log(value3)
-//       setTimeout(() => {
-//         window.location.href = `/carts/${value1}/purchase`;
-//       }, 500);
-//     })
-//     .catch(error => {
-//       console.log(error);
-//     });
-// }
-
-
 function disminuirCantidad(value1, value2) {
 
   fetch(`/api/cartsdb/${value1}/products/${value2}/discont`, {

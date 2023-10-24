@@ -1,15 +1,5 @@
 <section class="pageGithub">
 
-    {{!-- <div class="header">
-        <div>
-            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
-            <a href="/home-mongodb" class="btn btn-success" id="log">Ir a la seccion de productos</a>
-            <a href="/completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
-            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
-            <a href="/api/users/documents" class="btn btn-info bc">Cambiar foto de perfil</a>
-        </div>
-    </div> --}}
-
     {{> headerPrueba}}
 
     <div class="container">
@@ -35,28 +25,6 @@
                 {{data.ultimaConexion}}
             </div>
         </div>
-
-        {{!-- {{#if user.[5] }}
-        <div class="userData-mongoDB" id="ocultNeed">
-            <h3 class="title-t-userData-mongoDB">Vos ingresaste por el login conectado a Mongo-DB Atlas y aca abajo
-                veras tus datos de session</h3>
-            <h5 class="title-userData-mongoDB"> Bienvenido cliente de mongo-DB: {{ user.[0] }} </h5>
-            <h5 class="title-userData-mongoDB"> Tu rol es de: {{ user.[1] }} </h5>
-        </div>
-        {{ else }}
-        <div class="userData-github">
-            <h3 class="title-t-userData-github">Vos ingresaste por el login de Github y aca abajo veras tus datos de
-                session</h3>
-            <h5 class="title-userData-github"> Bienvenido Usuario: {{ user.[2] }} </h5>
-            <h5 class="title-userData-github"> Tu email es: {{ user.[3] }} </h5>
-            <h5 class="title-userData-github"> Y tu edad es: {{ user.[4] }} </h5>
-        </div>
-        {{/if }} --}}
-
-        {{!-- <div class="contenedor-boton-logout">
-            <span class="indicacion-boton">Para cerrar sesion, hacé click acá:</span>
-            <a href="/api/session/logout" class="btn btn-primary">LOGOUT</a>
-        </div> --}}
 
     </div>
 </section>

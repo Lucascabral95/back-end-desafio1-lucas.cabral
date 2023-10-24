@@ -63,10 +63,20 @@ export const accessDeniedforAdmin = async (req, res, next) => {
 }
 
 // MIDDLEWARE ANTI USUARIOS DE GITHUB
-export const accessDeniedforGithub = async (req, res, next) => {
+export const onlyAccessGithubUser = async (req, res, next) => {
     if (req.session.emailUser.last_name === "Usuario de Github") {
-        return res.status(403).send("Acceso denegado para Usuarios de Github");
-    } else {
         next();
+    } else {
+        const role = req.session.rol === "Admin" ? true : false
+        const email = req.session.emailUser
+        const data = [
+            email,
+            req.session.dataSubHeader[0],
+            req.session.dataSubHeader[1],
+            req.session.dataSubHeader[2],
+            req.session.dataSubHeader[3],
+            req.session.dataSubHeader[4]
+        ]
+        res.render("lockUser", { rol: data })
     }
 }

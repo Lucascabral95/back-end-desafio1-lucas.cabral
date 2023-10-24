@@ -14,14 +14,10 @@ import {
 } from "../DAO/sessions.js";
 
 export const controllerUsersPremium = async (req, res) => {
-    //----------github------------------------------
     const userGithubEmail = req.session.emailUser.email
     const userGithubId = req.session.emailUser._id
     const userGithubRole = req.session.emailUser.role
-    //----------github------------------------------
-    // const email = req.session.emailUser  // titular
     const email = req.session.emailUser && typeof req.session.emailUser === 'object' ? req.session.emailUser.email : req.session.emailUser;
-    //----------github------------------------------
     const findUser = await getByEmail(email)
     const roleOfEmail = findUser.role
     const idOfEmail = findUser._id
@@ -38,7 +34,6 @@ export const controllerUsersPremium = async (req, res) => {
     const length = documentReference.length
     const referenceLength = length === 0 ? false : true
 
-    //------------------ GITHUB ----------
     const data = [
         roleOfEmail,
         idOfEmail,
@@ -52,12 +47,6 @@ export const controllerUsersPremium = async (req, res) => {
     for (let i = 0; i < 5; i++) {
         data.push(req.session.dataSubHeader && req.session.dataSubHeader[i] !== undefined ? req.session.dataSubHeader[i] : null);
     }
-    //------------------ GITHUB ----------
-    console.log(req.session.emailUser)
-
-    // const data = [roleOfEmail, idOfEmail, email, changeRole, accessToPremium,
-    //     ultimoValor, referenceLength, req.session.dataSubHeader[0], req.session.dataSubHeader[1],
-    //     req.session.dataSubHeader[2], req.session.dataSubHeader[3], req.session.dataSubHeader[4]]
 
     res.render("changeRole", { role: data })
 }
@@ -65,10 +54,7 @@ export const controllerUsersPremium = async (req, res) => {
 
 export const controllerUsersPremiumPost = async (req, res) => {
     const uid = req.params.uid
-    //----------------GITHUB--------------
-    // const email = req.session.emailUser // TITULAR
     const email = req.session.emailUser && typeof req.session.emailUser === 'object' ? req.session.emailUser.email : req.session.emailUser;
-    //----------------GITHUB--------------
     const findUser = await getByEmail(email)
     const role = findUser.role
     const changeRole = role === "user" ? "premium" : "user"
@@ -78,10 +64,7 @@ export const controllerUsersPremiumPost = async (req, res) => {
 }
 
 export const uploadPhotos = async (req, res) => {
-    //--------- github ------------
-    // const user = req.session.emailUser // TITULAR
     const user = req.session.emailUser && typeof req.session.emailUser === 'object' ? req.session.emailUser.email : req.session.emailUser;
-    //--------- github ------------
     const findUserr = await getByEmail(user)
     const userIdd = findUserr._id
     const userCart = findUserr.cart
@@ -105,12 +88,10 @@ export const uploadPhotos = async (req, res) => {
     let ultimoValor = documentReference[documentReference.length - 1]
     const length = documentName.length
     const condicionalLength = length === 0 ? false : true;
-    //----------------
     const ultimoValor2 = documentReference2[documentReference2.length - 1]
     const length2 = documentName2.length
     const condicionalLength2 = length2 === 0 ? false : true;
     const showw = user !== "adminCoder@coder.com" ? false : true
-    //----------------
     const dataDocument = [user, documentName, documentReference, ultimoValor, condicionalLength,
         documentName2, documentReference2, ultimoValor2, condicionalLength2, userIdd, userCart, showw]
     res.render("uploadPictures", { data: dataDocument })
@@ -245,11 +226,8 @@ export const updateUserByIdPost = async (req, res) => {
 
 export const apiUserData = async (req, res) => {
     try {
-        //----------github------
-        // const user = req.session.emailUser; //  TITULAR
         const user = req.session.emailUser && typeof req.session.emailUser === 'object' ? req.session.emailUser.email : req.session.emailUser;
         let findUser = await getByEmail(user);
-        //----------github------
 
         if (!findUser) {
             return res.status(404).json({ error: 'Usuario no encontrado' });

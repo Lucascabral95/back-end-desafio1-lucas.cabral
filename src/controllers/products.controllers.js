@@ -206,19 +206,6 @@ export const apiProductosDinamicoDelete = async (req, res) => {
     }
 }
 
-// NO ELIMINAR NO ELIMINAR NO ELIMINAR NO ELIMINAR NO ELIMINAR NO ELIMINAR NO ELIMINAR 
-// NO ELIMINAR NO ELIMINAR NO ELIMINAR NO ELIMINAR NO ELIMINAR NO ELIMINAR NO ELIMINAR 
-// NO ELIMINAR NO ELIMINAR NO ELIMINAR NO ELIMINAR NO ELIMINAR NO ELIMINAR NO ELIMINAR 
-// export const homeProducts = async (req, res) => {
-//     try {
-//         const productsHome = await getProductsHome()
-//         res.render("home", { data: productsHome })
-//         req.logger.info("Peticion GET a /home exitosa.")
-//     } catch (error) {
-//         res.status(404).send({ status: "error", message: "No se ha podido encontrar la lista de productos." })
-//         req.logger.fatal("No se ha podido encontrar la lista de productos.")
-//     }
-// }
 export const homeProducts = async (req, res) => {
     try {
         const productsHome = await getProductsHome()
@@ -303,16 +290,12 @@ export const homeMongoDB = async (req, res) => {
     const buscadorStock = productos.map(s => s.stock)
     const buscadorCategory = productos.map(ca => ca.category)
     const buscadorOwner = productos.map(o => o.owner)
-    //---------------- github ----------
-    // const user = req.session.emailUser // TITULAR
     const user = req.session.emailUser && typeof req.session.emailUser === 'object' ? req.session.emailUser.email : req.session.emailUser;
-    //---------------- github ----------
     const rol = req.session.rol
     const existeRol = req.session.existRol
     const ownerAdmin = roleUser === "admin" ? "admin" : user
     const ultimaConexion = req.session.lastConnection || "No registra"
     const UltimaConexionDefinitiva = `Última conexión: ${ultimaConexion} 🕓`
-    //-----------------------------
     const idDocument = req.cookies.idDocument
     const find = await getDocumentById(idDocument)
     const findPhoto = find.documents.filter(i => i.image === "profile")
@@ -323,15 +306,11 @@ export const homeMongoDB = async (req, res) => {
     const ultimoValor = documentReference[documentReference.length - 1]
     const length = documentReference.length
     const referenceLength = length === 0 ? false : true
-    //-----------------------------
     const canDelete = buscadorOwner === emailUser ? true : false
     const userEmailGithub = req.session.emailUser.email
     const userAgeGithub = req.session.emailUser.age
     const userFirstNameGithub = req.session.emailUser.first_name
-    //---------------- github -----------
-    // const cartIdUser = req.session?.data?.[3] ?? null; // TITULAR
     const cartIdUser = req.session?.data?.[3] ?? req.session.emailUser.cart;
-    //---------------- github -----------
     const cartIdUserMap = Array(productos.length).fill(cartIdUser);
     const arrayEmailUser = Array(productos.length).fill(emailUser);
     const mostrarONo = roleUser === "Admin" ? false : true
@@ -359,9 +338,7 @@ export const homeMongoDB = async (req, res) => {
 
     const datosDePaginate = [totalDocss, limitt, totalPages, pagee,
         pagingCounter, hasPrevPage, hasNextPage, prevPage, nextPage, accesoProductos, bloqueoProductos]
-    //----------------------
     req.session.dataSubHeader = findUser ? [findUser._id, cartIdUser, referenceLength, ultimoValor, user, showONoAdmin] : [];
-    //----------------------
 
     res.render("products", { productossFull: productossFull, datosExtras: datosDePaginate, sort })
     req.logger.info("Peticion GET a /home-mongoDB exitosa.")

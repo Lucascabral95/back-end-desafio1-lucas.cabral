@@ -15,7 +15,6 @@ export const apiSessionDentro = async (req, res) => {
     let user = req.session.emailUser
     let rol = req.session.rol
     let existeRol = req.session.existRol
-    //------------------------------
     const userId = req.session.emailUser._id
     const userFirstName = req.session.emailUser.first_name
     const userLastName = req.session.emailUser.last_name
@@ -43,14 +42,11 @@ export const apiSessionDentro = async (req, res) => {
         domicilio: userDomicilio,
         ultimaConexion: userLastConnection
     }
-    //------------------------------
 
     let userNameGithub = req.session.emailUser.first_name
     let userEmailGithub = req.session.emailUser.email
     let userAgeGithub = req.session.emailUser.age
     const userData = [user, rol, userNameGithub, userEmailGithub, userAgeGithub, existeRol]
-
-    // console.log(req.session.emailUser._id)
 
     res.render("pageGithub", { user: userData, data: data })
     req.logger.info("Exito al ingresar a /api/session/dentro")
@@ -61,44 +57,9 @@ export const apiSessionRegister = async (req, res) => {
     req.logger.info("Peticion GET a /api/session/register exitosa.")
 }
 
-// export const apiSessionCurrent = async (req, res) => {
-//     try {
-//         const email = req.session.emailUser
-//         const findUser = await getByEmail(email)
-//         const name = findUser.first_name
-//         const lastName = findUser.last_name
-//         const age = findUser.age
-//         const role = findUser.role
-//         const cart = findUser.cart
-//         //--------------------------------------------------------------------------------
-//         const idDocument = req.cookies.idDocument
-//         const find = await getDocumentById(idDocument)
-//         const findPhoto = find.documents.filter(i => i.image === "profile")
-//         let documentReference
-//         if (findPhoto) {
-//             documentReference = findPhoto.map(n => n.reference)
-//         }
-//         const ultimoValor = documentReference[documentReference.length - 1]
-//         const length = documentReference.length
-//         const referenceLength = length === 0 ? false : true
-//         console.log(ultimoValor, referenceLength)
-//         //--------------------------------------------------------------------------------
-//         const datas = [email, name, lastName, age, role, cart,
-//             ultimoValor, referenceLength,]
-//         res.cookie('emailCurrent', email);
-//         res.render("current", { datos: datas })
-//         req.logger.info("Peticion GET a /api/session/current exitosa.")
-//     } catch (error) {
-//         res.status(500).json({ message: 'Error al obtener los datos de usuario.' });
-//         req.logger.fatal("Error al obtener los datos de usuario.")
-//     }
-// };
 export const apiSessionCurrent = async (req, res) => {
     try {
-        //-------- github -----------
-        // const email = req.session.emailUser// TITULAR
         const email = req.session.emailUser && typeof req.session.emailUser === 'object' ? req.session.emailUser.email : req.session.emailUser;
-        //-------- github -----------                
         const findUser = await getByEmail(email)
         const idDocument = req.cookies.idDocument
         const find = await getDocumentById(idDocument)
@@ -122,10 +83,8 @@ export const apiSessionCurrent = async (req, res) => {
             last_name: findUser.last_name,
             email: email,
             age: findUser.age,
-            //---------------
             dni: dnii,
             domicilio: domicilioo,
-            //---------------
             role: findUser.role,
             cart: findUser.cart,
             document: findUser.documents,
@@ -141,17 +100,6 @@ export const apiSessionCurrent = async (req, res) => {
     }
 };
 
-// RUTA "GET" DE /API/SESSION/LOGOUT
-// export const apiSessionLogout = async (req, res) => {
-//     const email = req.session.emailUser
-//     const last = await getByEmail(email)
-//     await last.updateLastConnection()
-//     req.session.destroy(error => {
-//         req.logger.info(`Terminando conexion a las: ${last.last_connection}`);
-//         res.render("login")
-//         req.logger.info("¡¡¡Desloqueo exitoso!!!")
-//     })
-// }
 export const apiSessionLogout = async (req, res) => {
     const email = req.session.emailUser;
     const last = await getByEmail(email);
@@ -228,9 +176,6 @@ export const apiSessionLoginPost = async (req, res) => {
             const token_access = generateToken(user.email);
             req.session.emailJwt = user.email;
             res.cookie("idDocument", busquedaData.documents ? busquedaData.documents.toString() : "");
-            //------
-            // res.cookie("authToken", token_access, { httpOnly: true }).redirect("/api/session/current");
-            //------
             res.cookie("authToken", token_access, { httpOnly: true }).redirect("/home-mongodb");
         } else {
             req.session.rol = "Usuario";
@@ -244,9 +189,6 @@ export const apiSessionLoginPost = async (req, res) => {
             await busquedaData.updateLastConnection();
             res.cookie("idDocument", busquedaData.documents ? busquedaData.documents.toString() : "");
             req.session.lastConnection = busquedaData.last_connection;
-            //------
-            // res.cookie("authToken", token_access, { httpOnly: true }).redirect("/api/session/current");
-            //------
             res.cookie("authToken", token_access, { httpOnly: true }).redirect("/home-mongodb");
         }
     } catch (error) {

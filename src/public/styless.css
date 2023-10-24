@@ -374,6 +374,9 @@ h1 {
 
 /* LOGIN-ERROR.HANDLEBARS */
 .section-login-error {
+  background-image: url(./img/container-fondo.webp);
+  background-repeat: repeat;
+  background-size: contain;
   .section-login-error-title {
     font-size: 3.5rem;
     color: black;
@@ -443,9 +446,6 @@ h1 {
       font-weight: bold;
       font-size: 1.6rem;
     }
-  }
-  .cont-github{
-    
   }
 }
 
@@ -723,6 +723,10 @@ h1 {
 }
 
 /* revoerPassword */
+.fondo{
+  background-image: url(./img/container-fondo.webp);
+  background-size: contain;
+}
 .recover-password {
   .recover-password-contenedor {
     position: absolute;
@@ -1132,8 +1136,6 @@ h1 {
         width: 196px;
         height: 75px;
       }
-    }
-    .boton-loginn {
     }
   }
 }

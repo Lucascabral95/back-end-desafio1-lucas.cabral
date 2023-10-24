@@ -30,16 +30,6 @@ const userSchema = new mongoose.Schema({
     domicilio: String
 });
 
-// Método para actualizar last_connection
-// userSchema.methods.updateLastConnection = function () {
-//     const buenosAiresOffset = -3 * 60 * 60 * 1000;
-//     const fechaHoraActual = new Date(new Date().getTime() + buenosAiresOffset);
-//     const formattedDate = fechaHoraActual.toISOString().replace(/\.(\d+)Z$/, "Z");
-
-//     this.last_connection = formattedDate;
-//     return this.save();
-// };
-
 userSchema.methods.updateLastConnection = function () {
     moment.locale('es');
     const fechaHora = moment().format('MMMM Do YYYY, h:mm:ss a');

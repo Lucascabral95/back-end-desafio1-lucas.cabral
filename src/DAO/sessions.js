@@ -9,7 +9,6 @@ export const getAll = async () => {
         result = await userModel.find()
     } catch (error) {
         console.log(error);
-        // req.logger.fatal("Error al mostrar los usuarios.")
     }
     return result
 }
@@ -21,7 +20,6 @@ export const getByEmail = async (email) => {
         return result
     } catch (error) {
         console.log(error);
-        // req.logger.fatal("Error al encontrar usuario por su ID.")
         throw error;
     }
 }
@@ -32,7 +30,6 @@ export const createUser = async (user) => {
         result = await userModel.create(user)
     } catch (error) {
         console.log(error);
-        // req.logger.fatal("Error al crear usuario nuevo.")
     }
     return result
 }
@@ -75,7 +72,7 @@ export const filterAndDeleteUsers = async () => {
                 const fechaUltimaConexion = moment(u.last_connection, 'MMMM Do YYYY, h:mm:ss a');
                 const diferenciaEnSegundos = currentTime.diff(fechaUltimaConexion, 'seconds');
                 // return diferenciaEnSegundos > 60; // BORRA A TODOS EN 60 SEGUNDOS
-                return diferenciaEnSegundos > 1800; // BORRA A TODOS LOS USUARIOS CON INACTIVIDAD DE 30 MINUTOS
+                return diferenciaEnSegundos > 1800; // BORRA A TODOS LOS USUARIOS CON INACTIVIDAD DE 30 MINUTOS (¡¡PROFE!! SE LO DEJO ASI PARA QUE VEA QUE FUNCIONA)
             }
             return true;
         }

@@ -143,11 +143,3 @@ export const serviceFaker = async (num) => {
     const products = generatorProducts(num)
     return products
 }
-
-//RUTAS COMENTADAS PORQUE FUERON ENVIADAS A SU ROUTER CORRECTO
-
-// OBTENER FUNCIONES DE PRODUCTOS PARA 
-// export const getProductsHome = async () => {
-//     const productosHome = await productsService.getProducts()
-//     return productosHome
-// }

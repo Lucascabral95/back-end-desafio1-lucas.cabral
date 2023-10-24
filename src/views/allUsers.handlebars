@@ -1,14 +1,4 @@
 <div class="deleteUsers">
-    {{!-- <div class="header">
-        <div>
-            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
-            <a href="/home-mongodb" class="btn btn-success">Ir a la sección de productos</a>
-            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
-        </div>
-        <div class="contenedor-profile">
-            <p class="texto"> Admin del website </p>
-        </div>
-    </div> --}}
 
     {{> headerPrueba}}
 
@@ -101,12 +91,11 @@
         <div class="eliminarUsuarios">
             <h3 class="text-center eliminacion"> ¡¡¡Cuidado!!! Este boton eliminar a todos los usuarios que se hayan
                 logueado ni
-                deslogueado en las ultimas 48 horas </h3>
+                deslogueado en la ultima media hora </h3>
+                <p style="color: black; font-weigth: 800, font-size: 1.2rem" class="text-center"> 
+                    *A veces cuando se eliminan muchos usuarios en simultaneo se tilda la pagina, pero los elimina. Solo actualiza la pagina* </p>
             <div class="botonParaEliminar">
-                {{!-- <button onclick="eliminarUsuarios()" class="btn btn-danger"> Eliminar usuarios por inacitividad de
-                    48 horas
-                </button> --}}
-                <a href="/api/users/delete" class="btn btn-danger"> Eliminar usuarios por inacitividad de 48 horas </a>
+                <a href="/api/users/delete" style="font-size: 1.2rem;" class="btn btn-danger"> Eliminar usuarios por inactividad de media hora </a>
             </div>
         </div>
 

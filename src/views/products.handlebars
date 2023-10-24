@@ -1,31 +1,4 @@
 <section id="section-mongodb" class="product-mongodb">
-    {{!-- <div class="header-mongodb">
-        <div>
-            {{#if productossFull.[26] }}
-            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
-            <a style="font-weight: 700;" href="/api/users" class="btn btn-danger"> Modificar/eliminar usuarios </a>
-            {{else}}
-            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
-            <a href="completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
-            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
-            <a href="api/users/documents" class="btn btn-info bc">Cambiar foto de perfil</a>
-            {{/if}}
-        </div>
-        <div style="display: flex">
-            <div style="display: flex; align-items:center">
-                <p class="texto-perfil"> Usuario: {{productossFull.[7]}} </p>
-            </div>
-            {{#if productossFull.[25] }}
-            <a href="api/users/documents">
-                <img class="cuadro-foto-perfil" src="{{productossFull.[24]}}" alt="Foto de perfil">
-            </a>
-            {{else}}
-            <a href="api/users/documents">
-                <img class="cuadro-foto-perfil" src="/img/foto-anonima.jpg" alt="Foto de perfil">
-                {{/if}}
-            </a>
-        </div>
-    </div> --}}
 
     {{> headerPrueba}}
 
@@ -57,61 +30,6 @@
             {{/if}}
         </div>
     </div>
-
-    {{!-- {{#if productossFull.[9] }}
-    <div class="datos-session-mongoDB">
-        <h2 style="text-align: center; font-weigth: bolder; font-size: 3.5rem; margin-top: 1%">Bienvenido/a usuario de
-            MongoDB Atlas:
-            {{productossFull.[7]}} </h2>
-        <h3 style="text-align: center; font-weigth: bolder; font-size: 2.8rem; margin-top: 1%; color: blue">
-            Tu rol es de: {{productossFull.[16]}} </h3>
-        <h4 data-otro-valor="{{productossFull.[13]}}" style="text-align: center; font-size: 2rem; font-weight: 600"> El
-            _ID de tu carrito es:
-            {{productossFull.[13]}} </h4>
-        <h4 style="text-align: center; font-size: 2rem; font-weight: 600; color:red">
-            {{productossFull.[23]}}
-        </h4>
-        <div class="div-boton-cart">
-            <a href="/carts/{{productossFull.[13]}}/purchase" style="font-size: 1.6rem; font-weight: bolder"
-                class="btn btn-success bc">Ir al carrito de compras 🛒 </a>
-        </div>
-    </div>
-    {{else}}
-    <div class="datos-session-github">
-        <h2 style="text-align: center; font-weigth: bolder; font-size: 3.5rem; margin-top: 1%">Bienvenido/a usuario de
-            Github: {{productossFull.[12]}} </h2>
-        <h2 style="text-align: center; font-weigth: bolder; font-size: 3.5rem; margin-top: 1%">Tu email es:
-            {{productossFull.[10]}} </h2>
-        <h3 style="text-align: center; font-weigth: bolder; font-size: 2.8rem; margin-top: 1%; color: blue">
-            Y tu edad es: {{productossFull.[11]}} </h3>
-    </div>
-    {{/if}} --}}
-
-    {{!-- {{#if productossFull.[9] }}
-    <div class="datos-session-mongoDB">
-        <h2 class="titlee">Bienvenido/a: {{productossFull.[7]}} </h2>
-        <h3 class="title-rol">
-            Tu rol es de: {{productossFull.[16]}} </h3>
-        <h4 data-otro-valor="{{productossFull.[13]}}" class="title-cart"> _ID de tu carrito:
-            {{productossFull.[13]}} </h4>
-        <h4 class="title-ultimaConexion">
-            {{productossFull.[23]}}
-        </h4>
-        <div class="div-boton-cart">
-            <a href="/carts/{{productossFull.[13]}}/purchase" class="btn btn-success bc">Ir al carrito de compras 🛒
-            </a>
-        </div>
-    </div>
-    {{else}}
-    <div class="datos-session-github">
-        <h2 class="titlee text-center">Bienvenido/a usuario de
-            Github: {{productossFull.[12]}} </h2>
-        <h2 class="text-center">Tu email es:
-            {{productossFull.[10]}} </h2>
-        <h3 class="text-center">
-            Y tu edad es: {{productossFull.[11]}} </h3>
-    </div>
-    {{/if}} --}}
 
     <h1 style="margin: 0; padding: 0" class="mb-4 titlee">Catálogo de productos</h1>
 
@@ -227,19 +145,6 @@
 
             </div>
 
-            {{!-- <div class="contenedor-datos-extras-paginate col-12">
-                <h3>Datos extras de Paginate de Mongoose</h3>
-                <p> totalDocs: {{datosExtras.[0]}} </p>
-                <p> limit: {{datosExtras.[1]}} </p>
-                <p> totalPages: {{datosExtras.[2]}} </p>
-                <p> page: {{datosExtras.[3]}} </p>
-                <p> pagingCounter: {{datosExtras.[4]}} </p>
-                <p> hasPrevPage: {{datosExtras.[5]}} </p>
-                <p> hasNextPage: {{datosExtras.[6]}} </p>
-                <p> prevPage: {{datosExtras.[7]}} </p>
-                <p> nextPage: {{datosExtras.[8]}} </p>
-            </div> --}}
-
             {{#if datosExtras.[9]}}
             <div class="col-12">
                 <hr class="col-12">
@@ -253,58 +158,28 @@
                     <div style="width: 50%">
                         <b class="text-center mb-2" style="font-size: 1.6rem">Todos los campos son obligatorios.</b>
 
-                        {{!-- <form action="/home-mongodb" method="POST">
-                            <label for="title">title:</label>
-                            <input type="text" name="title" required>
-                            <br>
-                            <label for="description">description: </label>
-                            <input type="text" name="description" required>
-                            <br>
-                            <label for="code">code:</label>
-                            <input type="text" name="code" required>
-                            <br>
-                            <label for="price">price:</label>
-                            <input type="number" name="price" required>
-                            <br>
-                            <label for="stock">stock:</label>
-                            <input type="number" name="stock" required>
-                            <br>
-                            <label for="category">category:</label>
-                            <input type="text" name="category" required>
-                            <br>
-                            <label for="category">owner:</label>
-                            <input type="text" name="owner" value="{{productossFull.[20]}}" readonly>
-                            <br>
-                            <button type="submit" class="btn btn-primary">Agregar</button>
-                        </form> --}}
                         <form action="/home-mongodb" method="POST">
                             <div class="form-group">
-                                {{!-- <label for="title">Agregue un producto:</label> --}}
                                 <input placeholder="Agregue un título..." class="form-control" type="text" name="title"
                                     required>
                             </div>
                             <div class="form-group">
-                                {{!-- <label for="description">Agregue una descripcion: </label> --}}
                                 <input placeholder="Agregue una descripción..." class="form-control" type="text"
                                     name="description" required>
                             </div>
                             <div class="form-group">
-                                {{!-- <label for="code">Agregue un codigo:</label> --}}
                                 <input placeholder="Agregue un código..." class="form-control" type="text" name="code"
                                     required>
                             </div>
                             <div class="form-group">
-                                {{!-- <label for="price">Agregue un precio:</label> --}}
                                 <input placeholder="Agregue un precio..." class="form-control" type="number"
                                     name="price" required>
                             </div>
                             <div class="form-group">
-                                {{!-- <label for="stock">Agregue un stock:</label> --}}
                                 <input placeholder="Agregue un stock..." class="form-control" type="number" name="stock"
                                     required>
                             </div>
                             <div class="form-group">
-                                {{!-- <label for="category">Agregue una categoria:</label> --}}
                                 <input placeholder="Agregue una categoría..." class="form-control" type="text"
                                     name="category" required>
                             </div>

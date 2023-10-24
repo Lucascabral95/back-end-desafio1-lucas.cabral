@@ -11,10 +11,7 @@ import TicketServices from "../DAO/TicketsDAO.js";
 const ticketDao = new TicketServices()
 
 export const createSession = async (req, res) => {
-    //------------------- GITHUB ------------------
-    // const email = req.session.emailUser; // TITULAR
     const email = req.session.emailUser && typeof req.session.emailUser === 'object' ? req.session.emailUser.email : req.session.emailUser;
-    //------------------- GITHUB ------------------
     const findEmail = await getByEmail(email);
     const cartId = findEmail.cart;
     const carrito = await cartsModelFindByIdPopulate(cartId);
@@ -64,10 +61,7 @@ export const cancel = async (req, res) => {
 
 export const successfulPurchase = async (req, res) => {
     try {
-        //------------------ github ---------------
-        // const purchaser = req.session.emailUser;  // TITULAR
         const purchaser = req.session.emailUser && typeof req.session.emailUser === 'object' ? req.session.emailUser.email : req.session.emailUser;
-        //------------------ github ---------------
         const findUser = await getByEmail(purchaser);
         const idCart = findUser.cart;
         const amount = req.session.sessionDataPurchase[8];
@@ -103,48 +97,3 @@ export const successfulPurchase = async (req, res) => {
         res.redirect("/completed/purchase");
     }
 };
-
-// export const createSession = async (req, res) => {
-//     const email = req.session.emailUser;
-//     const findEmail = await getByEmail(email);
-//     const cartId = findEmail.cart;
-//     const carrito = await cartsModelFindByIdPopulate(cartId);
-//     const datos = carrito.products.map(item => ({
-//         quantity: item.quantity,
-//         title: item.product.title,
-//         precio: item.product.price
-//     }));
-//     let cart = [];
-//     for (const datitos of datos) {
-//         cart.push(datitos);
-//     }
-//     console.log(findEmail.cart)
-//     try {
-//         const line_items = cart.map(item => {
-//             return {
-//                 price_data: {
-//                     product_data: {
-//                         name: item.title
-//                     },
-//                     currency: "usd",
-//                     unit_amount: item.precio * 100,
-//                 },
-//                 quantity: item.quantity
-//             };
-//         });
-
-//         const session = await stripe.checkout.sessions.create({
-//             line_items,
-//             mode: "payment",
-//             success_url: "http://localhost:8080/success",
-//             cancel_url: "http://localhost:8080/error"
-//         });
-
-//         // console.log(session);
-//         res.redirect(session.url)
-//         // return res.json({ url: session.url });
-//     } catch (error) {
-//         return res.status(500).send({ message: error.message });
-//     }
-// };
-

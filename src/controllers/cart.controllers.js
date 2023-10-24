@@ -191,16 +191,12 @@ export const controllerApiCartDBDinamicoDelete = async (req, res) => {
 
 // RUTA "GET" PARA /CARTS/:CID/PURCHASE
 export const cartsParams = async (req, res) => {
-    //----------------------- github
-    // const userr = req.session.emailUser // titular
     const userr = req.session.emailUser && typeof req.session.emailUser === 'object' ? req.session.emailUser.email : req.session.emailUser;
-    //----------------------- github
     const findUserr = await getByEmail(userr)
     const userIdd = findUserr._id
     const cartAll = await cartsModelFindService();
     const cid = req.params.cid;
     const cart = await cartsModelFindByIdService(cid)
-    //---------------
     const idDocument = req.cookies.idDocument
     const find = await getDocumentById(idDocument)
     const findPhoto = find.documents.filter(i => i.image === "profile")
@@ -211,7 +207,6 @@ export const cartsParams = async (req, res) => {
     const ultimoValor = documentReference[documentReference.length - 1]
     const length = documentReference.length
     const referenceLength = length === 0 ? false : true
-    //---------------
     try {
         const cartId = cart._id;
         const productId = cart.products.map((prod) => prod.product._id);
@@ -349,9 +344,7 @@ export const controllerStock = async (req, res) => {
 
 export const controllerTicket = async (req, res) => {
     const amount = req.session.sessionDataPurchase[8]
-    //---------------- GITHUB -------------
-    const purchaser = req.session.emailUser; // TITULAR
-    //---------------- GITHUB --------------
+    const purchaser = req.session.emailUser; 
 
     if (!amount || !purchaser) {
         req.logger.fatal("Todos los campos son obligatorios.")
