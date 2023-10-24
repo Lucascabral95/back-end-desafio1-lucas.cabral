@@ -9,6 +9,7 @@ const keyStripe = config.key_stripe;
 const stripe = new Stripe(keyStripe);
 import TicketServices from "../DAO/TicketsDAO.js";
 const ticketDao = new TicketServices()
+const PORT = config.port
 
 export const createSession = async (req, res) => {
     const email = req.session.emailUser && typeof req.session.emailUser === 'object' ? req.session.emailUser.email : req.session.emailUser;
@@ -44,9 +45,9 @@ export const createSession = async (req, res) => {
             line_items,
             mode: "payment",
             // success_url: "http://localhost:8080/success",
-            success_url: "https://back-end-desafio1-lucascabral-production.up.railway.app/success",
             // cancel_url: "http://localhost:8080/error"
-            success_url: "https://back-end-desafio1-lucascabral-production.up.railway.app/error",
+            success_url: `http://localhost:${PORT}/success`,
+            cancel_url: `http://localhost:${PORT}/error`
         });
 
 
