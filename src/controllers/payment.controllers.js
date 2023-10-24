@@ -46,8 +46,8 @@ export const createSession = async (req, res) => {
             mode: "payment",
             // success_url: `http://localhost:${PORT}/success`,
             // cancel_url: `http://localhost:${PORT}/error`
-            success_url: `http://back-end-desafio1-lucascabral-production.up.railway.app//success`,
-            cancel_url: `http://back-end-desafio1-lucascabral-production.up.railway.app//error`
+            success_url: `http://back-end-desafio1-lucascabral-production.up.railway.app/success`,
+            cancel_url: `http://back-end-desafio1-lucascabral-production.up.railway.app/error`
         });
 
 
