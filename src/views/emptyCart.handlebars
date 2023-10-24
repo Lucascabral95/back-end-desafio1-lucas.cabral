@@ -1,9 +1,48 @@
-<div class="container">
+<div class="empty-cart">
+    {{!-- <div class="header">
+        <div class="separador">
+            <div>
+                <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+                <a href="/home-mongodb" class="btn btn-success" id="log">Ir a la seccion de productos</a>
+                <a href="/api/users/documents" class="btn btn-danger" id="log">Cambiar foto de perfil</a>
+                <a href="/completed/purchase" class="btn btn-warning" id="log">Ir al historial de compras</a>
+            </div>
+        </div>
+    </div> --}}
 
-    <h2 class="title-emptyCart"> Carrito vacío. Por favor, agregue algún producto para realizar una compra. </h2>
+    {{> headerPrueba}}
 
-    <div class="contenedor-emptyCart">
-        <img class="img-emptyCart" src="https://i.pinimg.com/564x/10/cd/aa/10cdaa05ddea2d73851c404318d5da41.jpg" alt="Pikachu triste">
+    <div class="sub-header">
+        <div class="uid">
+            <p class="uid-texto"> UID: {{datos.[0]}} </p>
+        </div>
+        <div class="carrito-compras">
+            <a href="/carts/{{datos.[1]}}/purchase" class="carrito-compras-a">Ir al carrito de compras 🛒 </a>
+        </div>
+        <div class="photo">
+            {{#if datos.[2] }}
+            <a class="photo-a" href="api/users/documents">
+                <span class="photo-texto"> {{datos.[4]}} </span>
+                <img class="photo-profile" src="{{datos.[3]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a class="photo-a" href="api/users/documents">
+                <span class="photo-texto"> {{datos.[4]}} </span>
+                <img class="photo-profile" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="titlee"> Carrito vacío. Por favor, agregue algún producto para realizar una compra. </h2>
+
+        <div class="contenedor-emptyCart">
+            <img class="img-emptyCart" src="https://i.pinimg.com/564x/10/cd/aa/10cdaa05ddea2d73851c404318d5da41.jpg"
+                alt="Pikachu triste">
+        </div>
     </div>
 
 </div>
+
+{{> footerPrueba}}

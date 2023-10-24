@@ -1,4 +1,157 @@
-<div class="container-fluid">
+<div>
+    {{!-- <div class="header-mongodb">
+        <div>
+            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+            <a href="/home-mongodb" class="btn btn-warning bc">Ir a la seccion de productos</a>
+            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
+            <a href="/api/users/documents" class="btn btn-info bc">Cambiar foto de perfil</a>
+        </div>
+        <div style="display: flex">
+            <div style="display: flex; align-items:center">
+                <p style="font-size: 1.4rem;
+                            color: blue;
+                            font-weight: bolder;
+                            position: relative;
+                            right: 10%;" class="texto-perfil"> Usuario: {{mock.tid}} </p>
+            </div>
+            {{#if mock.referenceLength }}
+            <a href="api/users/documents">
+                <img class="cuadro-foto-perfil" src="{{mock.ultimoValor}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a href="api/users/documents">
+                <img class="cuadro-foto-perfil" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
+    </div> --}}
+
+    {{> headerPrueba}}
+
+    <div class="sub-header">
+        <div class="uid">
+            <p class="uid-texto"> UID: {{data.uid}} </p>
+        </div>
+        <div class="carrito-compras">
+            <a href="/carts/{{data.cart}}/purchase" class="carrito-compras-a">Ir al carrito de compras 🛒 </a>
+        </div>
+        <div class="photo">
+            {{#if data.referenceLength }}
+            <a class="photo-a" href="/api/users/documents">
+                <span class="photo-texto"> {{data.email}} </span>
+                <img class="photo-profile" src="{{data.ultimoValor}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a class="photo-a" href="api/users/documents">
+                <span class="photo-texto"> {{data.email}} </span>
+                <img class="photo-profile" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="container">
+
+        <h2 class="titlee text-center"> Historial de compras </h2>
+
+        {{!-- <h2 class="titlee">¡¡¡Felicidades por terminar tu compra!!!</h2>
+        <h5 class="subtitle-compra-realizada">Tu ultimo ticket de compra se encuentra acá abajo 👇 </h5>
+        <h5 style="color: red; font-size: 1.4rem" class="subtitle-compra-realizada">*A su vez, se desconto el stock de
+            los
+            productos en la base de datos y se vacío el carrito*</h5> --}}
+        <div class="col-12">
+            {{!-- <table style="margin-top: 3.5%;" class="table table-striped col-12">
+                <thead>
+                    <tr>
+                        <th scope="col">_id</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Purchase datatime</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Email del comprador</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td> {{ticket._id}} </td>
+                        <td> {{ticket.code}} </td>
+                        <td> {{ticket.purchase_dateTime}} </td>
+                        <td> {{ticket.amount}} </td>
+                        <td> {{ticket.purchaser}} </td>
+                    </tr>
+                </tbody>
+            </table> --}}
+
+            <h2
+                style="color: blue; font-weight: bolder; text-align: center; font-size: 2rem; margin-top: 7%; margin-bottom: 2%">
+                Todos los Tickets generados por este Carrito ({{mock.total}} en total) </h2>
+
+            <table style="margin-top: 3.5%;" class="table table-striped col-12">
+                <thead>
+                    <tr>
+                        <th>_id del Ticket generado</th>
+                        <th>Code</th>
+                        <th>Purchase datatime</th>
+                        <th>Amount</th>
+                        <th>Email del comprador</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each mock._id as |ticketId index|}}
+                    <tr>
+                        <td scope="col">{{ticketId}}</td>
+                        <td scope="col">{{lookup ../mock.code index}}</td>
+                        <td scope="col">{{lookup ../mock.purchase_dateTime index}}</td>
+                        <td scope="col">{{lookup ../mock.amount index}}</td>
+                        <td scope="col">{{lookup ../mock.purchaser index}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+
+            <h3 class="text-center" style="font-size: 2.2rem; font-weigth: 600; margin: 4%"> Ticket de su última compra
+            </h3>
+            {{!-- <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>_id del Ticket generado</th>
+                        <th>Code</th>
+                        <th>Purchase datatime</th>
+                        <th>Amount</th>
+                        <th>Email del comprador</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td> {{last.ultimoIddd}} </td>
+                        <td> {{last.ultimoCode}} </td>
+                        <td> {{last.ultimoDatatimee}} </td>
+                        <td> {{last.ultimoAmount}} </td>
+                        <td> {{last.ultimoPurr}} </td>
+                    </tr>
+                </tbody>
+            </table> --}}
+            <div style="display:flex; justify-content:center">
+                <div class="card border-info mb-3" style="max-width: 18rem;">
+                    <div class="card-header" style="font-weight: 700;">Ticket</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Ultimo ticket de compra</h5>
+                        <p class="card-text"> _id: {{last.ultimoIddd}} </p>
+                        <p class="card-text"> Code: {{last.ultimoCode}} </p>
+                        <p class="card-text"> Purchase datatime: {{last.ultimoDatatimee}} </p>
+                        <p class="card-text"> Amount: {{last.ultimoAmount}} </p>
+                        <p class="card-text"> Email del comprador: {{last.ultimoPurr}} </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{> footerPrueba}}
+
+
+{{!-- <div class="container-fluid">
 
     <div class="header-mongodb">
         <div>
@@ -89,4 +242,4 @@
         </div>
     </div>
 
-</div>
+</div> --}}

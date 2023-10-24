@@ -75,3 +75,11 @@ export const ticketModelAddService = async (content) => {
     }
 }
 
+export const quantityCartDinamic = async (quantity) => {
+    try {
+        
+    } catch (error) {
+    console.log("Error al modificar cantidad del producto")
+    throw error
+    }
+}

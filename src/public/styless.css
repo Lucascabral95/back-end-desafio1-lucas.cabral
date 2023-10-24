@@ -5,10 +5,154 @@
 
 * {
   text-decoration: none;
+  list-style: none;
+}
+
+/* el estilo de todos los titulos */
+.titlee {
+  text-align: center;
+  color: black;
+  font-weight: bolder;
+  font-size: 3rem;
+}
+
+/* BODY */
+body {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.header-oficial {
+  background-color: #111111;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+
+  .sections-a {
+    text-decoration: none;
+  }
+
+  .logo {
+    .logo-img {
+      width: auto;
+      height: 60px;
+    }
+  }
+
+  .sections {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 7px;
+    .sections-ul {
+      .sections-li {
+        display: inline;
+        margin-right: 15px;
+        margin-left: 15px;
+        font-size: 1.2rem;
+        font-weight: bolder;
+        color: white;
+        &:hover {
+          padding: 2px;
+          border-radius: 4px;
+          transition: 0.5s;
+          background-color: white;
+          color: black;
+        }
+      }
+    }
+  }
+
+  .logout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    right: 16px;
+    top: 5px;
+    .logout-button {
+      font-weight: bolder;
+      color: red;
+      font-size: 1.8rem;
+    }
+  }
+}
+
+/* footer */
+.footer {
+  background-color: #111111;
+
+  .contenedor-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .cont-img {
+      margin-top: 1.6%;
+      margin-bottom: 1%;
+      width: 42px;
+      height: 42px;
+      background-color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 1%;
+      margin-right: 1%;
+      .icons-img {
+        background-color: white;
+        width: 26px;
+        height: 26px;
+      }
+    }
+  }
+
+  .contenedor-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .texto {
+      font-size: 1.1rem;
+      color: white;
+      font-weight: bolder;
+      margin-bottom: 1%;
+      margin-top: 1%;
+      margin-right: 1.8%;
+      margin-left: 1.8%;
+      text-decoration: none;
+    }
+    .texto:hover {
+      transition: 0.4s;
+      transform: scale(1.2);
+      background-color: white;
+      color: black;
+      border-radius: 4px;
+    }
+  }
+
+  .contenedor-mine {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    .datosMios {
+      position: relative;
+      top: 8px;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .datosMios-span {
+      color: white;
+      font-weight: 800;
+    }
+  }
 }
 
 h1 {
-  /* color: black; */
   color: black;
   font-weight: bolder;
   font-size: 2.8rem;
@@ -153,6 +297,9 @@ h1 {
   .contenedor-precio-final {
     margin: auto;
     margin-top: 4%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .precio-final {
       font-size: 2.5rem;
       font-weight: bolder;
@@ -165,21 +312,29 @@ h1 {
     }
   }
 
-  .totalidad-carritos {
+  .stripe {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: auto;
-    .totalidad-carritos-texto {
+    margin-bottom: 4%;
+  }
+}
+
+.totalidad-carritos {
+  margin: auto;
+  .totalidad-carritos-texto {
+    font-weight: bolder;
+    text-align: center;
+    font-size: 1.6rem;
+    color: red;
+    margin-top: 9%;
+  }
+  .totalidad-carritos-lista {
+    .bucle-carritos-id {
+      color: blue;
       font-weight: bolder;
-      text-align: center;
-      font-size: 1.6rem;
-      color: red;
-      margin-top: 9%;
-    }
-    .totalidad-carritos-lista {
-      .bucle-carritos-id {
-        color: blue;
-        font-weight: bolder;
-        font-size: 1.2rem;
-      }
+      font-size: 1.2rem;
     }
   }
 }
@@ -230,6 +385,16 @@ h1 {
     color: red;
     text-align: center;
   }
+  .login-error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 6%;
+    .login-error-img {
+      width: 64%;
+      height: auto;
+    }
+  }
 }
 
 /* pageGithub.handlebars */
@@ -279,6 +444,9 @@ h1 {
       font-size: 1.6rem;
     }
   }
+  .cont-github{
+    
+  }
 }
 
 /* current.handlebars */
@@ -316,9 +484,35 @@ h1 {
       margin-top: 1.5%;
     }
   }
+  .texto {
+    font-family: "Pacifico", cursive;
+  }
+
+  .data-card {
+    display: grid;
+    grid-template-columns: 1fr 10fr;
+    margin-bottom: 6%;
+    .data-session-current {
+      border: solid 1px #ccc;
+      border-radius: 5px;
+      padding: 20px;
+      width: 80%;
+      margin: auto;
+      .data {
+        display: flex;
+        .data-key {
+          width: 50%;
+          .text {
+            font-family: "Alex Brush", cursive;
+            font-style: italic;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
 }
 
-/* products.hdb */
 .product-mongodb {
   .texto-perfil {
     font-size: 1.4rem;
@@ -327,7 +521,110 @@ h1 {
     position: relative;
     right: 10%;
   }
+
+  .datos-session-mongoDB {
+    .title {
+      text-align: center;
+      font-weight: bolder;
+      font-size: 2.6rem;
+    }
+    .title-rol {
+      text-align: center;
+      font-size: 1.2rem;
+    }
+    .title-cart {
+      text-align: center;
+    }
+    .title-ultimaConexion {
+      text-align: center;
+      color: red;
+      font-weight: 700;
+    }
+  }
 }
+
+/* SUB-HEADER (LO QUE VA DEBAJO DEL HEADER) */
+.sub-header {
+  margin-bottom: 2%;
+  background-color: #111111;
+  display: flex;
+  justify-content: space-between;
+  .uid {
+    position: relative;
+    left: 20px;
+    top: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .uid-texto {
+      color: white;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+  }
+  .carrito-compras {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .carrito-compras-a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bolder;
+      font-size: 1.4rem;
+      color: white;
+      &:hover {
+        text-decoration: none;
+        transition: 0.4s;
+        font-size: 1.6rem;
+        background-color: white;
+        color: black;
+        border-radius: 10px;
+        padding: 4px;
+      }
+    }
+  }
+  .photo {
+    position: relative;
+    right: 20px;
+    .photo-a {
+      .photo-texto {
+        position: relative;
+        right: 10px;
+        top: 4px;
+        color: white;
+        font-size: 1.4rem;
+        font-weight: 600;
+      }
+      .photo-profile {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+      }
+    }
+  }
+  .carrito-compras-a-users {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bolder;
+    font-size: 1.4rem;
+    color: white;
+    background-color: red;
+    padding: 3px;
+    border-radius: 5px;
+    &:hover {
+      text-decoration: none;
+      transition: 0.4s;
+      font-size: 1.6rem;
+      background-color: white;
+      color: red;
+      border-radius: 10px;
+      padding: 4px;
+    }
+  }
+}
+
 .title-bloqueo-crud {
   text-align: center;
   font-size: 2.4rem;
@@ -427,27 +724,34 @@ h1 {
 
 /* revoerPassword */
 .recover-password {
-  .title {
-    font-size: 2.4rem;
-    font-weight: bold;
-    margin-top: 4%;
-    margin-bottom: 10vw;
+  .recover-password-contenedor {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    .form {
+      .title-form {
+        margin-bottom: 9%;
+        font-size: 2rem;
+      }
+      .texto-form {
+        text-align: center;
+        color: red;
+        font-weight: bolder;
+      }
+      .title-p {
+        font-weight: bolder;
+        font-size: 1.1rem;
+      }
+    }
   }
-
-  .form {
-    .title-form {
-      margin-bottom: 9%;
-      font-size: 2rem;
-    }
-    .texto-form {
-      text-align: center;
-      color: red;
-      font-weight: bolder;
-    }
-    .title-p {
-      font-weight: bolder;
-      font-size: 1.1rem;
-    }
+  .recuperacion-count {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
   }
 }
 
@@ -556,6 +860,280 @@ h1 {
     .img-img {
       width: 60%;
       height: auto;
+    }
+  }
+  .successChangePassword-contenedor {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+  }
+}
+
+/* allUsers */
+.allUsers {
+  .title {
+    text-align: center;
+    margin-top: 6%;
+    margin-bottom: 2%;
+    font-weight: bolder;
+    font-size: 2.8rem;
+  }
+
+  .texto {
+    margin-bottom: 6%;
+    color: blueviolet;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+
+    .texto-a {
+      color: red;
+      font-weight: 700;
+    }
+  }
+
+  .title-form {
+    text-align: center;
+    font-weight: bolder;
+    margin-top: 6%;
+    margin-bottom: 4%;
+    font-size: 2.4rem;
+  }
+
+  .form {
+    width: 50%;
+    margin: auto;
+    .label {
+      color: blueviolet;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+  }
+
+  .botones {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .eliminarUsuarios {
+    .eliminacion {
+      color: blue;
+      font-size: 2rem;
+      font-weight: bolder;
+      margin-top: 7%;
+      margin-bottom: 3%;
+    }
+    .botonParaEliminar {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+
+/* deleteUsers */
+.deleteUsers {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .contenedor-profile {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .texto {
+        color: blue;
+        font-weight: bold;
+        font-size: 1.4rem;
+        margin-right: 16px;
+      }
+    }
+  }
+  .container {
+    .title {
+      font-size: 2.8rem;
+      color: blue;
+      font-weight: bolder;
+      margin-top: 5%;
+      margin-bottom: 8%;
+    }
+    .else {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .else-img {
+        width: 44%;
+        height: auto;
+      }
+    }
+    .if {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+/* lockUsers */
+.container {
+  .title-bloqueo-user-hdb {
+    font-size: 2.8rem;
+    font-weight: bolder;
+    color: blue;
+    text-align: center;
+    margin-top: 4%;
+    margin-bottom: 8%;
+  }
+  .bloqueo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .bloqueo-img {
+      width: 70%;
+      height: auto;
+    }
+  }
+}
+
+.contenedor-ventajas-desventajas {
+  margin-top: 3.5%;
+  margin-bottom: 5%;
+  .ventajas {
+    .title {
+      color: blue;
+    }
+    .li {
+      font-weight: 600;
+      background-color: rgba(255, 0, 0, 0.2);
+    }
+  }
+  .desventajas {
+    .li {
+      background-color: rgba(0, 128, 0, 0.2);
+      font-weight: 600;
+    }
+    .title {
+      color: blue;
+    }
+  }
+}
+
+/* lockAdmin */
+.lockAdmin {
+  .separador {
+    display: flex;
+    justify-content: space-between;
+    .header {
+      .btn {
+        font-weight: 600;
+      }
+    }
+    .texto {
+      font-size: 1.4rem;
+      font-weight: bolder;
+      color: blue;
+      margin: 12px;
+    }
+  }
+}
+
+/* cancel */
+.payment {
+  .title {
+    margin-top: 3%;
+    color: red;
+  }
+  .sub-title {
+    margin-top: 4%;
+    color: blue;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+  .p-payment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .payment-img {
+      width: 48%;
+      height: auto;
+    }
+  }
+}
+
+/* register/login */
+.vista-register-login {
+  background-image: url("./img/container-fondo.webp");
+  background-attachment: fixed;
+  background-size: contain;
+  background-repeat: repeat;
+
+  /* login */
+  .login {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    width: 600px;
+    .login-title {
+      color: black;
+      font-size: 1.8rem;
+    }
+    .boton-ingresar {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .login.github {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    /* .div-github{ */
+    .boton-github {
+      background-color: #6f42c1;
+      border-radius: 5px;
+      color: black;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .icon-github {
+      width: 30px;
+      height: 30px;
+    }
+    /* } */
+    .forget-pass {
+      font-size: 1.2rem;
+      font-weight: 700;
+      &:hover {
+        transition: 0.2s;
+        border-radius: 5px;
+        color: white;
+        background-color: red;
+        font-weight: bolder;
+      }
+    }
+    .boton-create-count {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: blue;
+      &:hover {
+        transition: 0.2s;
+        background-color: #00bfff;
+        border-radius: 5px;
+      }
+    }
+    .pokemon-logoo {
+      margin: auto;
+      .pokemon-logoo-img {
+        width: 196px;
+        height: 75px;
+      }
+    }
+    .boton-loginn {
     }
   }
 }

@@ -1,13 +1,123 @@
-{{!-- ACA ESTAN TODOS LOS CARRITOS SEGUN SU ID SELECCIONADO --}}
 <section class="section-carts">
+    {{!-- <div class="header">
+        <div>
+            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+            <a href="/home-mongodb" class="btn btn-success">Ir a la sección de productos</a>
+            <a href="/api/users/premium" class="btn btn-warning bc">Cambiar rol de usuario</a>
+            <a href="/api/users/documents" class="btn btn-info bc">Cambiar foto de perfil</a>
+        </div>
+    </div> --}}
+
+    {{> headerPrueba}}
+
+    <div class="sub-header">
+        <div class="uid">
+            <p class="uid-texto"> UID: {{datos.[16]}} </p>
+        </div>
+        <div class="carrito-compras">
+            <a href="/carts/{{datos.[17]}}/purchase" class="carrito-compras-a">Ir al carrito de compras 🛒 </a>
+        </div>
+        {{#if datos.[21]}}
+        <div class="carrito-compras">
+            <a class="carrito-compras-a-users" href="/api/users"> Modificar usuarios </a>
+        </div>
+        {{/if}}
+        <div class="photo">
+            {{#if datos.[18] }}
+            <a class="photo-a" href="/api/users/documents">
+                <span class="photo-texto"> {{datos.[20]}} </span>
+                <img class="photo-profile" src="{{datos.[19]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a class="photo-a" href="api/users/documents">
+                <span class="photo-texto"> {{datos.[20]}} </span>
+                <img class="photo-profile" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+
+            <h2 class="col-12 text-center titlee">Carrito de compras </h2>
+            <div class="carrito-seleccionado">
+                
+                <h4 class="cart-selected" style="background-color: pink; padding: 3px; border-radius: 5px">🛒N°: <span
+                        class="cart-texto">{{datos.[7]}} </h4>
+                <h4 class="cart-title"> Contenido del carrito </h4>
+            </div>
+
+            <div class="col-12 contenedor-carts">
+                <div class="col-12">
+                    <table style="margin-top: 3.5%;" class="table table-striped col-12">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID product</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Price</th>s
+                                <th scope="col">Total price</th>
+                                <th scope="col">Remove from cart</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each datos.[1]}}
+                            <tr>
+                                <th scope="row">{{this}}</th>
+                                <td>{{lookup ../datos.[2] @index}}</td>
+                                <td> <button class="btn btn-warning" onclick="disminuirCantidad(
+                                        '{{lookup ../datos.[14] @index}}', 
+                                        '{{lookup ../datos.[1] @index}}'
+                                        )"> - </button>
+
+                                    <input < size="1" type="number" readonly value="{{lookup ../datos.[3] @index}}">
+
+                                    <button class="btn btn-warning" onclick="aumentarCantidad(
+                                        '{{lookup ../datos.[14] @index}}', 
+                                        '{{lookup ../datos.[1] @index}}')">+</button>
+                                </td>
+                                <td>${{lookup ../datos.[4] @index}}</td>
+                                <td>${{lookup ../datos.[5] @index}}</td>
+                                <td> <button class="btn btn-danger" onclick="eliminarDelCart(
+                                        '{{lookup ../datos.[14] @index}}', 
+                                        '{{lookup ../datos.[1] @index}}')">Eliminar</button> </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                    <p style="display: flex; justify-content: end; font-family: 'Great Vibes', cursive;">
+                       * Por favor, para poder realizar la compra asegurese de que todos los productos tengan al menos 1
+                        unidad. * 
+                    </p>
+                </div>
+            </div>
+
+            <div class="contenedor-precio-final col-12">
+                <h4 class="precio-final">Precio total de todos los productos: <span
+                        class="precio-final-texto">${{datos.[6]}}</span> </h4>
+            </div>
+
+            <div class="stripe col-12">
+                <a href="/create-checkout-session" type="submit" style="color: white; font-size: 18px; font-weight: 600"
+                    class="btn btn-success">Ir a pagar en Stripe</a>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+{{> footerPrueba}}
+
+
+{{!-- <section class="section-carts">
 
     <div class="container">
         <a href="/home-mongodb" class="btn btn-danger">Volver a la sección de productos</a>
         <div class="row">
 
-            <h2 style="text-align: center;" class="titulo-cart">Carrito de compras asociado a: {{datos.[9]}} </h2>
-
-
+            <h2 class="text-center titulo-cart">Carrito de compras asociado a: {{datos.[9]}} </h2>
             <div class="carrito-seleccionado">
                 <h4 class="cart-selected">Carrito seleccionado _id: <span class="cart-texto">{{datos.[7]}} </h4>
                 <h4 class="cart-title"> Contenido del carrito </h4>
@@ -51,34 +161,4 @@
         </div>
     </div>
 
-</section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{{!-- <h1> {{datos.[10]}} </h1>
-<h1> {{datos.[11]}} </h1>
-<h1> {{datos.[12]}} </h1>
-<h1> {{datos.[13]}} </h1> --}}
-
-{{!-- <div class="totalidad-carritos">
-    <p class="totalidad-carritos-texto">Para evitar que busque los _id en "/api/cartsDB", aca le dejo el .id
-        de todos los carritos en existencia</p>
-    <div class="totalidad-carritos-lista">
-        <ul>
-            {{#each datos.[8] }}
-            <li> Carrito por _id: <span class="bucle-carritos-id"> {{this}} </span> </li>
-            {{/each }}
-        </ul>
-    </div>
-</div> --}}
+</section> --}}

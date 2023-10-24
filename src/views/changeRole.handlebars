@@ -1,6 +1,5 @@
-<div class="container-fluid">
-
-    <div class="header-mongodb">
+<div>
+    {{!-- <div class="header-mongodb">
         <div>
             <a href="/api/session/logout" class="btn btn-danger" id="log">LOGOUT</a>
             <a href="/home-mongodb" class="btn btn-primary">Ir a la seccion de productos</a>
@@ -25,16 +24,40 @@
             </a>
             {{/if}}
         </div>
+    </div> --}}
+
+    {{> headerPrueba}}
+
+    <div class="sub-header">
+        <div class="uid">
+            <p class="uid-texto"> UID: {{role.[7]}} </p>
+        </div>
+        <div class="carrito-compras">
+            <a href="/carts/{{role.[8]}}/purchase" class="carrito-compras-a">Ir al carrito de compras 🛒 </a>
+        </div>
+        <div class="photo">
+            {{#if role.[9] }}
+            <a class="photo-a" href="/api/users/documents">
+                <span class="photo-texto"> {{role.[11]}} </span>
+                <img class="photo-profile" src="{{role.[10]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a class="photo-a" href="api/users/documents">
+                <span class="photo-texto"> {{role.[11]}} </span>
+                <img class="photo-profile" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
     </div>
 
     <div class="container changeRole">
-        <h4 class="text-center title"> Pagina para cambiar tu rol de usuario. <br>
+        <h4 class="text-center titlee"> Pagina para cambiar tu rol de usuario. <br>
             Actualmente es de: "{{role.[0]}}"
         </h4>
 
         {{#if role.[4]}}
         <div class="contenedor">
-            <p class="texto" style="color: blue;"> Ahora que completaste los datos con tu DNI y tu domicilio; </p>
+            <p class="texto mb-2 mt-5" style="color: blue;"> Ahora que completaste los datos con tu DNI y tu domicilio; </p>
             <p class="texto">¿Querés cambiar tu rol de: "{{role.[0]}}" a un rol de "{{role.[3]}}"?</p>
             <a onclick="changeYes()" class="btn btn-primary si"> Si </a>
             <a onclick="changeNo()" class="btn btn-danger si"> No </a>
@@ -46,7 +69,7 @@
         </div>
         {{else}}
         <div style="margin: auto; width: 50%">
-            <h3 class="text-center" style="color: blue"> Para poder cambiarte a un rol premium, por favor, primero llena
+            <h3 class="text-center mt-5 mb-3" style="font-size: 1.4rem;color: blue"> Para poder cambiarte a un rol premium, por favor, primero llena
                 el
                 formulario con
                 tus datos </h3>
@@ -68,5 +91,6 @@
         </div>
         {{/if}}
     </div>
-
 </div>
+
+{{> footerPrueba}}

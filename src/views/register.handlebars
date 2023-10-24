@@ -1,4 +1,50 @@
-<section>
+<section class="vista-register-login">
+
+    <div class="container login">
+        <div class="row">
+
+            <div class="pokemon-logoo mb-3">
+                <img src="/img/poke-logo.png" alt="Logo de Pokemon" class="pokemon-logoo-img">
+            </div>
+
+            <h2 class="col-12 text-center login-title">
+                Regístrese con sus datos</h2>
+
+            <div class="formulario-register col-12">
+                <form action="/api/session/register" role="form" method="post" class="col-12" required>
+                    <input class="form-control my-4" type="text" id="first_name" name="first_name"
+                        placeholder="Ingrese su nombre..." required>
+                    <input class="form-control my-4" type="text" id="last_name" name="last_name"
+                        placeholder="Ingrese su apellido..." required>
+                    <input class="form-control my-4" type="number" id="age" name="age" placeholder="Ingrese su edad..."
+                        required>
+                    <input class="form-control my-4" type="email" id="email" name="email"
+                        placeholder="Ingrese su email..." required>
+                    <input class="form-control my-4" type="password" id="password" name="password"
+                        placeholder="Ingrese su contraseña..." required>
+                    <div class="col-12">
+                        <button class="btn btn-primary col-12 boton-ingresar" type="submit">Registrarme</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-12 text-center mt-4 mb-3">
+                <a class="col-9 btn btn-danger" style="font-size: 1.2rem; font-weigth: 800" href="/api/session/login">¿Ya estás registrado? Clickeá acá.</a>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>
+
+
+
+
+
+{{!-- <section class="vista-register">
 
     <div class="container">
         <div class="row">
@@ -28,11 +74,10 @@
                 <a class="btn btn-danger" href="/api/session/login">¿Ya estás registrado? Clickeá acá.</a>
             </div>
 
-
         </div>
     </div>
 
 </section>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/index.js"></script>
+<script src="/js/index.js"></script> --}}

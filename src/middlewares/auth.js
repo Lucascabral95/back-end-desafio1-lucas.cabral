@@ -21,7 +21,16 @@ export const lockUser = async (req, res, next) => {
         next()
     } else {
         const role = req.session.rol === "Admin" ? true : false
-        res.render("lockUser", { rol: role })
+        const email = req.session.emailUser
+        const data = [
+            email,
+            req.session.dataSubHeader[0],
+            req.session.dataSubHeader[1],
+            req.session.dataSubHeader[2],
+            req.session.dataSubHeader[3],
+            req.session.dataSubHeader[4]
+        ]
+        res.render("lockUser", { rol: data })
     }
 }
 
@@ -29,8 +38,15 @@ export const accessDeniedAdmin = async (req, res, next) => {
     if (req.session.rol === "Usuario") {
         next()
     } else {
-        const role = req.session.rol === "Usuario" ? false : true
-        res.render("lockUser", { rol: role })
+        const data = [
+            req.session.dataSubHeader[0],
+            req.session.dataSubHeader[1],
+            req.session.dataSubHeader[2],
+            req.session.dataSubHeader[3],
+            req.session.dataSubHeader[4],
+            req.session.dataSubHeader[5]
+        ]
+        res.render("lockAdmin", { data: data })
     }
 }
 
@@ -43,5 +59,14 @@ export const accessDeniedforAdmin = async (req, res, next) => {
         return res.status(403).send("Acceso denegado para administradores");
     } else {
         next()
+    }
+}
+
+// MIDDLEWARE ANTI USUARIOS DE GITHUB
+export const accessDeniedforGithub = async (req, res, next) => {
+    if (req.session.emailUser.last_name === "Usuario de Github") {
+        return res.status(403).send("Acceso denegado para Usuarios de Github");
+    } else {
+        next();
     }
 }

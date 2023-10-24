@@ -1,7 +1,3 @@
-// import Swal from "sweetalert2";
-
-// import Swal from "sweetalert2";
-
 const socket = io();
 
 // VISTA REALTIMEPRODUCTS.HANDLEBARS 
@@ -56,14 +52,10 @@ boton.addEventListener("click", () => {
 
 
 // CHAT HANDLEBARS
-
 document.addEventListener('DOMContentLoaded', function () {
   let p = document.getElementById('miParrafo');
   p.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'end' });
 });
-// VISTA REALTIMEPRODUCTS.HANDLEBARS 
-
-//---------------------------------------------------------------------------------------------
 
 // FUNCION DE CHAT.HANDLEBARS QUE ES LA ENCARGADA DE DAR FUNCIONAMIENTO AL CHAT CONECTADO A MONGODB
 function funcion() {
@@ -105,10 +97,6 @@ function enter(event) {
     funcion();
   }
 }
-// FUNCION DE CHAT.HANDLEBARS QUE ES LA ENCARGADA DE DAR FUNCIONAMIENTO AL CHAT CONECTADO A MONGODB
-
-//---------------------------------------------------------------------------------------------
-
 
 function funcionMongo() {
   const id = document.getElementById('idMongo').value;
@@ -154,10 +142,18 @@ function funcionAddToCart(value1, value2, value3, value4) {
     fetch(`/api/cartsdb/${value2}/products/${value1}`, {
       method: "POST"
     })
-    alert(`¡¡¡Producto agregado al carrito exitosamente!!!`)
+    Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: `¡Producto agregado al carrito exitosamente!`
+    });
     console.log(value3, value4);
   } else {
-    alert("No se puede agregar al carrito productos que vos mismo agregaste.")
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: `No se puede agregar al carrito productos que vos mismo agregaste`
+    });
     console.log(value3, value4);
   }
 }
@@ -188,7 +184,6 @@ function changePass() {
     alert("¡Error! Ambas contraseñas deben coincidir.");
   }
 }
-
 
 function recoverPassword() {
   const valueeEmail = document.getElementById("valueEmail").value;
@@ -240,7 +235,7 @@ function changeYes(email) {
   fetch(`/api/users/premium/${email}`, {
     method: "POST"
   })
-    .then(response => {
+    .then( response => {
       console.log(response);
     })
     .catch(error => {
@@ -249,13 +244,46 @@ function changeYes(email) {
     })
 }
 
+// ELIMINAR PRODUCTO DEL CATALOGO SEGUND SU _ID
+// function deleteProductById(owner, idProduct, emailUser) {
+
+//   if (owner === emailUser || emailUser === "adminCoder@coder.com") {
+//     fetch(`/home-mongodb/${idProduct}`,
+//       { method: 'DELETE' })
+//       .then(response => {
+//         Swal.fire({
+//           icon: 'success',
+//           title: 'Success',
+//           text: `Producto con ID: ${idProduct} eliminado con exito ✅. `
+//         });
+//         window.location.href = '/home-mongodb';
+//         console.log(owner, idProduct, emailUser);
+//       })
+//       .catch(error => {
+//         alert(`Error al eliminar el producto.`)
+//         console.log(error);
+//       })
+//   } else {
+//     Swal.fire({
+//       icon: 'error',
+//       title: 'Error',
+//       text: `No tenes permitido eliminar este producto. Solo el Admin y el usuario que lo creo puede eliminarlo.`
+//     });
+//     console.log(owner, idProduct, emailUser);
+//   }
+// }
 function deleteProductById(owner, idProduct, emailUser) {
 
   if (owner === emailUser || emailUser === "adminCoder@coder.com") {
-    fetch(`/home-mongodb/${idProduct}`,
+    fetch(`/home-mongodb/${idProduct}/${owner}`,
       { method: 'DELETE' })
       .then(response => {
-        alert(`Producto con ID: ${idProduct} eliminador con exito ✅`)
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: `Producto con ID: ${idProduct} eliminado con exito ✅. `
+        });
+        window.location.href = '/home-mongodb';
         console.log(owner, idProduct, emailUser);
       })
       .catch(error => {
@@ -263,12 +291,14 @@ function deleteProductById(owner, idProduct, emailUser) {
         console.log(error);
       })
   } else {
-    alert("No tenes permitido eliminar este producto. Solo el Admin y el usuario que lo creo puede eliminarlo.")
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: `No tenes permitido eliminar este producto. Solo el Admin y el usuario que lo creo puede eliminarlo.`
+    });
     console.log(owner, idProduct, emailUser);
   }
 }
-
-// pedido de la cuarta practica integradora
 
 function cargarFoto() {
   Swal.fire({
@@ -292,4 +322,231 @@ function enviarDatos() {
     title: 'Success',
     text: `¡Éxito al agregar datos personales!`,
   });
+}
+
+function eliminar(event, email) {
+  event.preventDefault
+
+  fetch(`/api/users/${email}`, {
+    method: 'DELETE'
+  })
+    .then(response => {
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: `¡Éxito al elimiar el usuario ${email} !`,
+        });
+        setTimeout(() => {
+          window.location.href = "/api/users";
+        }, 2000);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: `¡Error al eliminar el usuario!`,
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+// ACTUALIZAR ROL DE USUARIO
+function updateRole(event) {
+  event.preventDefault();
+  const email = document.getElementById("emailRole").value;
+  const role = document.getElementById("roleRole").value;
+
+  const requestBody = {
+    role: role
+  };
+  fetch(`/api/users/${email}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(requestBody)
+  })
+    .then(response => {
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: `¡Éxito al actualizar el rol de ${email} !`,
+        });
+        setTimeout(() => {
+          window.location.href = "/api/users";
+        }, 1500);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: `¡El usuario: ${email} no existe en la Base de Datos!`,
+        });
+      }
+    })
+    .catch(error => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: `¡Error al actualizar el rol del usuario!`,
+      });
+    });
+}
+
+// ACTUALIZAR ROL DE USUARIO MEDIANTE TABLE
+function updateRoleTable(event, email) {
+  event.preventDefault()
+  const rol = document.getElementById(email).value
+  const requestBody = {
+    role: rol
+  };
+  fetch(`/api/users/${email}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(requestBody)
+  })
+    .then(response => {
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: `¡Éxito al actualizar el rol de ${email} !`,
+        });
+        setTimeout(() => {
+          window.location.href = "/api/users";
+        }, 1500);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: `¡Éxito al actualizar el rol de ${email} !`,
+        });
+        setTimeout(() => {
+          window.location.href = "/api/users";
+        }, 1500);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: `¡El usuario: ${email} no existe en la Base de Datos!`,
+        });
+      }
+    })
+    .catch(error => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: `¡Error al actualizar el rol del usuario!`,
+      });
+    });
+}
+
+// funcion que elimina a todos los usuarios con una inactiviad de 48 horas o superior
+function eliminarUsuarios() {
+  fetch(`/api/users/delete`, {
+    method: "GET"
+  })
+    .then((res) => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: `¡Éxito al eliminar a todos los usuarios con una actividad de 48 horas o mayor!`,
+      })
+    })
+    .catch((error) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: `¡Error al eliminar usuarios con dicha inactividad!`,
+      });
+    })
+}
+
+// AUMENTAR CANTIDAD DEL PRODUCTO EN EL CARRITO
+function aumentarCantidad(value1, value2) {
+
+  fetch(`/api/cartsdb/${value1}/products/${value2}`, {
+    method: "POST"
+  })
+    .then(res => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: '¡Cantidad del producto aumentada exitosamente!',
+      });
+      setTimeout(() => {
+        window.location.href = `/carts/${value1}/purchase`;
+      }, 500);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+// FUNCION PARA ELIMINAR UN PRODUCTO DEL CARRITO DE COMPRAS
+function eliminarDelCart(value1, value2) {
+  fetch(`/api/cartsdb/${value1}/products/${value2}`, {
+    method: "DELETE"
+  })
+    .then((res) => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: '¡Exito al eliminar el producto del carrito!',
+      });
+      setTimeout(() => {
+        window.location.href = `/carts/${value1}/purchase`;
+      }, 500);
+    })
+    .catch((error) => {
+      console.log(error)
+      throw error
+    })
+}
+
+// DISMINUIR CANTIDAD DEL PRODUCTO EN EL CARRITO
+// function disminuirCantidad(value1, value2, value3) {
+
+//   fetch(`/api/cartsdb/${value1}/products/${value2}/discont`, {
+//     method: "POST"
+//   })
+//     .then(res => {
+//       Swal.fire({
+//         icon: 'success',
+//         title: 'Success',
+//         text: '¡Cantidad del producto disminuida exitosamente!',
+//       });
+//       console.log(value3)
+//       setTimeout(() => {
+//         window.location.href = `/carts/${value1}/purchase`;
+//       }, 500);
+//     })
+//     .catch(error => {
+//       console.log(error);
+//     });
+// }
+
+
+function disminuirCantidad(value1, value2) {
+
+  fetch(`/api/cartsdb/${value1}/products/${value2}/discont`, {
+    method: "POST"
+  })
+    .then(res => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: '¡Cantidad del producto disminuida exitosamente!',
+      });
+      setTimeout(() => {
+        window.location.href = `/carts/${value1}/purchase`;
+      }, 500);
+    })
+    .catch(error => {
+      console.log(error);
+    });
 }

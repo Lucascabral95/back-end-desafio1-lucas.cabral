@@ -1,7 +1,6 @@
 // CAPA DE PERSISTENCIA // CAPA DE PERSISTENCIA // CAPA DE PERSISTENCIA // CAPA DE PERSISTENCIA // CAPA DE PERSISTENCIA
 // CAPA DE PERSISTENCIA // CAPA DE PERSISTENCIA // CAPA DE PERSISTENCIA // CAPA DE PERSISTENCIA // CAPA DE PERSISTENCIA
 // CAPA DE PERSISTENCIA // CAPA DE PERSISTENCIA // CAPA DE PERSISTENCIA // CAPA DE PERSISTENCIA // CAPA DE PERSISTENCIA
-
 import ProductManager from "../ProductManager.js";
 import MessagesManager from "../DAO/MessagesDAO.js"
 import ProductModel from "../DAO/models/products.model.js"
@@ -23,17 +22,10 @@ export const populateCart = async (cid) => {
     return cart
 }
 
-
 // OBTENER CART DE COMPRA DE USUARIOS
 export const getCartUser = async (pid, quantity) => {
     const cart = await cartDao.subtractStock(pid, quantity)
     return cart
-}
-
-// OBTENER FUNCIONES DE PRODUCTOS PARA 
-export const getProductsHome = async () => {
-    const productosHome = await productsService.getProducts()
-    return productosHome
 }
 
 // LOGICA "POST" PARA AGREGAR PRODUCTOS A /REALTIMEPRODUCTS
@@ -147,8 +139,15 @@ export const cartsModelFindByIdService = async (cid) => {
     }
 };
 
-
 export const serviceFaker = async (num) => {
     const products = generatorProducts(num)
     return products
 }
+
+//RUTAS COMENTADAS PORQUE FUERON ENVIADAS A SU ROUTER CORRECTO
+
+// OBTENER FUNCIONES DE PRODUCTOS PARA 
+// export const getProductsHome = async () => {
+//     const productosHome = await productsService.getProducts()
+//     return productosHome
+// }

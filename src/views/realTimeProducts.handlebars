@@ -1,6 +1,6 @@
 <section>
 
-    <h1 class="text-center mt-4 mb-4">Lista de todos los productos</h1>
+    <h1 class="text-center mt-4 mb-4 titlee">Lista de todos los productos</h1>
 
     <p style="text-align: center;">*Vista en tiempo real desde <span style="font-weight: bolder">
             realTimeProducts.handlebars. </span>
@@ -22,7 +22,7 @@
 
                 <b style="font-size: 1.5rem;">Todos los campos son obligatorios.</b>
 
-                <form action="/realtimeproducts" method="POST">
+                <form action="/products/fs/socket" method="POST">
                     <label for="title">title:</label>
                     <input type="text" name="title" required>
                     <br>

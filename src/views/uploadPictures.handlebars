@@ -1,6 +1,6 @@
-<div class="container-fluid upload-photos">
+<div class="upload-photos">
 
-    <div class="header-mongodb">
+    {{!-- <div class="header-mongodb">
         <div>
             <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
             <a href="/home-mongodb" class="btn btn-info bc">Volver a la seccion de productos</a>
@@ -21,11 +21,42 @@
             <img class="cuadro-foto-perfil" src="/img/foto-anonima.jpg" alt="Foto de perfil">
             {{/if}}
         </div>
+    </div> --}}
+
+    {{> headerPrueba}}
+
+    <div class="sub-header">
+        <div class="uid">
+            <p class="uid-texto"> UID: {{data.[9]}} </p>
+        </div>
+        <div class="carrito-compras">
+            <a href="/carts/{{data.[10]}}/purchase" class="carrito-compras-a">Ir al carrito de compras 🛒 </a>
+        </div>
+        {{#if data.[11]}}
+        <div class="carrito-compras">
+            <a class="carrito-compras-a-users" href="/api/users"> Modificar usuarios </a>
+        </div>
+        {{/if}}
+        <div class="photo">
+            {{#if data.[0] }}
+            <a class="photo-a" href="/api/users/documents">
+                <span class="photo-texto"> {{data.[0]}} </span>
+                <img class="photo-profile" src="{{data.[3]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a class="photo-a" href="/api/users/documents">
+                <span class="photo-texto"> {{data.[0]}} </span>
+                <img class="photo-profile" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
     </div>
 
     <div class="container">
-        <h2 class="text-center" style="font-size: 2.8rem; margin-top: 4%; margin-bottom: 4%; color: red;
-     font-weight: bolder">
+
+<h2 class="titlee text-center" style="margin-bottom: 5%;"> Subidas de fotos </h2>
+
+        <h2 class="text-center" style="font-weight: bolder; font-size: 2rem">
             Carga de fotos de perfil
         </h2>
 
@@ -73,8 +104,7 @@
         </table>
         {{/if}}
 
-        <h2 class="text-center" style="font-size: 2.8rem; margin-top: 6%; margin-bottom: 4%; color: red;
-     font-weight: bolder">
+        <h2 class="text-center" style="font-weight: bolder; font-size: 2rem; margin-top: 5%">
             Carga de fotos de productos </h2>
 
         <div class="form2" style="margin: auto; width: 50%">
@@ -98,7 +128,7 @@
         </div>
 
         <h4 class="text-center" style="font-size: 2.4rem; mt-5 mb-5"> Tabla con los datos de todas las imagenes de
-            perfil subidas
+            productos subidas
         </h4>
         <table class="table table-striped">
             <thead>
@@ -124,3 +154,5 @@
 
     </div>
 </div>
+
+{{> footerPrueba}}

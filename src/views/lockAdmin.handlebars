@@ -1,0 +1,79 @@
+<div class="lockAdmin">
+    {{!-- <div class="header">
+        <div class="separador">
+            <div>
+                <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+                <a href="/home-mongodb" class="btn btn-success" id="log">Ir a la seccion de productos</a>
+                <a href="/api/users" class="btn btn-warning" id="log">Modificar/eliminar usuarios</a>
+            </div>
+            <div>
+                <p class="texto"> Admin del website </p>
+            </div>
+        </div>
+    </div> --}}
+
+    {{> headerPrueba}}  
+
+    <div class="sub-header">
+        <div class="uid">
+            <p class="uid-texto"> UID: {{data.[0]}} </p>
+        </div>
+        <div class="carrito-compras">
+            <a href="/carts/{{data.[1]}}/purchase" class="carrito-compras-a">Ir al carrito de compras 🛒 </a>
+        </div>
+        {{#if data.[5]}}
+        <div class="carrito-compras">
+            <a class="carrito-compras-a-users" href="/api/users"> Modificar usuarios </a>
+        </div>
+        {{/if}}
+        <div class="photo">
+            {{#if data.[2] }}
+            <a class="photo-a" href="/api/users/documents">
+                <span class="photo-texto"> {{data.[4]}} </span>
+                <img class="photo-profile" src="{{data.[3]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a class="photo-a" href="/api/users/documents">
+                <span class="photo-texto"> {{data.[4]}} </span>
+                <img class="photo-profile" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="container lockUsers">
+
+        <h1 class="titlee"> Al ser el <span style="color: red;">
+                Admin </span> de este website no podes ingresar a este endpoint </h1>
+        <div class="bloqueo">
+            <img class="bloqueo-img" src="/img/pikachu-bloqueo.gif" alt="Pikachu hermetico">
+        </div>
+
+        <div class="contenedor-ventajas-desventajas text-center row">
+            <div class="ventajas col">
+                <h3 class="text-center ventajas title"> Siendo <span style="color: red;">admin</span> no podés: </h3>
+                <ol class="list-group list-group-numbered ol">
+                    <li class="list-group-item li">Agregar productos al carrito.</li>
+                    <li class="list-group-item li">Hacer compras (por ende, tampoco tener un historial de compras).</li>
+                    <li class="list-group-item li">Cambiarte de rol, porque, al ser <span
+                            style="color: red;">Admin</span>
+                        tenes
+                        libertad para hacer lo que quieras.</li>
+                </ol>
+            </div>
+            <div class="desventajas col">
+                <h3 class="text-center desventajas title"> Pero podés: </h3>
+                <ol class="list-group list-group-numbered  ol">
+                    <li class="list-group-item li">Modificar el rol de cualquier usuario, o eliminarlo.</li>
+                    <li class="list-group-item li">Eliminar con un solo botón a todos los usuarios que no se hayan
+                        conectado en las
+                        ultimas 48 horas.</li>
+                    <li class="list-group-item li">Eliminar cualquier producto, sea uno agregado por vos, o no.</li>
+                </ol>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{{> footerPrueba}}  

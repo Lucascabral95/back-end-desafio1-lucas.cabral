@@ -1,0 +1,29 @@
+<div class="container-fluid payment">
+
+    {{> headerPrueba}}
+
+    <div class="header">
+        <div>
+            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+            <a href="/home-mongodb" class="btn btn-success" id="log">Ir a la seccion de productos</a>
+            <a href="/completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
+            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
+            <a href="/api/users/documents" class="btn btn-info bc">Cambiar foto de perfil</a>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <h1 class="text-center title"> Payment failed </h1>
+
+        <h3 class="text-center sub-title">
+            Asegurese de que cuenta con un metodo de pago valido y vuelva a realizar la compra. </h3>
+
+        <div class="p-payment">
+            <img src="/img/pikachu-payment.jpg" alt="Pikachu payment" class="payment-img">
+        </div>
+    </div>
+
+</div>
+
+{{> footerPrueba}}

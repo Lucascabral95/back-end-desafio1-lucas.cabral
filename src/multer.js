@@ -3,7 +3,7 @@ import { dirname } from "path";
 import multer from "multer"
 
 const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+export const __dirname = dirname(__filename)
 
 // multer para fotos de perfil
 const storage = multer.diskStorage({
@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 })
 
 export const uploader = multer({ storage })
-//-------------------------
+
 // multer para fotos de productos
 const productStorage = multer.diskStorage({
     destination: function (req, file, cb) {

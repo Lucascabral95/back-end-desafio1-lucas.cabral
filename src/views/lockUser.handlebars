@@ -1,11 +1,66 @@
 <div>
 
-    {{#if rol }}
-    <h1 class="title-bloqueo-user-hdb"> El endpoint al que intentas acceder, solo puede ser accedido por los usuarios
-        con un rol de "User" </h1>
-    {{else}}
-    <h1 class="title-bloqueo-user-hdb"> El endpoint al que intentas acceder, solo puede ser accedido por los usuarios
-        con un rol de "Admin" </h1>
-    {{/if}}
+    {{> headerPrueba}}
+
+    <div class="sub-header">
+        <div class="uid">
+            <p class="uid-texto"> UID: {{rol.[1]}} </p>
+        </div>
+        <div class="carrito-compras">
+            <a href="/carts/{{rol.[2]}}/purchase" class="carrito-compras-a">Ir al carrito de compras 🛒 </a>
+        </div>
+        <div class="photo">
+            {{#if rol.[3] }}
+            <a class="photo-a" href="api/users/documents">
+                <span class="photo-texto"> {{rol.[5]}} </span>
+                <img class="photo-profile" src="{{rol.[4]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a class="photo-a" href="api/users/documents">
+                <span class="photo-texto"> {{rol.[5]}} </span>
+                <img class="photo-profile" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="container lockUsers">
+
+        <h1 class="titlee"> Solo el <span style="color: red;"> Admin </span> puede acceder a este
+            endpoint </h1>
+        <div class="bloqueo">
+            <img class="bloqueo-img" src="/img/pikachu-bloqueo.gif" alt="Pikachu hermetico">
+        </div>
+
+        <div class="contenedor-ventajas-desventajas text-center row">
+            <div class="ventajas col">
+                <h3 class="text-center ventajas title"> Al no ser <span style="color: red;">admin</span> podés: </h3>
+                <ol class="list-group list-group-numbered ol">
+                    <li style="background-color: rgba(0, 128, 0, 0.2)" class="list-group-item li">Agregar productos al
+                        carrito.</li>
+                    <li style="background-color: rgba(0, 128, 0, 0.2)" class="list-group-item li">Hacer compras (por
+                        ende, tener un historial de compras).</li>
+                    <li style="background-color: rgba(0, 128, 0, 0.2)" class="list-group-item li">Cambiarte el rol. De
+                        "user" a "premium" y acceder a todos los
+                        beneficios que esto conlleva. </li>
+                </ol>
+            </div>
+            <div class="desventajas col">
+                <h3 class="text-center desventajas title"> Pero no podés: </h3>
+                <ol class="list-group list-group-numbered  ol">
+                    <li style="background-color: rgba(255, 0, 0, 0.2);" class="list-group-item li">Modificar el rol de
+                        cualquier usuario, o eliminarlo.</li>
+                    <li style="background-color: rgba(255, 0, 0, 0.2);" class="list-group-item li">Eliminar con un solo
+                        botón a todos los usuarios que no se hayan
+                        conectado en las
+                        ultimas 48 horas.</li>
+                    <li style="background-color: rgba(255, 0, 0, 0.2);" class="list-group-item li">Eliminar cualquier
+                        producto, sea uno agregado por vos, o no.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
 
 </div>
+
+{{> footerPrueba}}

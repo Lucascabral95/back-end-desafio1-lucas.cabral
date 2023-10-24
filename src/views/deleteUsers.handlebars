@@ -1,0 +1,75 @@
+<div class="deleteUsers">
+    {{!-- <div class="header">
+        <div>
+            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+            <a href="/home-mongodb" class="btn btn-success">Ir a la sección de productos</a>
+            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
+        </div>
+        <div class="contenedor-profile">
+            <div>
+                <p class="texto"> Admin del website </p>
+            </div>
+        </div>
+    </div> --}}
+
+    {{> headerPrueba}}
+
+    <div class="sub-header">
+        <div class="uid">
+            <p class="uid-texto"> UID: {{datos.[0]}} </p>
+        </div>
+        <div class="carrito-compras">
+            <a href="/carts/{{datos.[1]}}/purchase" class="carrito-compras-a">Ir al carrito de compras 🛒 </a>
+        </div>
+        {{#if datos.[5]}}
+        <div class="carrito-compras">
+            <a class="carrito-compras-a-users" href="/api/users"> Modificar usuarios </a>
+        </div>
+        {{/if}}
+        <div class="photo">
+            {{#if datos.[2] }}
+            <a class="photo-a" href="api/users/documents">
+                <span class="photo-texto"> {{datos.[4]}} </span>
+                <img class="photo-profile" src="{{datos.[3]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a class="photo-a" href="api/users/documents">
+                <span class="photo-texto"> {{datos.[4]}} </span>
+                <img class="photo-profile" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="container">
+        {{#if response.cuentaEliminadaIf }}
+        <h2 class="text-center titlee"> {{response.cantidad}} </h2>
+        <div class="if">
+            <img class="if-img" src="/img/pikachu-deleted.jpg" alt="Pikachu triste">
+        </div>
+
+
+
+        <div class="ELIMINADOS">
+            <h5>Usuarios eliminados</h5>
+            {{#each deleted }}
+            <p> {{deleted}} </p>
+            {{/each }}
+        </div>
+        {{/if }}
+
+
+
+
+        {{#if response.cuentaEliminadaElse }}
+        <h2 class="text-center titlee" style="margin-bottom: 4%;"> No se encontraron usuarios para eliminar </h2>
+        <div class="else">
+            <img class="else-img" src="/img/pikachu-saltando.gif" alt="Pikachu saltando">
+        </div>
+        {{/if }}
+
+    </div>
+
+</div>
+
+{{> footerPrueba}}

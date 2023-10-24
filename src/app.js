@@ -5,6 +5,8 @@ import products from "./Routes/products.js";
 import viewsRouter from "./Routes/views.router.js";
 import users from "./Routes/users.router.js";
 import cart from "./Routes/cart.js";
+import payment from "./Routes/payment.routes.js";
+import sessiones from "./Routes/sessions.router.js"
 //--------------routers-----------------
 import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
@@ -83,9 +85,6 @@ app.use(
     secret: KEY_SECRET_MONGOSTORE,
     resave: false,
     saveUninitialized: false,
-    // cookie: {
-      //   maxAge: 7 * 24 * 60 * 60 * 1000,
-      // },
       store: MongoStore.create({
         mongoUrl:
         MONGOSTORE,
@@ -93,7 +92,7 @@ app.use(
         useNewUrlParser: true,
         useUnifiedTopology: true,
       },
-      ttl: 100000000,
+      ttl: 100000000000,
     }),
   })
   );
@@ -108,6 +107,8 @@ app.use(
   app.use(products);
   app.use(viewsRouter);
   app.use(users)
+  app.use(payment)
+  app.use(sessiones)
   app.use(errorMiddleware)// errorHandler
   const specs = swaggerJsdoc(swaggerOptions) // SWAGGER
   app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs)) // SWAGGER

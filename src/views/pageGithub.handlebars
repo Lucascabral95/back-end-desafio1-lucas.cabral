@@ -1,30 +1,68 @@
 <section class="pageGithub">
+
+    {{!-- <div class="header">
+        <div>
+            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+            <a href="/home-mongodb" class="btn btn-success" id="log">Ir a la seccion de productos</a>
+            <a href="/completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
+            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
+            <a href="/api/users/documents" class="btn btn-info bc">Cambiar foto de perfil</a>
+        </div>
+    </div> --}}
+
+    {{> headerPrueba}}
+
     <div class="container">
 
-        <h3 class="title-pageGithub"> ¡Hola!, estas adentro de la session de Github. </h3>
+        <h3 class="titlee mt-4"> ¡Hola! Estás dentro de la session de Github. </h3>
 
-        {{#if user.[5] }}
+
+        <div class="card text-center" style="margin-top: 5%;">
+            <div class="card-header" style="font-weight: 700; font-size: 1.4rem">
+                ¡Hola usuario de Github; {{user.[3]}}!
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"> Éstos son tus datos de usuario: </h5>
+                <p class="card-text">Nombre de usuario: {{user.[2]}} </p>
+                <p class="card-text">Edad: {{data.edad}} </p>
+                <p class="card-text">Rol: {{data.role}} </p>
+                <p class="card-text">Cart: {{data.cart}} </p>
+                <p class="card-text">Document: {{data.documents}} </p>
+                <p class="card-text">DNI: {{data.dni}} </p>
+                <p class="card-text">Domicilio: {{data.domicilio}} </p>
+            </div>
+            <div class="card-footer text-body-secondary">
+                {{data.ultimaConexion}}
+            </div>
+        </div>
+
+        {{!-- {{#if user.[5] }}
         <div class="userData-mongoDB" id="ocultNeed">
-            <h3 class="title-t-userData-mongoDB">Vos ingresaste por el login conectado a Mongo-DB Atlas y aca abajo veras tus datos de session</h3>
+            <h3 class="title-t-userData-mongoDB">Vos ingresaste por el login conectado a Mongo-DB Atlas y aca abajo
+                veras tus datos de session</h3>
             <h5 class="title-userData-mongoDB"> Bienvenido cliente de mongo-DB: {{ user.[0] }} </h5>
             <h5 class="title-userData-mongoDB"> Tu rol es de: {{ user.[1] }} </h5>
         </div>
         {{ else }}
         <div class="userData-github">
-            <h3 class="title-t-userData-github">Vos ingresaste por el login de Github y aca abajo veras tus datos de session</h3>
+            <h3 class="title-t-userData-github">Vos ingresaste por el login de Github y aca abajo veras tus datos de
+                session</h3>
             <h5 class="title-userData-github"> Bienvenido Usuario: {{ user.[2] }} </h5>
             <h5 class="title-userData-github"> Tu email es: {{ user.[3] }} </h5>
             <h5 class="title-userData-github"> Y tu edad es: {{ user.[4] }} </h5>
         </div>
-        {{/if }}
+        {{/if }} --}}
 
-        <div class="contenedor-boton-logout">
+        {{!-- <div class="contenedor-boton-logout">
             <span class="indicacion-boton">Para cerrar sesion, hacé click acá:</span>
             <a href="/api/session/logout" class="btn btn-primary">LOGOUT</a>
-        </div>
+        </div> --}}
 
     </div>
 </section>
+
+{{> footerPrueba}}
+
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="../Routes/views.router.js"></script>

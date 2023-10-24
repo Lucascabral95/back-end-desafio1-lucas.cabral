@@ -1,0 +1,116 @@
+<div class="deleteUsers">
+    {{!-- <div class="header">
+        <div>
+            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+            <a href="/home-mongodb" class="btn btn-success">Ir a la sección de productos</a>
+            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
+        </div>
+        <div class="contenedor-profile">
+            <p class="texto"> Admin del website </p>
+        </div>
+    </div> --}}
+
+    {{> headerPrueba}}
+
+    <div class="sub-header">
+        <div class="uid">
+            <p class="uid-texto"> UID: {{availablePage.[5]}} </p>
+        </div>
+        <div class="carrito-compras">
+            <a href="/carts/{{availablePage.[6]}}/purchase" class="carrito-compras-a">Ir al carrito de compras 🛒 </a>
+        </div>
+        {{#if availablePage.[10]}}
+        <div class="carrito-compras">
+            <a class="carrito-compras-a-users" href="/api/users"> Modificar usuarios </a>
+        </div>
+        {{/if}}
+        <div class="photo">
+            {{#if availablePage.[7] }}
+            <a class="photo-a" href="api/users/documents">
+                <span class="photo-texto"> {{availablePage.[9]}} </span>
+                <img class="photo-profile" src="{{availablePage.[8]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a class="photo-a" href="api/users/documents">
+                <span class="photo-texto"> {{availablePage.[9]}} </span>
+                <img class="photo-profile" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="container allUsers">
+
+        <h2 class="titlee"> Tabla con todos los usuarios de MongoDB Atlas </h2>
+        <p class="texto"> Podés actualizar el rol de un usuario es esta tabla de abajo, o bien en el formulario de
+            <a class="texto-a" href="#form"> acá </a>
+        </p>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Actualizar rol del usuario</th>
+                    <th>Eliminar usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each datos.email }}
+                <tr>
+                    <td> {{ lookup ../datos.nombre @index }} </td>
+                    <td> {{this}} </td>
+                    <td> {{ lookup ../datos.role @index }} </td>
+                    <td>
+                        <form onsubmit="updateRoleTable(event, '{{this}}')" class="form">
+                            <input id="{{this}}" type="text" placeholder="{{lookup ../datos.role @index}}" size="12">
+                            <button class="btn btn-primary" type="submit"> Actualizar </button>
+                        </form>
+                    </td>
+                    <td> <button class="btn btn-danger" onclick="eliminar(event, '{{this}}')"> Eliminar usuario
+                        </button>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+        <div class="botones">
+            <a {{#if availablePage.[1]}} href="/api/users?page={{availablePage.[3]}}" {{else}} disabled {{/if}}
+                class="btn btn-danger">Pagina anterior</a>
+            <a {{#if availablePage.[0]}} href="/api/users?page={{availablePage.[4]}}" {{else}} disabled {{/if}}
+                class="btn btn-primary">Pagina siguiente</a>
+        </div>
+
+        <h3 class="title-form"> Formulario para cambiar de rol a usuarios por medio de su email </h3>
+        <form id="form" onsubmit="updateRole(event)" class="form">
+            <div class="form-group">
+                <label class="label" for="email">Ingresa el email del usuario a actualizar el rol </label>
+                <input type="email" id="emailRole" placeholder="Ejemplo123@hotmail.com" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="label" for="role"> Ingresa el nuevo rol del usuario </label>
+                <input type="text" id="roleRole" placeholder="user" required class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-warning">
+            </div>
+        </form>
+
+        <div class="eliminarUsuarios">
+            <h3 class="text-center eliminacion"> ¡¡¡Cuidado!!! Este boton eliminar a todos los usuarios que se hayan
+                logueado ni
+                deslogueado en las ultimas 48 horas </h3>
+            <div class="botonParaEliminar">
+                {{!-- <button onclick="eliminarUsuarios()" class="btn btn-danger"> Eliminar usuarios por inacitividad de
+                    48 horas
+                </button> --}}
+                <a href="/api/users/delete" class="btn btn-danger"> Eliminar usuarios por inacitividad de 48 horas </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{{> footerPrueba}}

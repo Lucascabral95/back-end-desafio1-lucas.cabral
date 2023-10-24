@@ -36,6 +36,7 @@ export const addProducts = async (content) => {
     }
 }
 
+// LOGICA "DELETE" DINAMICA PARA ELIMINAR PRODUCTOS DE /HOME-MONGODB
 export const deleteProductById = async (pid) => {
     try {
         const product = await productsServices.deleteProductById(pid)
@@ -106,4 +107,20 @@ export const deleteProductManager = async (pid) => {
     } catch (error) {
         console.log("Error al eliminar el producto.");
     }
+}
+
+export const getProductsHome = async () => {
+    const productosHome = await productManagerServices.getProducts()
+    return productosHome
+}
+
+export const addProductsSockets = async (nuevoProducto) => {
+    const nuevoPro = await productManagerServices.addProducts(nuevoProducto)
+    return nuevoPro
+}
+
+// LOGICA "POST" PARA AGREGAR PRODUCTOS A /HOME-MONGODB
+export const add = async (newProduct) => {
+    const add = await productsServices.addProducts(newProduct)
+    return add
 }

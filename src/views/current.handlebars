@@ -1,7 +1,220 @@
-<div class="container-fluid">
+<div>
+    {{!-- <div class="header-mongodb">
+        <div>
+            <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+            <a href="/home-mongoDB" class="btn btn-success bc">Ir a la seccion de productos</a>
+            <a href="/completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
+            <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
+            <a href="/api/users/documents" class="btn btn-info bc">Cambiar foto de perfil</a>
+        </div>
+        <div style="display: flex">
+            <div style="display: flex; align-items:center">
+                <p style="font-size: 1.4rem;
+                            color: blue;
+                            font-weight: bolder;
+                            position: relative;
+                            right: 10%;" class="texto-perfil">
+                    Usuario: {{datos.email}}
+                </p>
+            </div>
+            {{#if datito.[1] }}
+            <a href="/api/users/documents">
+                <img class="cuadro-foto-perfil" src="{{datito.[0]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a href="/api/users/documents">
+                <img class="cuadro-foto-perfil" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
+    </div> --}}
+
+    {{> headerPrueba}}
+
+    <div class="sub-header">
+        <div class="uid">
+            <p class="uid-texto"> UID: {{datito.[2]}} </p>
+        </div>
+        <div class="carrito-compras">
+            <a href="/carts/{{datos.cart}}/purchase" class="carrito-compras-a">Ir al carrito de compras 🛒 </a>
+        </div>
+        {{#if datito.[3]}}
+        <div class="carrito-compras">
+            <a class="carrito-compras-a-users" href="/api/users"> Modificar usuarios </a>
+        </div>
+        {{/if}}
+        <div class="photo">
+            {{#if datito.[1] }}
+            <a class="photo-a" href="/api/users/documents">
+                <span class="photo-texto"> {{datos.email}} </span>
+                <img class="photo-profile" src="{{datito.[0]}}" alt="Foto de perfil">
+            </a>
+            {{else}}
+            <a class="photo-a" href="/api/users/documents">
+                <span class="photo-texto"> {{datos.email}} </span>
+                <img class="photo-profile" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+            </a>
+            {{/if}}
+        </div>
+    </div>
+
+    <section class="section-current">
+        <div class="container">
+            <h3 class="titlee" style="margin-bottom: 5%;">Tus datos de usuario</h3>
+
+            <div class="data-card">
+
+                <div class="card" style="width: 18rem;">
+                    <img class="photo-profile" src="{{datito.[0]}}" alt="Foto de perfil">
+                    {{#if datito.[1]}}
+                    {{else}}
+                    <img src="/img/foto-anonima.jpg" class="card-img-top" alt="Foto de perfil">
+                    {{/if}}
+                    <div class="card-body">
+                        <h5 class="card-title"> {{datos.email}} </h5>
+                        <p class="card-text texto">Nombre: {{datos.first_name}} </p>
+                        <p class="card-text texto">Apellido: {{datos.last_name}} </p>
+                        <p class="card-text texto">Rol: {{datos.role}} </p>
+                        <p class="card-text texto">UID: {{datito.[2]}} </p>
+                        <p class="card-text texto">Edad: {{datos.age}} </p>
+                        <p class="card-text texto">DNI: {{datos.dni}} </p>
+                        <p class="card-text texto">Domicilio: {{datos.domicilio}} </p>
+                        <p class="card-text texto">Cart: {{datos.cart}} </p>
+                        <p class="card-text texto">Document: {{datos.document}} </p>
+                        <p class="card-text texto">Última conexión: {{datos.last_connection}} </p>
+                    </div>
+                </div>
+                <div class="data-session-current">
+                    <div class="data">
+                        <div class="data-key">
+                            <p class="text">Tu email de sessión con Json Web Token es: </p>
+                        </div>
+                        <div class="data-key">
+                            <p class="text">{{datos.email}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="data">
+                        <div class="data-key">
+                            <p class="text">Tu nombre de sesión con Json Web Token es: </p>
+                        </div>
+                        <div class="data-key">
+                            <p class="text">{{datos.first_name}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="data">
+                        <div class="data-key">
+                            <p class="text">Tu apellido de sesión con Json Web Token es: </p>
+                        </div>
+                        <div class="data-key">
+                            <p class="text">{{datos.last_name}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="data">
+                        <div class="data-key">
+                            <p class="text">Tu edad de sesión con Json Web Token es: </p>
+                        </div>
+                        <div class="data-key">
+                            <p class="text">{{datos.age}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="data">
+                        <div class="data-key">
+                            <p class="text">Tu DNI es: </p>
+                        </div>
+                        <div class="data-key">
+                            <p class="text">{{datos.dni}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="data">
+                        <div class="data-key">
+                            <p class="text">Tu domicilio es: </p>
+                        </div>
+                        <div class="data-key">
+                            <p class="text">{{datos.age}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="data">
+                        <div class="data-key">
+                            <p class="text">Tu rol de sesión con Json Web Token es: </p>
+                        </div>
+                        <div class="data-key">
+                            <p class="text">{{datos.role}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="data">
+                        <div class="data-key">
+                            <p class="text">El _id de tu cart es: </p>
+                        </div>
+                        <div class="data-key">
+                            <p class="text">{{datos.cart}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="data">
+                        <div class="data-key">
+                            <p class="text">El _id del document donde se guardarán todas las fotos es: </p>
+                        </div>
+                        <div class="data-key">
+                            <p class="text">{{datos.document}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="data">
+                        <div class="data-key">
+                            <p class="text">Tu última conexión fue: </p>
+                        </div>
+                        <div class="data-key">
+                            <p class="text">{{datos.last_connection}}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {{!-- <p class="data-current"> Tu email de sesión con Json Web Token es: <span
+                    class="data-dos-current">{{datos.email}}</span></p>
+            <p class="data-current"> Tu nombre de sesión con Json Web Token es: <span
+                    class="data-dos-current">{{datos.first_name}}</span></p>
+            <p class="data-current"> Tu apellido de sesión con Json Web Token es: <span
+                    class="data-dos-current">{{datos.last_name}}</span></p>
+            <p class="data-current"> Tu edad de sesión con Json Web Token es: <span
+                    class="data-dos-current">{{datos.age}} años.</span></p>
+            <p class="data-current"> Tu rol de sesión con Json Web Token es: <span
+                    class="data-dos-current">{{datos.role}}</span></p>
+            <p class="data-current"> El ._id de tu cart generado con Json Web Token es: <span
+                    class="data-dos-current">{{datos.cart}}</span></p>
+            <p class="data-current"> El ._id del document donde se guardan todas las fotos es: <span
+                    class="data-dos-current">{{datos.document}}</span></p>
+            <p class="data-current"> Tu ultima conexion fue: <span
+                    class="data-dos-current">{{datos.last_connection}}</span></p>
+            <p class="data-current">- Accediste a esta página gracias a Json Web Token.</p>
+            <p class="data-current">- Además, tu contraseña está hasheada con bcrypt y leída en el login con el método
+                "compareSync" de bcrypt.</p>
+            <img class="img-current" src="https://i.pinimg.com/564x/93/c2/98/93c298c36aca5b3950486fa07aa7c2af.jpg"
+                alt="Pikachu feliz">
+            <a href="/home-mongodb" class="btn btn-primary logout-current">Ir a la sección de productos</a>
+            <a href="/api/session/logout" class="btn btn-danger logout-current">Logout</a> --}}
+        </div>
+    </section>
+
+</div>
+
+{{> footerPrueba}}
+
+
+
+{{!-- <div class="container-fluid">
     <div class="header-mongodb">
         <div>
             <a href="/api/session/logout" class="btn btn-primary" id="log">LOGOUT</a>
+            <a href="/home-mongoDB" class="btn btn-success bc">Ir a la seccion de productos</a>
             <a href="/completed/purchase" class="btn btn-warning bc">Ir al historial de compras</a>
             <a href="/api/users/premium" class="btn btn-danger bc">Cambiar rol de usuario</a>
             <a href="/api/users/documents" class="btn btn-info bc">Cambiar foto de perfil</a>
@@ -52,4 +265,4 @@
             <a href="/api/session/logout" class="btn btn-danger logout-current">Logout</a>
         </div>
     </section>
-</div>
+</div> --}}

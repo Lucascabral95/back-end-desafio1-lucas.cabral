@@ -1,8 +1,37 @@
 <body class="body-chat-handlebars">
 
-  <h1>Prototipo de chat con MongoDB</h1>
-  <h1>Hola: {{combineData.[3]}} </h1>
-  <h1 style="color: brown; font-weight:bolder">¡¡Solo vos tenes acceso a este chat!! </h1>
+  {{> headerPrueba}}
+
+  <div class="sub-header">
+    <div class="uid">
+      <p class="uid-texto"> UID: {{datos.[0]}} </p>
+    </div>
+    <div class="carrito-compras">
+      <a href="/carts/{{datos.[1]}}/purchase" class="carrito-compras-a">Ir al carrito de compras 🛒 </a>
+    </div>
+    {{#if datos.[5]}}
+    <div class="carrito-compras">
+      <a class="carrito-compras-a-users" href="/api/users"> Modificar usuarios </a>
+    </div>
+    {{/if}}
+    <div class="photo">
+      {{#if datos.[2] }}
+      <a class="photo-a" href="api/users/documents">
+        <span class="photo-texto"> {{datos.[4]}} </span>
+        <img class="photo-profile" src="{{datos.[3]}}" alt="Foto de perfil">
+      </a>
+      {{else}}
+      <a class="photo-a" href="api/users/documents">
+        <span class="photo-texto"> {{datos.[4]}} </span>
+        <img class="photo-profile" src="/img/foto-anonima.jpg" alt="Foto de perfil">
+      </a>
+      {{/if}}
+    </div>
+  </div>
+
+  <h1 class="titlee">Prototipo de chat con MongoDB</h1>
+  <h1 class="titlee">Hola: {{combineData.[3]}} </h1>
+  <h1 style="color: blueviolet; font-weight:bolder">¡¡Solo vos tenes acceso a este chat!! </h1>
 
 
   <div class="container">
@@ -10,7 +39,8 @@
       <div class="contendor-estructura-chat col-12">
 
         <div class="input-identificacion">
-          <label class="label-identificacion" for="identificacion" aria-required="true">Indique su correo electronico, por favor:
+          <label class="label-identificacion" for="identificacion" aria-required="true">Indique su correo electronico,
+            por favor:
           </label>
           <input type="text" id="identificacion" placeholder="Tu correo electronico...">
         </div>
@@ -38,6 +68,8 @@
       </div>
     </div>
   </div>
+
+  {{> footerPrueba}}
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="../Routes/views.router.js"></script>
