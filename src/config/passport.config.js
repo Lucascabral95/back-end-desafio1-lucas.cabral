@@ -8,8 +8,7 @@ import config from "../config/config.js"
 
 const CLIENTID = config.clientId
 const CLIENTSECRET = config.clientSecret
-// const CALLBACKURL = config.callbackUrl // DESARROLLO
-const CALLBACKURL = "http://back-end-desafio1-lucascabral-production.up.railway.app/api/session/githubcallback"
+const CALLBACKURL = config.callbackUrl
 
 const initializePassport = () => {
 
