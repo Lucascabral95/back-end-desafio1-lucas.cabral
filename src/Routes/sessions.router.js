@@ -28,7 +28,7 @@ import {
 //         res.redirect("/home-mongodb"); // PARA DESARROLLO
 //     }
 // );
-sessions.get("http://back-end-desafio1-lucascabral-production.up.railway.app/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { });
+sessions.get("/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"], callbackURL: `https://back-end-desafio1-lucascabral-production.up.railway.app/api/session/githubcallback` }), async (req, res) => { });
 
 sessions.get("/api/session/githubcallback", authDenied, passport.authenticate("github", { failureRedirect: "/api/session/login" }),
     (req, res) => {
