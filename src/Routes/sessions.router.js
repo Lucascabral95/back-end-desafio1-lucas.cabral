@@ -17,7 +17,7 @@ import {
 
 // PASSPORT-GITHUB2
 // RUTA "GET" PARA LOGUEARTE CON TU CUENTA DE GITHUB.
-sessions.get("https://back-end-desafio1-lucascabral-production.up.railway.app/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { }) // PARA DESARROLLO  
+sessions.get("/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { }) // PARA DESARROLLO  
 
 sessions.get("/api/session/githubcallback", authDenied, passport.authenticate("github", { failureRedirect: "/api/session/login" }), // PARA DESARROLLO
     (req, res) => { // PARA DESARROLLO
