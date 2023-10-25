@@ -44,10 +44,10 @@ export const createSession = async (req, res) => {
         const session = await stripe.checkout.sessions.create({
             line_items,
             mode: "payment",
-            // success_url: `http://localhost:${PORT}/success`,
-            // cancel_url: `http://localhost:${PORT}/error`
-            success_url: `http://back-end-desafio1-lucascabral-production.up.railway.app/success`,
-            cancel_url: `http://back-end-desafio1-lucascabral-production.up.railway.app/error`
+            // success_url: `http://localhost:${PORT}/success`, // PARA DESARROLLO
+            // cancel_url: `http://localhost:${PORT}/error` // PARA DESARROLLO
+            success_url: `http://back-end-desafio1-lucascabral-production.up.railway.app/success`, // PARA PRODUCCION
+            cancel_url: `http://back-end-desafio1-lucascabral-production.up.railway.app/error` // PARA PRODUCCION
         });
 
 

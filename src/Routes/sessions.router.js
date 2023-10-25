@@ -17,15 +17,26 @@ import {
 
 // PASSPORT-GITHUB2
 // RUTA "GET" PARA LOGUEARTE CON TU CUENTA DE GITHUB.
-sessions.get("/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { })
+// sessions.get("/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { }) // PARA DESARROLLO  
 
-sessions.get("/api/session/githubcallback", authDenied, passport.authenticate("github", { failureRedirect: "/api/session/login" }),
-    (req, res) => {
-        req.session.emailUser = req.user;
-        req.session.rol = "Usuario";
-        req.session.exitsRol = false
-        res.cookie("idDocument", req.session.emailUser.documents ? req.session.emailUser.documents.toString() : "");
-        res.redirect("/home-mongodb");
+// sessions.get("/api/session/githubcallback", authDenied, passport.authenticate("github", { failureRedirect: "/api/session/login" }), // PARA DESARROLLO
+//     (req, res) => { // PARA DESARROLLO
+//         req.session.emailUser = req.user; // PARA DESARROLLO
+//         req.session.rol = "Usuario"; // PARA DESARROLLO
+//         req.session.exitsRol = false // PARA DESARROLLO
+//         res.cookie("idDocument", req.session.emailUser.documents ? req.session.emailUser.documents.toString() : ""); // PARA DESARROLLO
+//         res.redirect("/home-mongodb"); // PARA DESARROLLO
+//     }
+// );
+sessions.get("http://back-end-desafio1-lucascabral-production.up.railway.app/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { }) // PARA PRODUCCION
+
+sessions.get("http://back-end-desafio1-lucascabral-production.up.railway.app/api/session/githubcallback", authDenied, passport.authenticate("github", { failureRedirect: "http://back-end-desafio1-lucascabral-production.up.railway.app/api/session/login" }), // PARA PRODUCCION
+    (req, res) => { // PARA PRODUCCION
+        req.session.emailUser = req.user; // PARA PRODUCCION
+        req.session.rol = "Usuario"; // PARA PRODUCCION
+        req.session.exitsRol = false // PARA PRODUCCION
+        res.cookie("idDocument", req.session.emailUser.documents ? req.session.emailUser.documents.toString() : ""); // PARA PRODUCCION
+        res.redirect("http://back-end-desafio1-lucascabral-production.up.railway.app/home-mongodb"); // PARA PRODUCCION
     }
 );
 // PASSPORT-GITHUB2
