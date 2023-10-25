@@ -173,7 +173,8 @@ export const controllerNodemailer = async (req, res) => {
     try {
         const linkToken = uuidv4()
         const expirationTime = Math.floor(Date.now() / 1000) + 3600 // tiempo en segundos para que expire este link temporal para restablecer la contraseña (1 hora)
-        const enlace = `http://localhost:8080/link/${linkToken}?expira=${expirationTime}`
+        // const enlace = `http://localhost:8080/link/${linkToken}?expira=${expirationTime}` // DESARROLLO
+        const enlace = `http://back-end-desafio1-lucascabral-production.up.railway.app/link/${linkToken}?expira=${expirationTime}`
 
         let option = ({
             from: " Proyecto de Backend <lucasgamerpolar10@gmail.com>",
