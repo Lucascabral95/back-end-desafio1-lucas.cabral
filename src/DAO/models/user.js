@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
-import moment from "moment";
+// import moment from "moment";
+import moment from "moment-timezone";
+
 
 const documentsSchema = new mongoose.Schema({
     documents: {
@@ -36,10 +38,10 @@ const userSchema = new mongoose.Schema({
 //     return this.save();
 // };
 userSchema.methods.updateLastConnection = function () {
-    momentTimezone.tz.setDefault('America/Argentina/Buenos_Aires');
+    moment.tz.setDefault('America/Argentina/Buenos_Aires');  
     const fechaHora = moment().format('MMMM Do YYYY, h:mm:ss a');
     this.last_connection = fechaHora;
     return this.save();
-};
+  };
 
 export const userModel = mongoose.model("users", userSchema);
