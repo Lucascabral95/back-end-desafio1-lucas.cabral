@@ -31,12 +31,6 @@ const userSchema = new mongoose.Schema({
     domicilio: String
 });
 
-// userSchema.methods.updateLastConnection = function () {
-//     moment.locale('es');
-//     const fechaHora = moment().format('MMMM Do YYYY, h:mm:ss a');
-//     this.last_connection = fechaHora;
-//     return this.save();
-// };
 userSchema.methods.updateLastConnection = function () {
     moment.tz.setDefault('America/Argentina/Buenos_Aires');  
     const fechaHora = moment().format('MMMM Do YYYY, h:mm:ss a');

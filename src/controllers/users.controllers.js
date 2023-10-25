@@ -267,7 +267,7 @@ export const eliminarUsuariosPorInactividad = async (req, res) => {
 
     if (deletedCount > 0) {
         const cuentasEliminadas = deletedCount > 0 ? true : false;
-        const responseCounts = `Se eliminaron a ${deletedCount} usuario(s)`;
+        const responseCounts = `Se eliminaron a ${deletedCount} usuario(s) debido a una inactividad de más de 12 horas.`;
         const email = req.session.emailUser;
         const responses = {
             cuentaEliminadaIf: cuentasEliminadas,

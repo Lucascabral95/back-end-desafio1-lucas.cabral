@@ -72,7 +72,7 @@ export const filterAndDeleteUsers = async () => {
                 const fechaUltimaConexion = moment(u.last_connection, 'MMMM Do YYYY, h:mm:ss a');
                 const diferenciaEnSegundos = currentTime.diff(fechaUltimaConexion, 'seconds');
                 // return diferenciaEnSegundos > 60; // BORRA A TODOS EN 60 SEGUNDOS
-                return diferenciaEnSegundos > 1800; // BORRA A TODOS LOS USUARIOS CON INACTIVIDAD DE 30 MINUTOS (¡¡PROFE!! SE LO DEJO ASI PARA QUE VEA QUE FUNCIONA)
+                return diferenciaEnSegundos > 43200; // BORRA A TODOS LOS USUARIOS CON UNA INACTIVIDAD DE 12 HORAS (¡¡PROFE!! SE LO DEJO ASI PARA QUE VEA QUE FUNCIONA)
             }
             return true;
         }
