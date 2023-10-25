@@ -17,29 +17,17 @@ import {
 
 // PASSPORT-GITHUB2
 // RUTA "GET" PARA LOGUEARTE CON TU CUENTA DE GITHUB.
-// sessions.get("/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { }) // PARA DESARROLLO  
+sessions.get("/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { }) // PARA DESARROLLO  
 
-// sessions.get("/api/session/githubcallback", authDenied, passport.authenticate("github", { failureRedirect: "/api/session/login" }), // PARA DESARROLLO
-//     (req, res) => { // PARA DESARROLLO
-//         req.session.emailUser = req.user; // PARA DESARROLLO
-//         req.session.rol = "Usuario"; // PARA DESARROLLO
-//         req.session.exitsRol = false // PARA DESARROLLO
-//         res.cookie("idDocument", req.session.emailUser.documents ? req.session.emailUser.documents.toString() : ""); // PARA DESARROLLO
-//         res.redirect("/home-mongodb"); // PARA DESARROLLO
-//     }
-// );
-sessions.get("/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"], callbackURL: `https://back-end-desafio1-lucascabral-production.up.railway.app/api/session/githubcallback` }), async (req, res) => { });
-
-sessions.get("/api/session/githubcallback", authDenied, passport.authenticate("github", { failureRedirect: "/api/session/login" }),
-    (req, res) => {
-        req.session.emailUser = req.user;
-        req.session.rol = "Usuario";
-        req.session.exitsRol = false;
-        res.cookie("idDocument", req.session.emailUser.documents ? req.session.emailUser.documents.toString() : "");
-        res.redirect("/home-mongodb");
+sessions.get("/api/session/githubcallback", authDenied, passport.authenticate("github", { failureRedirect: "/api/session/login" }), // PARA DESARROLLO
+    (req, res) => { // PARA DESARROLLO
+        req.session.emailUser = req.user; // PARA DESARROLLO
+        req.session.rol = "Usuario"; // PARA DESARROLLO
+        req.session.exitsRol = false // PARA DESARROLLO
+        res.cookie("idDocument", req.session.emailUser.documents ? req.session.emailUser.documents.toString() : ""); // PARA DESARROLLO
+        res.redirect("/home-mongodb"); // PARA DESARROLLO
     }
 );
-
 // PASSPORT-GITHUB2
 
 // EN ESTA RUTA ESTAN TODOS LOS DATOS DE CONTACTO DE LOS USUARIOS LOGUEADOS CON GITHUB
