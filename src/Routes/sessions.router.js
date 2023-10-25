@@ -30,7 +30,7 @@ import {
 // );
 sessions.get("/api/session/github", authDenied, passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { });
 
-sessions.get("/api/session/githubcallback", authDenied, passport.authenticate("github", { failureRedirect: "https://back-end-desafio1-lucascabral-production.up.railway.app/home-mongodb" }),
+sessions.get("/api/session/githubcallback", authDenied, passport.authenticate("github", { failureRedirect: "/api/session/login" }),
     (req, res) => {
         req.session.emailUser = req.user;
         req.session.rol = "Usuario";
