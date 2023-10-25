@@ -23,15 +23,20 @@ const userSchema = new mongoose.Schema({
     password: String,
     role: { type: String, default: "user" },
     cart: { type: mongoose.Schema.Types.ObjectId, ref: "carts" },
-    // last_connection: Date,
     last_connection: String,
     documents: { type: mongoose.Schema.Types.ObjectId, ref: "documents" },
     dni: Number,
     domicilio: String
 });
 
+// userSchema.methods.updateLastConnection = function () {
+//     moment.locale('es');
+//     const fechaHora = moment().format('MMMM Do YYYY, h:mm:ss a');
+//     this.last_connection = fechaHora;
+//     return this.save();
+// };
 userSchema.methods.updateLastConnection = function () {
-    moment.locale('es');
+    momentTimezone.tz.setDefault('America/Argentina/Buenos_Aires');
     const fechaHora = moment().format('MMMM Do YYYY, h:mm:ss a');
     this.last_connection = fechaHora;
     return this.save();
