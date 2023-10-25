@@ -15,5 +15,6 @@ export default {
     loggers: process.env.LOGGER_ENV,
     email_nodemailer: process.env.USER_EMAIL,
     pass_nodemailer: process.env.EMAIL_PASS,
-    key_stripe: process.env.KEY_STRIPE
+    key_stripe: process.env.KEY_STRIPE,
+    url_environment: process.env.URL_ENVIRONMENT
 }

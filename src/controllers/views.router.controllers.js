@@ -19,6 +19,8 @@ import bcrypt from "bcrypt"
 import { generateToken } from "../jwt.js";
 import { sendMail } from "../services/nodemailer.js";
 import { v4 as uuidv4 } from 'uuid';
+import config from "../config/config.js";
+const url_environment = config.url_environment
 
 // LOGIGA DE /API/SESSION/CURRENT
 export const controllerHomeMongodb = async (req, res) => {
@@ -173,8 +175,8 @@ export const controllerNodemailer = async (req, res) => {
     try {
         const linkToken = uuidv4()
         const expirationTime = Math.floor(Date.now() / 1000) + 3600 // tiempo en segundos para que expire este link temporal para restablecer la contraseña (1 hora)
-        // const enlace = `http://localhost:8080/link/${linkToken}?expira=${expirationTime}` // DESARROLLO
-        const enlace = `http://back-end-desafio1-lucascabral-production.up.railway.app/link/${linkToken}?expira=${expirationTime}`
+        const enlace = `http://${url_environment}/link/${linkToken}?expira=${expirationTime}` // DESARROLLO
+        // const enlace = `http://back-end-desafio1-lucascabral-production.up.railway.app/link/${linkToken}?expira=${expirationTime}` // PRODUCCION
 
         let option = ({
             from: " Proyecto de Backend <lucasgamerpolar10@gmail.com>",
