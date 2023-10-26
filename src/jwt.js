@@ -11,38 +11,25 @@ export const generateToken = (user) => {
 
 // MIDDLEWARE QUE RECIBE EL VALOR DE "REQ.COOKIES.AUTHTOKEN" CON EL TOKEN "JWT" Y SE ENCARGA DE LEERLO Y VERIFICAR QUE SEA CORRECTO PARA DEJARTE AVANZAR A LA RUTA DONDE SE LO APLICA.
 export const authToken = (req, res, next) => {
-    const token = req.cookies.authToken
-    if (!token) {
-        return res.status(401).json({
-            error: "No tiene token",
-            message: "No tiene token"
-        })
+    const token = req.cookies.authToken;
+
+    if (token) {
+        try {
+            req.user = jwt.verify(token, KEY_SECRET);
+        } catch (error) {
+            return res.status(401).json({
+                error: "Token inválido.",
+                message: "El token enviado no es válido o no tiene el nivel de acceso suficiente para este recurso."
+            });
+        }
     }
-    try {
-        req.user = jwt.verify(token, KEY_SECRET)
-        next()
-    } catch (error) {
+
+    if (req.session.emailUser.last_name === "Usuario de Github" || token) {
+        next();
+    } else {
         return res.status(401).json({
-            error: "Token invalido.",
-            message: "El token enviado no es valido o no tiene el nivel de acceso suficiente para este recurso."
-        })
+            error: "Acceso no autorizado.",
+            message: "No tiene el nivel de acceso suficiente para este recurso."
+        });
     }
-}
-// export const authToken = (req, res, next) => {
-//     const token = req.cookies.authToken
-//     if (!token) {
-//         return res.status(401).json({
-//             error: "No tiene token",
-//             message: "No tiene token"
-//         })
-//     }
-//     try {
-//         req.user = jwt.verify(token, KEY_SECRET)
-//         next()
-//     } catch (error) {
-//         return res.status(401).json({
-//             error: "Token invalido.",
-//             message: "El token enviado no es valido o no tiene el nivel de acceso suficiente para este recurso."
-//         })
-//     }
-// }
+};
